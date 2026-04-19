@@ -9,6 +9,7 @@ import { Reveal } from "@/components/reveal";
 import { Marquee } from "@/components/marquee";
 import { Spotlight } from "@/components/spotlight";
 import { GradientBorder } from "@/components/ui/gradient-border";
+import { ModK } from "@/components/kbd";
 import {
   ArrowRight,
   BrainCircuit,
@@ -104,9 +105,20 @@ function Nav() {
           </a>
         </nav>
         <div className="flex items-center gap-2">
-          <button className="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-border/60 bg-white/60 backdrop-blur text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors">
+          <button
+            onClick={() => {
+              const ev = new KeyboardEvent("keydown", {
+                key: "k",
+                ctrlKey: true,
+                metaKey: true,
+              });
+              window.dispatchEvent(ev);
+            }}
+            className="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-border/60 bg-white/60 backdrop-blur text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+            aria-label="Open command palette"
+          >
             <Command className="h-3 w-3" />
-            <span className="font-mono">⌘K</span>
+            <ModK />
           </button>
           <Link
             href="/dashboard"
