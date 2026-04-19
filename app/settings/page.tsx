@@ -5,15 +5,22 @@ import { AppNav } from "@/components/app-nav";
 import { HydrationGate } from "@/components/hydration-gate";
 import { AppShell } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { useApp } from "@/lib/store";
+import { useEntitlements } from "@/lib/entitlements";
+import { UpgradeWall } from "@/components/upgrade-wall";
+import { describeLicense } from "@/lib/licensing";
 import { EXAMS } from "@/lib/data/exams";
 import type { ExamId } from "@/lib/types";
 import { Logo } from "@/components/app-nav";
+import Link from "next/link";
 import {
   Calendar,
   Clock,
   GraduationCap,
   Heart,
+  KeyRound,
+  Lock,
   RotateCcw,
   Sparkles,
   Trophy,
@@ -29,7 +36,9 @@ export default function SettingsPage() {
 
 function Inner() {
   const router = useRouter();
-  const { profile, updateProfile, resetAll } = useApp();
+  const { profile, license, updateProfile, resetAll, setLicense } = useApp();
+  const ent = useEntitlements();
+  const [wallOpen, setWallOpen] = useState(false);
   if (!profile) return null;
 
   return (
@@ -49,46 +58,122 @@ function Inner() {
             Active certification
           </div>
           <div className="space-y-2">
-            {EXAMS.map((e) => (
-              <button
-                key={e.id}
-                onClick={() => updateProfile({ examId: e.id as ExamId })}
-                className={`w-full text-left rounded-xl border p-3.5 transition-all flex items-center gap-3 ${
-                  profile.examId === e.id
-                    ? "border-brand-500 bg-brand-50 ring-2 ring-brand-100"
-                    : "border-border bg-white hover:border-brand-200"
-                }`}
-              >
-                <div
-                  className="h-9 w-9 rounded-lg text-white flex items-center justify-center font-semibold text-[11px] shrink-0"
-                  style={{
-                    background: `linear-gradient(135deg, ${e.accentFrom}, ${e.accentTo})`,
+            {EXAMS.map((e) => {
+              const isActive = e.id === profile.examId;
+              const isLocked = !isActive && !ent.canSwitchExams;
+              return (
+                <button
+                  key={e.id}
+                  onClick={() => {
+                    if (isLocked) {
+                      setWallOpen(true);
+                      return;
+                    }
+                    updateProfile({ examId: e.id as ExamId });
                   }}
+                  className={`w-full text-left rounded-xl border p-3.5 transition-all flex items-center gap-3 ${
+                    isActive
+                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-100"
+                      : isLocked
+                        ? "border-border bg-slate-50/60 hover:bg-slate-50 opacity-80"
+                        : "border-border bg-white hover:border-brand-200"
+                  }`}
                 >
-                  {e.id === "aws-ccp"
-                    ? "AWS"
-                    : e.id === "ms-900"
-                      ? "MS"
-                      : "AZ"}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold">{e.fullTitle}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {e.vendor} · {e.totalDomains} domains
+                  <div
+                    className="h-9 w-9 rounded-lg text-white flex items-center justify-center font-semibold text-[11px] shrink-0"
+                    style={{
+                      background: `linear-gradient(135deg, ${e.accentFrom}, ${e.accentTo})`,
+                    }}
+                  >
+                    {e.id === "aws-ccp"
+                      ? "AWS"
+                      : e.id === "ms-900"
+                        ? "MS"
+                        : "AZ"}
                   </div>
-                </div>
-                {profile.examId === e.id && (
-                  <span className="chip bg-brand-600 text-white border-transparent shrink-0">
-                    Active
-                  </span>
-                )}
-              </button>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold">{e.fullTitle}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {e.vendor} · {e.totalDomains} domains
+                    </div>
+                  </div>
+                  {isActive && (
+                    <span className="chip bg-brand-600 text-white border-transparent shrink-0">
+                      Active
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="chip bg-rose-50 border-rose-200 text-rose-700 shrink-0">
+                      <Lock className="h-3 w-3" />
+                      Multi-Cert
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
           <p className="text-xs text-muted-foreground mt-3">
-            Switching certifications keeps your data — progress tracks per
-            exam separately.
+            {ent.canSwitchExams
+              ? "Switching certifications keeps your data — progress tracks per exam separately."
+              : "Free and Pro tiers are locked to one exam. Multi-Cert unlocks all three."}
           </p>
+        </div>
+
+        <UpgradeWall
+          open={wallOpen}
+          onClose={() => setWallOpen(false)}
+          reason="Multi-Cert unlocks all exams"
+          headline="Switch between 3 certifications"
+          sub="Multi-Cert unlocks AZ-900, AWS Cloud Practitioner, and MS-900 with one purchase. Track progress across all three."
+        />
+
+        <div className="card-surface p-6 mb-4">
+          <div className="flex items-center gap-2 text-sm font-medium mb-3">
+            <KeyRound className="h-4 w-4 text-brand-600" />
+            Subscription
+          </div>
+          {license ? (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-4 flex items-start gap-3">
+              <Sparkles className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-sm font-semibold">
+                  Active · {describeLicense(license)}
+                </div>
+                <div className="text-xs text-muted-foreground mt-0.5 font-mono">
+                  {license.key}
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  if (confirm("Remove your license from this device?")) {
+                    setLicense(null);
+                  }
+                }}
+                className="text-xs text-rose-600 hover:text-rose-700 font-medium"
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 rounded-xl border border-dashed border-border p-4">
+              <div className="flex-1">
+                <div className="text-sm font-semibold">Free plan</div>
+                <div className="text-xs text-muted-foreground">
+                  3 drills/day · first lesson per chapter
+                </div>
+              </div>
+              <Link href="/redeem">
+                <Button variant="outline" size="sm">
+                  I have a key
+                </Button>
+              </Link>
+              <Link href="/upgrade">
+                <Button variant="primary" size="sm">
+                  Upgrade
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className="card-surface p-6 mb-4">

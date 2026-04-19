@@ -4,6 +4,8 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type {
   AnswerRecord,
+  DailyDrillCount,
+  License,
   QuizAttempt,
   StudyPlan,
   UserProfile,
@@ -20,6 +22,8 @@ interface AppState {
   completedBlockIds: string[];
   completedLessonIds: string[];
   lastPlanDate: string | null;
+  license: License | null;
+  dailyDrills: DailyDrillCount | null;
   setProfile: (p: UserProfile) => void;
   updateProfile: (patch: Partial<UserProfile>) => void;
   recordAttempt: (
@@ -29,6 +33,8 @@ interface AppState {
   ) => QuizAttempt;
   markBlockDone: (blockId: string) => void;
   markLessonComplete: (lessonId: string) => void;
+  setLicense: (license: License | null) => void;
+  incrementDrill: () => void;
   resetAll: () => void;
 }
 
@@ -43,6 +49,8 @@ export const useApp = create<AppState>()(
       completedBlockIds: [],
       completedLessonIds: [],
       lastPlanDate: null,
+      license: null,
+      dailyDrills: null,
       setProfile: (p) =>
         set({
           profile: p,
@@ -121,6 +129,16 @@ export const useApp = create<AppState>()(
               : s.profile,
           };
         }),
+      setLicense: (license) => set({ license }),
+      incrementDrill: () =>
+        set((s) => {
+          const today = new Date().toISOString().slice(0, 10);
+          const current =
+            s.dailyDrills?.date === today ? s.dailyDrills.count : 0;
+          return {
+            dailyDrills: { date: today, count: current + 1 },
+          };
+        }),
       resetAll: () =>
         set({
           profile: null,
@@ -128,6 +146,8 @@ export const useApp = create<AppState>()(
           completedBlockIds: [],
           completedLessonIds: [],
           lastPlanDate: null,
+          license: null,
+          dailyDrills: null,
         }),
     }),
     {

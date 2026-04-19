@@ -33,6 +33,8 @@ import {
   Zap,
 } from "lucide-react";
 import { getLessonsForExam } from "@/lib/data/lessons";
+import { useEntitlements } from "@/lib/entitlements";
+import { LockCard, UpgradeWall } from "@/components/upgrade-wall";
 
 export function LessonClient() {
   return (
@@ -51,8 +53,10 @@ function Inner() {
   const topic = TOPIC_MAP[topicId];
 
   const { completedLessonIds, markLessonComplete, profile } = useApp();
+  const ent = useEntitlements();
   const [index, setIndex] = useState(0);
   const [celebrating, setCelebrating] = useState(false);
+  const [wallOpen, setWallOpen] = useState(false);
 
   useEffect(() => {
     setIndex(0);
@@ -80,6 +84,40 @@ function Inner() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  const locked = lesson ? !ent.canAccessLesson(lesson.id) : false;
+
+  if (lesson && topic && locked) {
+    return (
+      <>
+        <AppNav />
+        <UpgradeWall
+          open={wallOpen}
+          onClose={() => setWallOpen(false)}
+          reason={`Lesson ${lesson.order} is a Pro lesson`}
+          headline="Unlock every lesson in your exam"
+          sub="Free tier gets the first lesson per topic. Pro unlocks all lessons, deep review, cram sheets, and rescue mode. One-time $19."
+        />
+        <AppShell className="max-w-lg">
+          <div className="mt-4">
+            <Link
+              href={`/guide/${topic.id}`}
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to {topic.shortName}
+            </Link>
+            <LockCard
+              title={lesson.title}
+              body="This lesson is part of Pro. You get the first lesson of each chapter free — upgrade to unlock the rest."
+              reason={`${lesson.minutes} min · ${lesson.cards.length} cards · Pro`}
+              onUpgrade={() => setWallOpen(true)}
+            />
+          </div>
+        </AppShell>
+      </>
+    );
+  }
 
   if (!lesson || !topic) {
     return (

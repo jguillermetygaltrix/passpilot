@@ -12,6 +12,8 @@ import { TOPIC_MAP, getTopicsForExam } from "@/lib/data/topics";
 import { getTopicLessons } from "@/lib/data/lessons";
 import { QUESTION_MAP } from "@/lib/data/questions";
 import { useApp } from "@/lib/store";
+import { useEntitlements } from "@/lib/entitlements";
+import { UpgradeWall } from "@/components/upgrade-wall";
 import type { ReviewSection, TopicReview } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
@@ -26,6 +28,7 @@ import {
   GraduationCap,
   Lightbulb,
   ListChecks,
+  Lock,
   PlayCircle,
   ShieldAlert,
   Sparkles,
@@ -50,8 +53,11 @@ function Inner() {
   const topicId = (params?.topicId as string) || "";
   const topic = TOPIC_MAP[topicId];
   const { attempts, completedLessonIds } = useApp();
+  const ent = useEntitlements();
   const [refOpen, setRefOpen] = useState(false);
   const [refMode, setRefMode] = useState<RefMode>("review");
+  const [wallOpen, setWallOpen] = useState(false);
+  const [wallReason, setWallReason] = useState("Locked chapter content");
 
   if (!topic) {
     return (
@@ -162,68 +168,104 @@ function Inner() {
             {lessons.map((l, i) => {
               const isDone = completedLessonIds.includes(l.id);
               const isNext = l.id === nextLesson.id && !isDone;
-              return (
-                <li key={l.id}>
-                  <Link
-                    href={`/guide/${topic.id}/${l.id}`}
+              const isLocked = !ent.canAccessLesson(l.id);
+              const content = (
+                <div className="flex items-start gap-4">
+                  <div
                     className={cn(
-                      "group block rounded-2xl border p-5 transition-all",
-                      isDone
-                        ? "border-emerald-200 bg-emerald-50/30 hover:bg-emerald-50/60"
-                        : isNext
-                          ? "border-brand-500 bg-brand-50/40 ring-2 ring-brand-100 hover:bg-brand-50/70"
-                          : "border-border bg-white hover:border-brand-200 hover:shadow-soft"
+                      "h-11 w-11 rounded-xl flex items-center justify-center shrink-0 font-semibold text-sm",
+                      isLocked
+                        ? "bg-slate-100 border border-border text-muted-foreground"
+                        : isDone
+                          ? "bg-emerald-500 text-white"
+                          : isNext
+                            ? "bg-brand-600 text-white"
+                            : "bg-brand-50 border border-brand-100 text-brand-700"
                     )}
                   >
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={cn(
-                          "h-11 w-11 rounded-xl flex items-center justify-center shrink-0 font-semibold text-sm",
-                          isDone
-                            ? "bg-emerald-500 text-white"
-                            : isNext
-                              ? "bg-brand-600 text-white"
-                              : "bg-brand-50 border border-brand-100 text-brand-700"
-                        )}
-                      >
-                        {isDone ? (
-                          <CheckCircle2 className="h-5 w-5" />
-                        ) : (
-                          <span className="tabular-nums">{i + 1}</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          {isNext && (
-                            <span className="chip bg-brand-600 text-white border-transparent">
-                              <PlayCircle className="h-3 w-3" />
-                              Start here
-                            </span>
-                          )}
-                          <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                            Lesson {l.order} · {l.minutes} min · {l.cards.length} cards
-                          </span>
-                        </div>
-                        <div className="font-semibold text-[15px] leading-snug">
-                          {l.title}
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                          {l.summary}
-                        </div>
-                      </div>
-                      <ChevronRight
-                        className={cn(
-                          "h-5 w-5 shrink-0 transition-transform",
-                          "text-muted-foreground group-hover:translate-x-0.5 group-hover:text-brand-700"
-                        )}
-                      />
+                    {isLocked ? (
+                      <Lock className="h-4 w-4" />
+                    ) : isDone ? (
+                      <CheckCircle2 className="h-5 w-5" />
+                    ) : (
+                      <span className="tabular-nums">{i + 1}</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      {isLocked && (
+                        <span className="chip bg-rose-50 border-rose-200 text-rose-700">
+                          <Lock className="h-3 w-3" />
+                          Pro
+                        </span>
+                      )}
+                      {!isLocked && isNext && (
+                        <span className="chip bg-brand-600 text-white border-transparent">
+                          <PlayCircle className="h-3 w-3" />
+                          Start here
+                        </span>
+                      )}
+                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                        Lesson {l.order} · {l.minutes} min · {l.cards.length} cards
+                      </span>
                     </div>
-                  </Link>
+                    <div className="font-semibold text-[15px] leading-snug">
+                      {l.title}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                      {l.summary}
+                    </div>
+                  </div>
+                  <ChevronRight
+                    className={cn(
+                      "h-5 w-5 shrink-0 transition-transform",
+                      isLocked
+                        ? "text-muted-foreground/40"
+                        : "text-muted-foreground group-hover:translate-x-0.5 group-hover:text-brand-700"
+                    )}
+                  />
+                </div>
+              );
+              return (
+                <li key={l.id}>
+                  {isLocked ? (
+                    <button
+                      onClick={() => {
+                        setWallReason(`Lesson ${l.order} is a Pro lesson`);
+                        setWallOpen(true);
+                      }}
+                      className="group block w-full text-left rounded-2xl border p-5 transition-all border-border bg-slate-50/60 hover:bg-slate-50 hover:border-rose-200"
+                    >
+                      {content}
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/guide/${topic.id}/${l.id}`}
+                      className={cn(
+                        "group block rounded-2xl border p-5 transition-all",
+                        isDone
+                          ? "border-emerald-200 bg-emerald-50/30 hover:bg-emerald-50/60"
+                          : isNext
+                            ? "border-brand-500 bg-brand-50/40 ring-2 ring-brand-100 hover:bg-brand-50/70"
+                            : "border-border bg-white hover:border-brand-200 hover:shadow-soft"
+                      )}
+                    >
+                      {content}
+                    </Link>
+                  )}
                 </li>
               );
             })}
           </ul>
         </div>
+
+        <UpgradeWall
+          open={wallOpen}
+          onClose={() => setWallOpen(false)}
+          reason={wallReason}
+          headline="Unlock every lesson in this chapter"
+          sub="Free tier gets the first lesson per topic. Pro unlocks all 19 lessons, deep review, cram sheets, and rescue mode."
+        />
 
         <div className="card-surface overflow-hidden">
           <button

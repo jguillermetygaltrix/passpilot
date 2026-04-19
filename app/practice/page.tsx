@@ -16,12 +16,18 @@ import {
 } from "@/lib/data/questions";
 import { TOPIC_MAP, getTopicsForExam } from "@/lib/data/topics";
 import { useApp } from "@/lib/store";
+import { useEntitlements, FREE_DAILY_DRILL_LIMIT } from "@/lib/entitlements";
+import { UpgradeWall } from "@/components/upgrade-wall";
 import {
   AlertTriangle,
   Dumbbell,
+  InfinityIcon,
   ListChecks,
+  Lock,
   RotateCcw,
   Shuffle,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +46,8 @@ type Mode = "topic" | "mixed" | "incorrect-only";
 function Inner() {
   const params = useSearchParams();
   const router = useRouter();
-  const { attempts, profile } = useApp();
+  const { attempts, profile, incrementDrill } = useApp();
+  const ent = useEntitlements();
   const examId = profile?.examId ?? "az-900";
   const examQuestions = getQuestionsForExam(examId);
   const examTopics = getTopicsForExam(examId);
@@ -52,6 +59,7 @@ function Inner() {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [topicId, setTopicId] = useState(initialTopic);
   const [questionCount, setQuestionCount] = useState(8);
+  const [showWall, setShowWall] = useState(false);
 
   const incorrectIds = useMemo(() => {
     const ids = new Set<string>();
@@ -83,6 +91,15 @@ function Inner() {
       Math.min(questionCount, examQuestions.length)
     );
   }, [mode, topicId, questionCount, incorrectIds, examQuestions]);
+
+  const handleStart = () => {
+    if (!ent.canStartDrill) {
+      setShowWall(true);
+      return;
+    }
+    incrementDrill();
+    setStarted(true);
+  };
 
   if (started) {
     return (
@@ -117,15 +134,30 @@ function Inner() {
     <>
       <AppNav />
       <AppShell className="max-w-3xl">
-        <div className="mb-6">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-            Practice
+        <UpgradeWall
+          open={showWall}
+          onClose={() => setShowWall(false)}
+          reason="Daily drill limit reached"
+          headline="You've used your 3 free drills today"
+          sub="Upgrade to Pro for unlimited drills, full lessons, and Rescue Mode. One-time $19, lifetime access."
+        />
+
+        <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+              Practice
+            </div>
+            <h1 className="heading-2 mt-1">Pick your drill</h1>
+            <p className="text-muted-foreground mt-2 max-w-xl">
+              Choose a mode. Every answer feeds your readiness score and
+              adapts the plan.
+            </p>
           </div>
-          <h1 className="heading-2 mt-1">Pick your drill</h1>
-          <p className="text-muted-foreground mt-2 max-w-xl">
-            Choose a mode. Every answer feeds your readiness score and adapts
-            the plan.
-          </p>
+          <DrillCounter
+            left={ent.drillsLeftToday}
+            hasPro={ent.hasPro}
+            onUpgrade={() => setShowWall(true)}
+          />
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 mb-6">
@@ -212,16 +244,33 @@ function Inner() {
         <Button
           variant="primary"
           size="xl"
-          className="w-full"
+          className="w-full group"
           disabled={
             (mode === "topic" && !topicId) ||
             (mode === "incorrect-only" && !incorrectIds.length) ||
             !selectedQuestions.length
           }
-          onClick={() => setStarted(true)}
+          onClick={handleStart}
         >
-          Start drill · {selectedQuestions.length} questions
+          {ent.drillLimitReached && !ent.hasPro ? (
+            <>
+              <Lock className="h-4 w-4" />
+              Upgrade to start — daily limit reached
+            </>
+          ) : (
+            <>
+              Start drill · {selectedQuestions.length} questions
+              <Sparkles className="h-3.5 w-3.5 opacity-70 transition-opacity group-hover:opacity-100" />
+            </>
+          )}
         </Button>
+        {!ent.hasPro && !ent.drillLimitReached && (
+          <div className="text-center text-xs text-muted-foreground mt-3">
+            {ent.drillsLeftToday === Infinity
+              ? null
+              : `${ent.drillsLeftToday} of ${FREE_DAILY_DRILL_LIMIT} free drills left today`}
+          </div>
+        )}
 
         {!incorrectIds.length && (
           <div className="mt-6 card-surface p-5 flex items-start gap-3 border-brand-100">
@@ -247,6 +296,50 @@ function Inner() {
         )}
       </AppShell>
     </>
+  );
+}
+
+function DrillCounter({
+  left,
+  hasPro,
+  onUpgrade,
+}: {
+  left: number;
+  hasPro: boolean;
+  onUpgrade: () => void;
+}) {
+  if (hasPro) {
+    return (
+      <div className="chip bg-emerald-50 border-emerald-200 text-emerald-700">
+        <InfinityIcon className="h-3.5 w-3.5" />
+        Unlimited drills · Pro
+      </div>
+    );
+  }
+  const limited = left === 0;
+  return (
+    <button
+      onClick={onUpgrade}
+      className={cn(
+        "flex flex-col rounded-xl border px-4 py-2.5 transition-colors hover:shadow-soft",
+        limited
+          ? "border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-50"
+          : "border-border bg-white text-foreground hover:border-brand-200"
+      )}
+    >
+      <div className="text-[10px] uppercase tracking-wider font-semibold opacity-70">
+        Free drills today
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-lg font-semibold tabular-nums">
+          {left} / {FREE_DAILY_DRILL_LIMIT}
+        </span>
+        <Zap className="h-3.5 w-3.5 opacity-70" />
+      </div>
+      <div className="text-[10px] text-muted-foreground mt-0.5">
+        {limited ? "Upgrade for unlimited →" : "Tap to upgrade"}
+      </div>
+    </button>
   );
 }
 

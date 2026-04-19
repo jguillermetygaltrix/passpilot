@@ -1,5 +1,20 @@
 export type ExamId = "az-900" | "aws-ccp" | "ms-900";
 
+export type LicenseTier = "free" | "pro" | "multi";
+
+export interface License {
+  key: string;
+  tier: Exclude<LicenseTier, "free">;
+  unlockedExams: ExamId[];
+  verifiedAt: string;
+  email?: string;
+}
+
+export interface DailyDrillCount {
+  date: string; // YYYY-MM-DD
+  count: number;
+}
+
 export type ConfidenceLevel = "new" | "some" | "solid" | "confident";
 
 export type RiskLevel = "high" | "borderline" | "safer" | "strong";

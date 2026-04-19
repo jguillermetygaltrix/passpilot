@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/app-nav";
 import { HydrationGate } from "@/components/hydration-gate";
 import { AppShell } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import { LockCard, UpgradeWall } from "@/components/upgrade-wall";
 import { useApp, useMasteryAndReadiness } from "@/lib/store";
+import { useEntitlements } from "@/lib/entitlements";
 import { rescueTopics } from "@/lib/planner";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import {
@@ -31,7 +34,34 @@ export default function RescuePage() {
 function Inner() {
   const { profile } = useApp();
   const mr = useMasteryAndReadiness();
+  const ent = useEntitlements();
+  const [wallOpen, setWallOpen] = useState(false);
   if (!profile || !mr) return null;
+
+  if (!ent.canAccessRescue) {
+    return (
+      <>
+        <AppNav />
+        <UpgradeWall
+          open={wallOpen}
+          onClose={() => setWallOpen(false)}
+          reason="Rescue Mode is Pro"
+          headline="When the exam is near, Rescue Mode takes over"
+          sub="Condensed survival plan, priority-only drills, honest guidance on what to skip. Unlocked with Pro."
+        />
+        <AppShell className="max-w-lg">
+          <LockCard
+            icon={LifeBuoy}
+            title="Rescue Mode"
+            body="A condensed plan for the final days before your exam. Unlocks priority drills, cram sheets, and 'what to skip' guidance. Pro only."
+            reason={`${mr.readiness.daysLeft} days to exam · Pro`}
+            ctaLabel="Unlock Rescue Mode"
+            onUpgrade={() => setWallOpen(true)}
+          />
+        </AppShell>
+      </>
+    );
+  }
 
   const { readiness, mastery } = mr;
   const { prioritize, deprioritize } = rescueTopics(mastery);

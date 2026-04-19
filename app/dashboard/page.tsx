@@ -14,6 +14,8 @@ import { GradientBorder } from "@/components/ui/gradient-border";
 import { CountUp } from "@/components/count-up";
 import { AppShell } from "@/components/container";
 import { useApp, useDailyPlan, useMasteryAndReadiness } from "@/lib/store";
+import { useEntitlements } from "@/lib/entitlements";
+import { UpgradeWall } from "@/components/upgrade-wall";
 import { EXAMS } from "@/lib/data/exams";
 import { useState } from "react";
 import { topInsight } from "@/lib/scoring";
@@ -33,6 +35,7 @@ import {
   GraduationCap,
   LifeBuoy,
   LineChart as LineChartIcon,
+  Lock,
   PlayCircle,
   Sparkles,
 } from "lucide-react";
@@ -50,7 +53,18 @@ function Inner() {
   const { profile, attempts, completedBlockIds, completedLessonIds, updateProfile } = useApp();
   const mr = useMasteryAndReadiness();
   const plan = useDailyPlan();
+  const ent = useEntitlements();
   const [examMenuOpen, setExamMenuOpen] = useState(false);
+  const [wallOpen, setWallOpen] = useState(false);
+  const [wallProps, setWallProps] = useState({
+    reason: "",
+    headline: "",
+    sub: "",
+  });
+  const openWall = (reason: string, headline: string, sub: string) => {
+    setWallProps({ reason, headline, sub });
+    setWallOpen(true);
+  };
 
   if (!profile || !mr || !plan) return null;
 
@@ -82,7 +96,15 @@ function Inner() {
   return (
     <>
       <AppNav />
+      <UpgradeWall
+        open={wallOpen}
+        onClose={() => setWallOpen(false)}
+        reason={wallProps.reason}
+        headline={wallProps.headline}
+        sub={wallProps.sub}
+      />
       <AppShell>
+        {!ent.hasPro && <ProBanner openWall={openWall} drillsLeft={ent.drillsLeftToday} />}
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
@@ -122,44 +144,65 @@ function Inner() {
                       <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 py-2 border-b border-border bg-slate-50">
                         Switch certification
                       </div>
-                      {EXAMS.map((e) => (
-                        <button
-                          key={e.id}
-                          onClick={() => {
-                            updateProfile({ examId: e.id });
-                            setExamMenuOpen(false);
-                          }}
-                          className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${
-                            e.id === profile.examId
-                              ? "bg-brand-50"
-                              : "hover:bg-muted/50"
-                          }`}
-                        >
-                          <div
-                            className="h-7 w-7 rounded-lg text-white flex items-center justify-center text-[10px] font-bold shrink-0"
-                            style={{
-                              background: `linear-gradient(135deg, ${e.accentFrom}, ${e.accentTo})`,
+                      {EXAMS.map((e) => {
+                        const isActive = e.id === profile.examId;
+                        const isLocked = !isActive && !ent.canSwitchExams;
+                        return (
+                          <button
+                            key={e.id}
+                            onClick={() => {
+                              if (isLocked) {
+                                setExamMenuOpen(false);
+                                openWall(
+                                  "Multi-Cert unlocks all exams",
+                                  "Switch between 3 certifications",
+                                  "Multi-Cert unlocks AZ-900, AWS Cloud Practitioner, and MS-900 with one purchase. Track progress across all three."
+                                );
+                                return;
+                              }
+                              updateProfile({ examId: e.id });
+                              setExamMenuOpen(false);
                             }}
+                            className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${
+                              isActive
+                                ? "bg-brand-50"
+                                : isLocked
+                                  ? "opacity-70 hover:bg-slate-50"
+                                  : "hover:bg-muted/50"
+                            }`}
                           >
-                            {e.id === "aws-ccp"
-                              ? "AWS"
-                              : e.id === "ms-900"
-                                ? "MS"
-                                : "AZ"}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate">
-                              {e.name}
+                            <div
+                              className="h-7 w-7 rounded-lg text-white flex items-center justify-center text-[10px] font-bold shrink-0"
+                              style={{
+                                background: `linear-gradient(135deg, ${e.accentFrom}, ${e.accentTo})`,
+                              }}
+                            >
+                              {e.id === "aws-ccp"
+                                ? "AWS"
+                                : e.id === "ms-900"
+                                  ? "MS"
+                                  : "AZ"}
                             </div>
-                            <div className="text-[11px] text-muted-foreground truncate">
-                              {e.fullTitle}
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium truncate">
+                                {e.name}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground truncate">
+                                {e.fullTitle}
+                              </div>
                             </div>
-                          </div>
-                          {e.id === profile.examId && (
-                            <CheckCircle2 className="h-4 w-4 text-brand-600 shrink-0" />
-                          )}
-                        </button>
-                      ))}
+                            {isActive && (
+                              <CheckCircle2 className="h-4 w-4 text-brand-600 shrink-0" />
+                            )}
+                            {isLocked && (
+                              <span className="chip bg-rose-50 border-rose-200 text-rose-700 text-[9px] px-1.5 py-0.5 shrink-0">
+                                <Lock className="h-2.5 w-2.5" />
+                                Multi
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </>
                 )}
@@ -551,4 +594,56 @@ function greeting() {
   if (h < 12) return "Morning";
   if (h < 18) return "Afternoon";
   return "Evening";
+}
+
+function ProBanner({
+  openWall,
+  drillsLeft,
+}: {
+  openWall: (reason: string, headline: string, sub: string) => void;
+  drillsLeft: number;
+}) {
+  return (
+    <div className="mb-5 rounded-2xl p-[1.5px] bg-gradient-to-br from-brand-500/60 via-violet2-500/60 to-cyan-500/60">
+      <div className="rounded-[calc(1rem-1.5px)] bg-white p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-500 to-violet2-600 text-white flex items-center justify-center shadow-pop shrink-0">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold">
+              You're on the free plan
+            </div>
+            <div className="text-xs text-muted-foreground mt-0.5">
+              {drillsLeft === 0
+                ? "No free drills left today. Upgrade for unlimited."
+                : `${drillsLeft} free drills left today · unlock unlimited with Pro`}
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <Link href="/redeem">
+            <Button variant="ghost" size="sm">
+              I have a key
+            </Button>
+          </Link>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() =>
+              openWall(
+                "Unlock the full pass plan",
+                "Study until you actually pass",
+                "Unlimited drills, all 19 lessons, Rescue Mode, cram sheets. $19 one-time, lifetime access."
+              )
+            }
+            className="group"
+          >
+            Upgrade
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
