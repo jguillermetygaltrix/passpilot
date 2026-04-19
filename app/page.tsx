@@ -954,7 +954,7 @@ function Pricing() {
           <Reveal delay={120}>
             <PricingCard
               name="Pro (1 cert)"
-              price="$19"
+              price="$19.99"
               cadence="one-time"
               description="Pick one certification and pass it. Lifetime access."
               cta="Get Pro"

@@ -92,7 +92,7 @@ export default function UpgradePage() {
                     </div>
                     <div className="text-right">
                       <div className="text-4xl font-semibold tracking-tight tabular-nums">
-                        $19
+                        $19.99
                       </div>
                       <div className="text-[11px] text-muted-foreground">
                         one-time
@@ -127,7 +127,7 @@ export default function UpgradePage() {
                       size="lg"
                       className="w-full group"
                     >
-                      Get Pro — $19
+                      Get Pro — $19.99
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </Button>
                   </a>

@@ -634,7 +634,7 @@ function ProBanner({
               openWall(
                 "Unlock the full pass plan",
                 "Study until you actually pass",
-                "Unlimited drills, all 19 lessons, Rescue Mode, cram sheets. $19 one-time, lifetime access."
+                "Unlimited drills, all 19 lessons, Rescue Mode, cram sheets. $19.99 one-time, lifetime access."
               )
             }
             className="group"

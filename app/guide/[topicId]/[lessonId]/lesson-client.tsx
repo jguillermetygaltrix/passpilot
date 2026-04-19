@@ -96,7 +96,7 @@ function Inner() {
           onClose={() => setWallOpen(false)}
           reason={`Lesson ${lesson.order} is a Pro lesson`}
           headline="Unlock every lesson in your exam"
-          sub="Free tier gets the first lesson per topic. Pro unlocks all lessons, deep review, cram sheets, and rescue mode. One-time $19."
+          sub="Free tier gets the first lesson per topic. Pro unlocks all lessons, deep review, cram sheets, and rescue mode. One-time $19.99."
         />
         <AppShell className="max-w-lg">
           <div className="mt-4">

@@ -183,7 +183,7 @@ function UpgradeTab() {
             </div>
           </div>
           <div className="text-3xl font-semibold tracking-tight tabular-nums">
-            $19
+            $19.99
           </div>
         </div>
         <ul className="space-y-2 mt-3 flex-1">
@@ -196,7 +196,7 @@ function UpgradeTab() {
         </ul>
         <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-5">
           <Button variant="primary" size="md" className="w-full group">
-            Get Pro — $19
+            Get Pro — $19.99
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Button>
         </a>

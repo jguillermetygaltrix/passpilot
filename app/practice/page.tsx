@@ -139,7 +139,7 @@ function Inner() {
           onClose={() => setShowWall(false)}
           reason="Daily drill limit reached"
           headline="You've used your 3 free drills today"
-          sub="Upgrade to Pro for unlimited drills, full lessons, and Rescue Mode. One-time $19, lifetime access."
+          sub="Upgrade to Pro for unlimited drills, full lessons, and Rescue Mode. One-time $19.99, lifetime access."
         />
 
         <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
