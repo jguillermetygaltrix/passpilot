@@ -9,6 +9,7 @@ import { ProgressBar } from "./ui/progress";
 import { useApp } from "@/lib/store";
 import { CheckCircle2, XCircle, ArrowRight, Flag } from "lucide-react";
 import { TOPIC_MAP } from "@/lib/data/topics";
+import { WhyWrongExplainer } from "./why-wrong-explainer";
 
 interface Props {
   questions: Question[];
@@ -296,6 +297,17 @@ export function QuestionRunner({
             <p className="text-muted-foreground leading-relaxed">
               {q.explanation}
             </p>
+            {selected !== null && selected !== q.correctIndex && (
+              <WhyWrongExplainer
+                examId={q.examId}
+                topicName={TOPIC_MAP[q.topicId]?.name ?? q.topicId}
+                question={q.prompt}
+                choices={q.choices}
+                correctIndex={q.correctIndex}
+                userSelectedIndex={selected}
+                officialExplanation={q.explanation}
+              />
+            )}
           </div>
         )}
       </div>

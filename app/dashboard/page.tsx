@@ -9,6 +9,8 @@ import { RiskBadge } from "@/components/risk-badge";
 import { StatCard } from "@/components/stat-card";
 import { TopicMasteryList } from "@/components/topic-mastery-list";
 import { TrendChart } from "@/components/trend-chart";
+import { StreakBadge } from "@/components/streak-badge";
+import { ShareableReadiness } from "@/components/shareable-readiness";
 import { Button } from "@/components/ui/button";
 import { GradientBorder } from "@/components/ui/gradient-border";
 import { CountUp } from "@/components/count-up";
@@ -402,6 +404,18 @@ function Inner() {
             </div>
             <TrendChart data={readiness.trend} />
           </div>
+
+          <StreakBadge variant="full" />
+
+          {profile && (
+            <ShareableReadiness
+              examId={profile.examId}
+              examName={getExamMeta(profile.examId)?.name ?? profile.examId}
+              readinessScore={readiness.score}
+              daysToExam={readiness.daysLeft}
+              risk={readiness.risk}
+            />
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5 mt-5">
