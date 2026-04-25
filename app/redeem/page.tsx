@@ -169,18 +169,24 @@ function Inner() {
             </Link>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-dashed border-border bg-slate-50/60 p-5">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">
-              <Sparkles className="h-3.5 w-3.5" />
-              Demo keys (for testing)
+          {/* 🛡️ LEGION HARDENING (DEC-020 follow-up): demo-keys panel is dev-only.
+              Defense in depth — DEMO_KEYS const is also NODE_ENV-gated in lib/licensing.ts
+              so even if this UI gate fails, the values would be undefined.
+              Webpack tree-shakes the entire branch in production builds. */}
+          {process.env.NODE_ENV !== "production" && (
+            <div className="mt-10 rounded-2xl border border-dashed border-border bg-slate-50/60 p-5">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">
+                <Sparkles className="h-3.5 w-3.5" />
+                Demo keys (for testing)
+              </div>
+              <div className="space-y-1.5 text-xs font-mono">
+                <DemoKey label="Pro · AZ-900" value={DEMO_KEYS.proAz900 ?? ""} onUse={setKey} />
+                <DemoKey label="Pro · AWS CCP" value={DEMO_KEYS.proAwsCcp ?? ""} onUse={setKey} />
+                <DemoKey label="Pro · MS-900" value={DEMO_KEYS.proMs900 ?? ""} onUse={setKey} />
+                <DemoKey label="Multi-Cert" value={DEMO_KEYS.multi ?? ""} onUse={setKey} />
+              </div>
             </div>
-            <div className="space-y-1.5 text-xs font-mono">
-              <DemoKey label="Pro · AZ-900" value={DEMO_KEYS.proAz900} onUse={setKey} />
-              <DemoKey label="Pro · AWS CCP" value={DEMO_KEYS.proAwsCcp} onUse={setKey} />
-              <DemoKey label="Pro · MS-900" value={DEMO_KEYS.proMs900} onUse={setKey} />
-              <DemoKey label="Multi-Cert" value={DEMO_KEYS.multi} onUse={setKey} />
-            </div>
-          </div>
+          )}
         </AppShell>
       </div>
     </>

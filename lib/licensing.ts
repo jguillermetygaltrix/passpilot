@@ -132,13 +132,24 @@ export function describeLicense(license: License): string {
 
 /**
  * Demo keys for local testing. These bypass the network.
+ *
+ * 🛡️  LEGION HARDENING (2026-04-25, follow-up to DEC-017):
+ * Gated behind NODE_ENV so production bundles don't leak the literal demo
+ * key strings as info disclosure. The exploit was already closed (TEST_KEYS
+ * regex array is empty in prod, so even if a user typed a demo key it
+ * wouldn't authenticate), but exposing the strings in source-mapped
+ * production bundles was a code smell. Now production = empty object.
  */
-export const DEMO_KEYS = {
-  proAz900: "PASSPILOT-PRO-AZ900-DEMO",
-  proAwsCcp: "PASSPILOT-PRO-AWSCCP-DEMO",
-  proMs900: "PASSPILOT-PRO-MS900-DEMO",
-  multi: "PASSPILOT-MULTI-DEMO",
-};
+type DemoKeyMap = Partial<Record<"proAz900" | "proAwsCcp" | "proMs900" | "multi", string>>;
+export const DEMO_KEYS: DemoKeyMap =
+  process.env.NODE_ENV !== "production"
+    ? {
+        proAz900: "PASSPILOT-PRO-AZ900-DEMO",
+        proAwsCcp: "PASSPILOT-PRO-AWSCCP-DEMO",
+        proMs900: "PASSPILOT-PRO-MS900-DEMO",
+        multi: "PASSPILOT-MULTI-DEMO",
+      }
+    : {};
 
 /**
  * Live Lemon Squeezy checkout URLs.

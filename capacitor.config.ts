@@ -22,7 +22,7 @@ const config: CapacitorConfig = {
   appName: "PassPilot",
   // Next.js static export writes to `out/`
   webDir: "out",
-  bundledWebRuntime: false,
+  // (bundledWebRuntime removed — deprecated in Capacitor 5+, default behavior is now correct)
 
   // Dark splash to match the app's aesthetic
   backgroundColor: "#0B0D13",

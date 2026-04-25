@@ -1,9 +1,9 @@
-/**
- * Native in-app purchase bridge — Apple StoreKit / Google Play Billing.
+﻿/**
+ * Native in-app purchase bridge â€” Apple StoreKit / Google Play Billing.
  *
  * Feature-gated: if RevenueCat (or any other IAP SDK) is not wired up,
  * `isNativeIAPAvailable()` returns false and the UI shows a
- * "Purchase options coming soon — use restore if you already own it"
+ * "Purchase options coming soon â€” use restore if you already own it"
  * placeholder. This keeps the app App Store-compliant even before IAP
  * is fully set up.
  *
@@ -36,7 +36,7 @@ export interface NativeProduct {
   id: NativeProductId;
   title: string;
   description: string;
-  priceDisplay: string; // "$4.99" — filled from StoreKit at runtime
+  priceDisplay: string; // "$4.99" â€” filled from StoreKit at runtime
   period?: "weekly" | "monthly" | "annual" | "lifetime";
   features: string[];
 }
@@ -49,7 +49,7 @@ export interface NativeEntitlement {
   willRenew: boolean;
 }
 
-// Default product catalog (descriptions only — prices come from the store)
+// Default product catalog (descriptions only â€” prices come from the store)
 export const NATIVE_CATALOG: NativeProduct[] = [
   {
     id: "passpilot.weekly",
@@ -100,7 +100,7 @@ export const NATIVE_CATALOG: NativeProduct[] = [
       "All current + future certifications",
       "No subscription, ever",
       "Priority support",
-      "Founder tier — supports indie dev",
+      "Founder tier â€” supports indie dev",
     ],
   },
 ];
@@ -127,7 +127,7 @@ export function isNativeIAPAvailable(): boolean {
 
 /**
  * Initialize RevenueCat on app launch (iOS / Android only).
- * Safe to call on every app launch — idempotent.
+ * Safe to call on every app launch â€” idempotent.
  *
  * Requires `@revenuecat/purchases-capacitor` installed (optional peer dep).
  * If not installed, silently returns.
@@ -135,10 +135,9 @@ export function isNativeIAPAvailable(): boolean {
 export async function initNativeIAP(): Promise<void> {
   if (!isNativeIAPAvailable()) return;
   try {
-    const mod = await import(
-      // @ts-expect-error — optional peer dep, may not be installed
-      "@revenuecat/purchases-capacitor"
-    );
+    // @revenuecat/purchases-capacitor is now a direct dep (installed 2026-04-25);
+    // dynamic import preserved so web bundles tree-shake the native code paths.
+    const mod = await import("@revenuecat/purchases-capacitor");
     const Purchases = mod.Purchases ?? mod.default;
     const iosKey = process.env.NEXT_PUBLIC_REVENUECAT_IOS_KEY;
     const androidKey = process.env.NEXT_PUBLIC_REVENUECAT_ANDROID_KEY;
@@ -152,7 +151,7 @@ export async function initNativeIAP(): Promise<void> {
     if (!apiKey) return;
     await Purchases.configure({ apiKey });
   } catch {
-    // SDK not installed or config error — app still works, just without IAP
+    // SDK not installed or config error â€” app still works, just without IAP
   }
 }
 
@@ -163,10 +162,7 @@ export async function initNativeIAP(): Promise<void> {
 export async function getNativeProducts(): Promise<NativeProduct[]> {
   if (!isNativeIAPAvailable()) return NATIVE_CATALOG;
   try {
-    const mod = await import(
-      // @ts-expect-error — optional peer dep
-      "@revenuecat/purchases-capacitor"
-    );
+    const mod = await import("@revenuecat/purchases-capacitor");
     const Purchases = mod.Purchases ?? mod.default;
     const offerings = await Purchases.getOfferings();
     const current = offerings?.current;
@@ -198,10 +194,7 @@ export async function purchaseNative(
 ): Promise<NativeEntitlement | null> {
   if (!isNativeIAPAvailable()) return null;
   try {
-    const mod = await import(
-      // @ts-expect-error — optional peer dep
-      "@revenuecat/purchases-capacitor"
-    );
+    const mod = await import("@revenuecat/purchases-capacitor");
     const Purchases = mod.Purchases ?? mod.default;
     const offerings = await Purchases.getOfferings();
     const pkg = offerings?.current?.availablePackages?.find(
@@ -213,22 +206,19 @@ export async function purchaseNative(
     const result = await Purchases.purchasePackage({ aPackage: pkg });
     return parseCustomerInfo(result?.customerInfo);
   } catch (err) {
-    // User cancelled or error — return null, caller shows toast
+    // User cancelled or error â€” return null, caller shows toast
     return null;
   }
 }
 
 /**
  * Restore purchases on a new device. Also useful on app launch.
- * Safe to call anytime — idempotent.
+ * Safe to call anytime â€” idempotent.
  */
 export async function restoreNativePurchases(): Promise<NativeEntitlement | null> {
   if (!isNativeIAPAvailable()) return null;
   try {
-    const mod = await import(
-      // @ts-expect-error — optional peer dep
-      "@revenuecat/purchases-capacitor"
-    );
+    const mod = await import("@revenuecat/purchases-capacitor");
     const Purchases = mod.Purchases ?? mod.default;
     const result = await Purchases.restorePurchases();
     return parseCustomerInfo(result?.customerInfo);
@@ -238,10 +228,10 @@ export async function restoreNativePurchases(): Promise<NativeEntitlement | null
 }
 
 /**
- * Map RevenueCat customerInfo → our NativeEntitlement shape.
+ * Map RevenueCat customerInfo â†’ our NativeEntitlement shape.
  *
  * Expects the RevenueCat entitlement identifier to be "pro" (or "multi" for
- * the lifetime/annual tier — configure this in the RC dashboard).
+ * the lifetime/annual tier â€” configure this in the RC dashboard).
  */
 function parseCustomerInfo(info: unknown): NativeEntitlement | null {
   if (!info) return null;
