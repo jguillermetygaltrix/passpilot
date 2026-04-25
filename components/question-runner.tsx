@@ -10,6 +10,7 @@ import { useApp } from "@/lib/store";
 import { CheckCircle2, XCircle, ArrowRight, Flag } from "lucide-react";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { WhyWrongExplainer } from "./why-wrong-explainer";
+import { track } from "@/lib/usage";
 
 interface Props {
   questions: Question[];
@@ -40,10 +41,24 @@ export function QuestionRunner({
   const [completedAttemptId, setCompletedAttemptId] = useState<string | null>(null);
   const [finalScore, setFinalScore] = useState<number | null>(null);
 
+  const { profile } = useApp();
+  const examId = profile?.examId;
+
+  // Track drill start on mount (once)
+  useEffect(() => {
+    track.drillStarted(examId, kind);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     setStartedAt(Date.now());
     setSelected(null);
     setRevealed(false);
+    // Track question VIEW when new question renders
+    if (questions[index]?.id) {
+      track.questionViewed(questions[index].id, examId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
   const q = questions[index];
@@ -65,6 +80,8 @@ export function QuestionRunner({
       correct,
       timeMs: Date.now() - startedAt,
     };
+    // Track answer submission (usage tracking)
+    track.questionAnswered(q.id, correct, examId);
     setAnswers((a) => [...a, record]);
     setRevealed(true);
   };
@@ -77,6 +94,20 @@ export function QuestionRunner({
       const attempt = recordAttempt(kind, finalAnswers, topicId);
       setCompletedAttemptId(attempt.id);
       setFinalScore(attempt.scorePct);
+      // Track drill completion (usage tracking)
+      const minutes = Math.round(
+        finalAnswers.reduce((s, a) => s + a.timeMs, 0) / 60000
+      );
+      const correctCount = finalAnswers.filter((a) => a.correct).length;
+      track.drillCompleted(examId || "unknown", {
+        questionCount: finalAnswers.length,
+        correctCount,
+        minutes,
+        kind,
+      });
+      if (kind === "diagnostic") {
+        track.diagnosticCompleted(examId);
+      }
       onFinish?.(attempt.id, attempt.scorePct);
     }
   };

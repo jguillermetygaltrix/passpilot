@@ -10,16 +10,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@capacitor/core": "^8.3.1",
+    "@revenuecat/purchases-capacitor": "^13.0.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.3.8",
+    "lucide-react": "^0.408.0",
     "next": "14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zustand": "^4.5.4",
-    "clsx": "^2.1.1",
+    "recharts": "^2.12.7",
     "tailwind-merge": "^2.4.0",
-    "class-variance-authority": "^0.7.0",
-    "lucide-react": "^0.408.0",
-    "framer-motion": "^11.3.8",
-    "recharts": "^2.12.7"
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",

@@ -7,6 +7,8 @@ import { AppShell } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { GradientBorder } from "@/components/ui/gradient-border";
 import { Reveal } from "@/components/reveal";
+import { RefundConsent } from "@/components/refund-consent";
+import { UsageBadge } from "@/components/usage-badge";
 import { useEntitlements } from "@/lib/entitlements";
 import { CHECKOUT_URLS } from "@/lib/licensing";
 import { useApp } from "@/lib/store";
@@ -339,6 +341,8 @@ function WebPaywall() {
   const { profile } = useApp();
   const ent = useEntitlements();
   const examMeta = profile ? getExamMeta(profile.examId) : null;
+  const [proConsented, setProConsented] = useState(false);
+  const [multiConsented, setMultiConsented] = useState(false);
 
   const proCheckoutUrl =
     profile?.examId === "aws-ccp"
@@ -346,6 +350,11 @@ function WebPaywall() {
       : profile?.examId === "ms-900"
         ? CHECKOUT_URLS.proMs900
         : CHECKOUT_URLS.proAz900;
+
+  const proOfferId =
+    profile?.examId === "aws-ccp" ? "pro-aws-ccp"
+      : profile?.examId === "ms-900" ? "pro-ms900"
+      : "pro-az900";
 
   if (ent.hasPro) {
     return <AlreadyUnlocked tier={ent.hasMulti ? "multi" : "pro"} />;
@@ -366,6 +375,9 @@ function WebPaywall() {
             Pay once, keep lifetime access. Pick the cert you&apos;re studying — or
             grab all three for the cost of a takeout dinner.
           </p>
+          <div className="mt-4">
+            <UsageBadge />
+          </div>
         </div>
       </Reveal>
 
@@ -403,12 +415,32 @@ function WebPaywall() {
                 "Lifetime updates to this exam",
               ]}
             />
-            <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-6">
-              <Button variant="primary" size="lg" className="w-full group">
+            <div className="mt-5">
+              <RefundConsent
+                offerId={proOfferId}
+                priceCents={1999}
+                currency="USD"
+                onConsent={setProConsented}
+              />
+            </div>
+            {proConsented ? (
+              <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-4">
+                <Button variant="primary" size="lg" className="w-full group">
+                  Get Pro — $19.99
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Button>
+              </a>
+            ) : (
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full mt-4 opacity-50 cursor-not-allowed"
+                disabled
+                title="Check the consent box above to continue"
+              >
                 Get Pro — $19.99
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Button>
-            </a>
+            )}
           </div>
 
           <GradientBorder
@@ -450,12 +482,32 @@ function WebPaywall() {
                 "Priority on requested certifications",
               ]}
             />
-            <a href={CHECKOUT_URLS.multi} target="_blank" rel="noopener" className="mt-6">
-              <Button variant="primary" size="lg" className="w-full group">
+            <div className="mt-5">
+              <RefundConsent
+                offerId="multi-cert"
+                priceCents={3900}
+                currency="USD"
+                onConsent={setMultiConsented}
+              />
+            </div>
+            {multiConsented ? (
+              <a href={CHECKOUT_URLS.multi} target="_blank" rel="noopener" className="mt-4">
+                <Button variant="primary" size="lg" className="w-full group">
+                  Get Multi-Cert — $39
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Button>
+              </a>
+            ) : (
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full mt-4 opacity-50 cursor-not-allowed"
+                disabled
+                title="Check the consent box above to continue"
+              >
                 Get Multi-Cert — $39
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Button>
-            </a>
+            )}
           </GradientBorder>
         </div>
       </Reveal>

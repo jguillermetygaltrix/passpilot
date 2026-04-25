@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { CommandPalette } from "@/components/command-palette";
 import { NativeBootstrap } from "@/components/native-bootstrap";
+import { DeviceRegistry } from "@/components/device-registry";
 import "./globals.css";
 
 const inter = Inter({
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen antialiased font-sans">
         <NativeBootstrap />
+        <DeviceRegistry />
         {children}
         <CommandPalette />
       </body>

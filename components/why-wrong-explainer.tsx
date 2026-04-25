@@ -5,6 +5,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { explainWrongAnswer, isAIAvailable } from "@/lib/ai";
 import type { ExamId } from "@/lib/types";
 import { getExamMeta } from "@/lib/data/exams";
+import { track } from "@/lib/usage";
 
 interface Props {
   examId: ExamId;
@@ -32,6 +33,8 @@ export function WhyWrongExplainer(props: Props) {
   const handleClick = async () => {
     if (state !== "idle") return;
     setState("loading");
+    // Track AI explanation request — costs us Gemini tokens, part of refund policy
+    track.aiExplanationRequested(props.question.slice(0, 60), props.examId);
     try {
       const examMeta = getExamMeta(props.examId);
       const text = await explainWrongAnswer({

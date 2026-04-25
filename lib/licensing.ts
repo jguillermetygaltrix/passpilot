@@ -27,34 +27,42 @@ const LS_PRODUCT_MAP: Record<
 };
 
 // ── Demo keys (no network call) ─────────────────────────────────────
+// 🛡️  LEGION HARDENING (2026-04-24, CRITICAL):
+// Demo keys are now gated to non-production builds only. Previously,
+// shipping these in production source meant anyone reading the public
+// repo got free Pro tier — a buy-pass exploit with zero attacker cost.
+// In Next.js, `process.env.NODE_ENV` is replaced at build time, so
+// production bundles will carry an empty array regardless of source.
 type TestKey = {
   pattern: RegExp;
   tier: "pro" | "multi";
   exams: ExamId[];
 };
 
-const TEST_KEYS: TestKey[] = [
-  {
-    pattern: /^PASSPILOT-PRO-AZ900-[A-Z0-9]+$/i,
-    tier: "pro",
-    exams: ["az-900"],
-  },
-  {
-    pattern: /^PASSPILOT-PRO-AWSCCP-[A-Z0-9]+$/i,
-    tier: "pro",
-    exams: ["aws-ccp"],
-  },
-  {
-    pattern: /^PASSPILOT-PRO-MS900-[A-Z0-9]+$/i,
-    tier: "pro",
-    exams: ["ms-900"],
-  },
-  {
-    pattern: /^PASSPILOT-MULTI-[A-Z0-9]+$/i,
-    tier: "multi",
-    exams: ["az-900", "aws-ccp", "ms-900"],
-  },
-];
+const TEST_KEYS: TestKey[] = process.env.NODE_ENV !== "production"
+  ? [
+      {
+        pattern: /^PASSPILOT-PRO-AZ900-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["az-900"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-AWSCCP-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["aws-ccp"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-MS900-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["ms-900"],
+      },
+      {
+        pattern: /^PASSPILOT-MULTI-[A-Z0-9]+$/i,
+        tier: "multi",
+        exams: ["az-900", "aws-ccp", "ms-900"],
+      },
+    ]
+  : [];
 
 /**
  * Validate a license key. Tries demo patterns first (instant), then falls

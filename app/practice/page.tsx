@@ -18,6 +18,10 @@ import { TOPIC_MAP, getTopicsForExam } from "@/lib/data/topics";
 import { useApp } from "@/lib/store";
 import { useEntitlements, FREE_DAILY_DRILL_LIMIT } from "@/lib/entitlements";
 import { UpgradeWall } from "@/components/upgrade-wall";
+import { useUnlockStatus, useUnlocked } from "@/lib/progressive-unlock";
+import { UnlockBanner } from "@/components/unlock-banner";
+import { useDeviceBinding } from "@/lib/device-binding";
+import { DeviceLimitWall } from "@/components/device-limit-wall";
 import {
   AlertTriangle,
   Dumbbell,
@@ -48,8 +52,19 @@ function Inner() {
   const router = useRouter();
   const { attempts, profile, incrementDrill } = useApp();
   const ent = useEntitlements();
+  // Layer 5: enforce device binding for Pro users
+  const { limited: deviceLimited } = useDeviceBinding(ent.hasPro);
   const examId = profile?.examId ?? "az-900";
-  const examQuestions = getQuestionsForExam(examId);
+  const allExamQuestions = getQuestionsForExam(examId);
+  const unlockStatus = useUnlockStatus();
+  // Progressive unlock: during the first 7 days of a Pro license, only show
+  // the unlocked subset of questions. Free tier sees everything (daily drill
+  // cap handles them separately).
+  const examQuestions = useUnlocked(allExamQuestions);
+  const unlockedIds = useMemo(
+    () => new Set(examQuestions.map((q) => q.id)),
+    [examQuestions]
+  );
   const examTopics = getTopicsForExam(examId);
   const initialTopic = params.get("topic") || "";
   const initialMode: Mode =
@@ -73,7 +88,8 @@ function Inner() {
 
   const selectedQuestions = useMemo(() => {
     if (mode === "topic" && topicId) {
-      const pool = getQuestionsByTopic(topicId);
+      // Topic drills: intersect topic pool with unlocked subset
+      const pool = getQuestionsByTopic(topicId).filter((q) => unlockedIds.has(q.id));
       return sampleQuestions(
         pool.map((q) => q.id),
         Math.min(questionCount, pool.length)
@@ -81,6 +97,7 @@ function Inner() {
     }
     if (mode === "incorrect-only") {
       if (!incorrectIds.length) return [];
+      // Review drills: always allow, user already saw these
       return incorrectIds
         .map((id) => QUESTION_MAP[id])
         .filter(Boolean)
@@ -90,7 +107,7 @@ function Inner() {
       examQuestions.map((q) => q.id),
       Math.min(questionCount, examQuestions.length)
     );
-  }, [mode, topicId, questionCount, incorrectIds, examQuestions]);
+  }, [mode, topicId, questionCount, incorrectIds, examQuestions, unlockedIds]);
 
   const handleStart = () => {
     if (!ent.canStartDrill) {
@@ -100,6 +117,11 @@ function Inner() {
     incrementDrill();
     setStarted(true);
   };
+
+  // Layer 5: block Pro users who've exceeded device limit
+  if (deviceLimited) {
+    return <DeviceLimitWall />;
+  }
 
   if (started) {
     return (
@@ -159,6 +181,10 @@ function Inner() {
             onUpgrade={() => setShowWall(true)}
           />
         </div>
+
+        {unlockStatus.isActive && (
+          <UnlockBanner totalItems={allExamQuestions.length} className="mb-6" />
+        )}
 
         <div className="grid md:grid-cols-3 gap-4 mb-6">
           <ModeCard
