@@ -245,6 +245,27 @@ function ExamStep({
       subtitle: "Microsoft · 60 min · 70% to pass · $99 · NEW",
       gradient: "from-purple-500 to-pink-500",
     },
+    {
+      id: "sec-plus",
+      badge: "SEC",
+      title: "Security+ · SY0-701",
+      subtitle: "CompTIA · 90 min · 750/900 to pass · $392",
+      gradient: "from-red-500 to-orange-500",
+    },
+    {
+      id: "aws-aip",
+      badge: "AIP",
+      title: "AIF-C01 · AWS AI Practitioner",
+      subtitle: "Amazon · 90 min · 65 questions · $100 · NEW",
+      gradient: "from-amber-500 to-orange-400",
+    },
+    {
+      id: "gcp-cdl",
+      badge: "CDL",
+      title: "Cloud Digital Leader",
+      subtitle: "Google Cloud · 90 min · 70% to pass · $99",
+      gradient: "from-blue-500 to-emerald-500",
+    },
   ];
 
   return (

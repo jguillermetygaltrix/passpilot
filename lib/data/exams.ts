@@ -3,6 +3,9 @@ import { AZ900_TOPICS, getTopicsForExam } from "./topics";
 import { AWS_CCP_TOPICS } from "./exams/aws-ccp";
 import { MS900_TOPICS } from "./exams/ms-900";
 import { AI900_TOPICS } from "./exams/ai-900";
+import { SEC_PLUS_TOPICS } from "./exams/sec-plus";
+import { AWS_AIP_TOPICS } from "./exams/aws-aip";
+import { GCP_CDL_TOPICS } from "./exams/gcp-cdl";
 
 export interface ExamMeta extends Exam {
   accentFrom: string;
@@ -89,6 +92,63 @@ export const EXAMS: ExamMeta[] = [
     accentTo: "#ec4899",
     durationMin: 60,
     questionCountRange: [40, 60],
+    priceUSD: 99,
+    available: true,
+  },
+  {
+    id: "sec-plus",
+    name: "Security+",
+    shortCode: "SY0-701",
+    vendor: "CompTIA",
+    fullTitle: "CompTIA Security+ (SY0-701)",
+    tagline: "The biggest entry-level security certification",
+    passScore: 75,
+    totalDomains: SEC_PLUS_TOPICS.length,
+    description:
+      "The most-required entry-level cybersecurity cert — DoD 8570 mandates it, and it's the baseline for nearly every SOC analyst, security admin, and IT security role. Vendor-neutral and broadly portable.",
+    domains: SEC_PLUS_TOPICS,
+    accentFrom: "#dc2626",
+    accentTo: "#f97316",
+    durationMin: 90,
+    questionCountRange: [80, 90],
+    priceUSD: 392,
+    available: true,
+  },
+  {
+    id: "aws-aip",
+    name: "AWS AIP",
+    shortCode: "AIF-C01",
+    vendor: "Amazon",
+    fullTitle: "AWS Certified AI Practitioner",
+    tagline: "AWS's new entry-level AI certification",
+    passScore: 70,
+    totalDomains: AWS_AIP_TOPICS.length,
+    description:
+      "Launched late 2024 — AWS's entry-level AI cert covering foundation models, Bedrock, Amazon Q, RAG, and responsible AI. Perfect pairing with AI-900 for a multi-cloud AI fundamentals story.",
+    domains: AWS_AIP_TOPICS,
+    accentFrom: "#f59e0b",
+    accentTo: "#fb923c",
+    durationMin: 90,
+    questionCountRange: [65, 65],
+    priceUSD: 100,
+    available: true,
+  },
+  {
+    id: "gcp-cdl",
+    name: "GCP CDL",
+    shortCode: "CDL",
+    vendor: "Google",
+    fullTitle: "Google Cloud Digital Leader",
+    tagline: "Entry-level Google Cloud certification",
+    passScore: 70,
+    totalDomains: GCP_CDL_TOPICS.length,
+    description:
+      "Google's foundational cloud cert — covers BigQuery, Vertex AI, GKE, Cloud Run, Anthos, and BeyondCorp Zero Trust. Completes the all-three-clouds story for the Multi tier.",
+    domains: GCP_CDL_TOPICS,
+    accentFrom: "#4285f4",
+    accentTo: "#34a853",
+    durationMin: 90,
+    questionCountRange: [50, 60],
     priceUSD: 99,
     available: true,
   },

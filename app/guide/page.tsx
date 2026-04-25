@@ -400,6 +400,30 @@ function examQuickFacts(
       { label: "ML metric pairs trip people up", body: "Precision vs recall, MAE vs RMSE — know which to optimize for which scenario." },
     ];
   }
+  if (examId === "sec-plus") {
+    return [
+      { label: "CIA triad is everywhere", body: "Confidentiality, Integrity, Availability — every security control protects one. Most-tested single concept on the exam." },
+      { label: "Phishing family is non-negotiable", body: "Phishing/vishing/smishing/pharming/whaling/BEC — multiple variants on every exam." },
+      { label: "Operations is the biggest domain (28%)", body: "SIEM, EDR, MFA factors, federation (SAML/OAuth/OIDC), incident response phases (PICERL), order of volatility for forensics." },
+      { label: "Risk math is testable", body: "ALE = SLE × ARO. Know the formula and how to apply it to numeric scenarios." },
+    ];
+  }
+  if (examId === "aws-aip") {
+    return [
+      { label: "Bedrock + Amazon Q are the headliners", body: "Bedrock = single API for many FMs (Claude, Llama, Titan). Q = AWS's branded assistants (Business, Developer, QuickSight, Connect)." },
+      { label: "RAG and vector stores show up everywhere", body: "Bedrock Knowledge Bases automate RAG. Vector stores: OpenSearch + k-NN, Aurora pgvector, Neptune, Kendra." },
+      { label: "Service-to-task map", body: "Rekognition (image), Comprehend (text), Textract (forms), Polly (TTS), Transcribe (STT), Personalize (recs)." },
+      { label: "Customer data ≠ training data on Bedrock", body: "Frequently tested. Bedrock prompts and outputs are not used to train base FMs." },
+    ];
+  }
+  if (examId === "gcp-cdl") {
+    return [
+      { label: "Database picker is heavily tested", body: "Cloud SQL (regional RDBMS) vs Spanner (global SQL) vs Firestore (doc NoSQL) vs Bigtable (wide-column NoSQL) vs BigQuery (analytics)." },
+      { label: "Compute ladder", body: "Compute Engine → GKE → Cloud Run → App Engine → Cloud Functions. Pick by abstraction level." },
+      { label: "Global Load Balancer is GCP's signature", body: "Single anycast IP that routes to the nearest healthy backend worldwide. Most clouds have regional LBs." },
+      { label: "Resource hierarchy + IAM", body: "Org → Folders → Projects → Resources. Predefined roles are the recommended default; basic roles too broad." },
+    ];
+  }
   return [
     { label: "Pure concepts", body: "No hands-on skills are tested. You don't need an Azure account to pass." },
     { label: "Scenario matching", body: "Most questions describe a need and ask which service fits. Pattern recognition wins." },

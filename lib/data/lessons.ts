@@ -2,6 +2,9 @@ import type { ExamId, Lesson } from "../types";
 import { AWS_CCP_LESSONS } from "./exams/aws-ccp";
 import { MS900_LESSONS } from "./exams/ms-900";
 import { AI900_LESSONS } from "./exams/ai-900";
+import { SEC_PLUS_LESSONS } from "./exams/sec-plus";
+import { AWS_AIP_LESSONS } from "./exams/aws-aip";
+import { GCP_CDL_LESSONS } from "./exams/gcp-cdl";
 import { TOPIC_MAP } from "./topics";
 
 export const AZ900_LESSONS: Lesson[] = [
@@ -1145,6 +1148,9 @@ export const ALL_LESSONS: Lesson[] = [
   ...AWS_CCP_LESSONS,
   ...MS900_LESSONS,
   ...AI900_LESSONS,
+  ...SEC_PLUS_LESSONS,
+  ...AWS_AIP_LESSONS,
+  ...GCP_CDL_LESSONS,
 ];
 
 export const LESSONS_BY_TOPIC: Record<string, Lesson[]> = ALL_LESSONS.reduce(

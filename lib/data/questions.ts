@@ -2,6 +2,9 @@ import type { ExamId, Question } from "../types";
 import { AWS_CCP_DIAGNOSTIC, AWS_CCP_QUESTIONS } from "./exams/aws-ccp";
 import { MS900_DIAGNOSTIC, MS900_QUESTIONS } from "./exams/ms-900";
 import { AI900_DIAGNOSTIC, AI900_QUESTIONS } from "./exams/ai-900";
+import { SEC_PLUS_DIAGNOSTIC, SEC_PLUS_QUESTIONS } from "./exams/sec-plus";
+import { AWS_AIP_DIAGNOSTIC, AWS_AIP_QUESTIONS } from "./exams/aws-aip";
+import { GCP_CDL_DIAGNOSTIC, GCP_CDL_QUESTIONS } from "./exams/gcp-cdl";
 
 export const AZ900_QUESTIONS: Question[] = [
   // ── Cloud Concepts ──────────────────────────────────────────────
@@ -856,6 +859,9 @@ export const ALL_QUESTIONS: Question[] = [
   ...AWS_CCP_QUESTIONS,
   ...MS900_QUESTIONS,
   ...AI900_QUESTIONS,
+  ...SEC_PLUS_QUESTIONS,
+  ...AWS_AIP_QUESTIONS,
+  ...GCP_CDL_QUESTIONS,
 ];
 
 export const QUESTION_MAP: Record<string, Question> = ALL_QUESTIONS.reduce(
@@ -868,6 +874,9 @@ export const DIAGNOSTIC_SETS: Record<ExamId, string[]> = {
   "aws-ccp": AWS_CCP_DIAGNOSTIC,
   "ms-900": MS900_DIAGNOSTIC,
   "ai-900": AI900_DIAGNOSTIC,
+  "sec-plus": SEC_PLUS_DIAGNOSTIC,
+  "aws-aip": AWS_AIP_DIAGNOSTIC,
+  "gcp-cdl": GCP_CDL_DIAGNOSTIC,
 };
 
 // Back-compat for older imports

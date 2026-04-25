@@ -2,6 +2,9 @@ import type { ExamId, Topic } from "../types";
 import { AWS_CCP_TOPICS } from "./exams/aws-ccp";
 import { MS900_TOPICS } from "./exams/ms-900";
 import { AI900_TOPICS } from "./exams/ai-900";
+import { SEC_PLUS_TOPICS } from "./exams/sec-plus";
+import { AWS_AIP_TOPICS } from "./exams/aws-aip";
+import { GCP_CDL_TOPICS } from "./exams/gcp-cdl";
 
 export const AZ900_TOPICS: Topic[] = [
   {
@@ -868,6 +871,9 @@ export const ALL_TOPICS: Topic[] = [
   ...AWS_CCP_TOPICS,
   ...MS900_TOPICS,
   ...AI900_TOPICS,
+  ...SEC_PLUS_TOPICS,
+  ...AWS_AIP_TOPICS,
+  ...GCP_CDL_TOPICS,
 ];
 
 export const TOPIC_MAP: Record<string, Topic> = ALL_TOPICS.reduce(
