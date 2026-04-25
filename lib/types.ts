@@ -1,4 +1,4 @@
-export type ExamId = "az-900" | "aws-ccp" | "ms-900";
+export type ExamId = "az-900" | "aws-ccp" | "ms-900" | "ai-900";
 
 export type LicenseTier = "free" | "pro" | "multi";
 

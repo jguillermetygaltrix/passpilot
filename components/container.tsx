@@ -13,3 +13,5 @@ export function AppShell({
     </div>
   );
 }
+
+export { AppShell as Container };

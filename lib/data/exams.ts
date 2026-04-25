@@ -2,6 +2,7 @@ import type { Exam, ExamId } from "../types";
 import { AZ900_TOPICS, getTopicsForExam } from "./topics";
 import { AWS_CCP_TOPICS } from "./exams/aws-ccp";
 import { MS900_TOPICS } from "./exams/ms-900";
+import { AI900_TOPICS } from "./exams/ai-900";
 
 export interface ExamMeta extends Exam {
   accentFrom: string;
@@ -67,6 +68,25 @@ export const EXAMS: ExamMeta[] = [
     domains: MS900_TOPICS,
     accentFrom: "#10b981",
     accentTo: "#06b6d4",
+    durationMin: 60,
+    questionCountRange: [40, 60],
+    priceUSD: 99,
+    available: true,
+  },
+  {
+    id: "ai-900",
+    name: "AI-900",
+    shortCode: "AI-900",
+    vendor: "Microsoft",
+    fullTitle: "Microsoft Azure AI Fundamentals",
+    tagline: "Entry-level Azure AI certification",
+    passScore: 70,
+    totalDomains: AI900_TOPICS.length,
+    description:
+      "Tests your knowledge of AI workloads, machine learning, computer vision, NLP, and the brand-new generative AI domain (added 2024). The fastest credential to validate AI literacy on Azure — perfect cross-sell with AZ-900.",
+    domains: AI900_TOPICS,
+    accentFrom: "#a855f7",
+    accentTo: "#ec4899",
     durationMin: 60,
     questionCountRange: [40, 60],
     priceUSD: 99,

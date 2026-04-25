@@ -392,6 +392,14 @@ function examQuickFacts(
       { label: "Compliance is in Purview", body: "DLP, eDiscovery, Information Protection, Compliance Manager all live there." },
     ];
   }
+  if (examId === "ai-900") {
+    return [
+      { label: "Generative AI is the biggest domain", body: "Added Sept 2024 — LLMs, tokens, prompts, Azure OpenAI, Copilot, RAG. ~25% of the exam." },
+      { label: "Service-mapping is most of the test", body: "Recognize the scenario, pick the Azure AI service. Watch for renames (LUIS→CLU, Form Recognizer→Document Intelligence)." },
+      { label: "6 Responsible AI principles", body: "Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability." },
+      { label: "ML metric pairs trip people up", body: "Precision vs recall, MAE vs RMSE — know which to optimize for which scenario." },
+    ];
+  }
   return [
     { label: "Pure concepts", body: "No hands-on skills are tested. You don't need an Azure account to pass." },
     { label: "Scenario matching", body: "Most questions describe a need and ask which service fits. Pattern recognition wins." },

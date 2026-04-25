@@ -1,6 +1,7 @@
 import type { ExamId, Question } from "../types";
 import { AWS_CCP_DIAGNOSTIC, AWS_CCP_QUESTIONS } from "./exams/aws-ccp";
 import { MS900_DIAGNOSTIC, MS900_QUESTIONS } from "./exams/ms-900";
+import { AI900_DIAGNOSTIC, AI900_QUESTIONS } from "./exams/ai-900";
 
 export const AZ900_QUESTIONS: Question[] = [
   // ── Cloud Concepts ──────────────────────────────────────────────
@@ -854,6 +855,7 @@ export const ALL_QUESTIONS: Question[] = [
   ...AZ900_QUESTIONS,
   ...AWS_CCP_QUESTIONS,
   ...MS900_QUESTIONS,
+  ...AI900_QUESTIONS,
 ];
 
 export const QUESTION_MAP: Record<string, Question> = ALL_QUESTIONS.reduce(
@@ -865,6 +867,7 @@ export const DIAGNOSTIC_SETS: Record<ExamId, string[]> = {
   "az-900": AZ900_DIAGNOSTIC,
   "aws-ccp": AWS_CCP_DIAGNOSTIC,
   "ms-900": MS900_DIAGNOSTIC,
+  "ai-900": AI900_DIAGNOSTIC,
 };
 
 // Back-compat for older imports

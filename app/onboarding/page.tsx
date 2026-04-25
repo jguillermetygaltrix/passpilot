@@ -238,6 +238,13 @@ function ExamStep({
       subtitle: "Microsoft · 60 min · 70% to pass · $99",
       gradient: "from-emerald-500 to-cyan-500",
     },
+    {
+      id: "ai-900",
+      badge: "AI",
+      title: "AI-900 · Azure AI Fundamentals",
+      subtitle: "Microsoft · 60 min · 70% to pass · $99 · NEW",
+      gradient: "from-purple-500 to-pink-500",
+    },
   ];
 
   return (
