@@ -25,6 +25,7 @@
  */
 
 import type { ExamId } from "../types";
+import { EXAMS } from "../data/exams";
 
 export type NativeProductId =
   | "passpilot.weekly"
@@ -80,11 +81,11 @@ export const NATIVE_CATALOG: NativeProduct[] = [
   {
     id: "passpilot.annual",
     title: "Annual",
-    description: "All 3 exams, best value",
+    description: `All ${EXAMS.length} certifications, best value`,
     priceDisplay: "$49.00",
     period: "annual",
     features: [
-      "All 3 certifications unlocked",
+      `All ${EXAMS.length} certifications unlocked (Microsoft, AWS, GCP, CompTIA)`,
       "Switch exams any time",
       "Save 59% vs monthly",
       "First access to new certifications",
@@ -93,14 +94,14 @@ export const NATIVE_CATALOG: NativeProduct[] = [
   {
     id: "passpilot.lifetime",
     title: "Lifetime",
-    description: "All exams, forever, one payment",
+    description: `All ${EXAMS.length} certifications, forever, one payment`,
     priceDisplay: "$99.00",
     period: "lifetime",
     features: [
-      "All current + future certifications",
+      `All ${EXAMS.length} live certifications + every future one we ship`,
       "No subscription, ever",
       "Priority support",
-      "Founder tier â€” supports indie dev",
+      "Founder tier — supports indie dev",
     ],
   },
 ];
@@ -265,8 +266,9 @@ function parseCustomerInfo(info: unknown): NativeEntitlement | null {
     const ent = active[key];
     const productId = (ent.productIdentifier ?? null) as NativeProductId | null;
 
-    // Everything unlocks all 3 exams in our new pricing model
-    const unlockedExams: ExamId[] = ["az-900", "aws-ccp", "ms-900"];
+    // Every paid tier unlocks the entire live catalog — driven from EXAMS
+    // so adding a cert auto-grants it to existing paid customers.
+    const unlockedExams: ExamId[] = EXAMS.map((e) => e.id);
 
     return {
       active: true,

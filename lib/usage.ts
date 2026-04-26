@@ -64,7 +64,10 @@ export interface UsageSummary {
 }
 
 const STORAGE_KEY = "passpilot.usage-log";
-const TOTAL_QUESTIONS_PER_EXAM = 400; // approximation; actual count loaded at runtime
+// Per-exam ~Q count for refund-eligibility math. Caller can override via
+// computeSummary(actualCount). 200 = realistic middle ground for our cert
+// content (most certs ship 100-300 Qs; updated when bank doubles).
+const TOTAL_QUESTIONS_PER_EXAM = 200;
 
 // Event log — append-only in localStorage
 export function logEvent(type: UsageEventType, meta: {
