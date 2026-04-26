@@ -126,7 +126,7 @@ export interface UserProfile {
 
 export interface QuizAttempt {
   id: string;
-  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock";
+  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock" | "sr-review";
   topicId?: string;
   startedAt: string;
   completedAt: string;

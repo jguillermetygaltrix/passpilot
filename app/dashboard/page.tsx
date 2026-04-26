@@ -19,7 +19,7 @@ import { useApp, useDailyPlan, useMasteryAndReadiness } from "@/lib/store";
 import { useEntitlements } from "@/lib/entitlements";
 import { UpgradeWall } from "@/components/upgrade-wall";
 import { EXAMS } from "@/lib/data/exams";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { topInsight } from "@/lib/scoring";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { getLessonsForExam } from "@/lib/data/lessons";
@@ -28,6 +28,7 @@ import {
   AlertTriangle,
   ArrowRight,
   BookOpen,
+  Brain,
   Calendar,
   CheckCircle2,
   ChevronDown,
@@ -35,6 +36,7 @@ import {
   Command,
   Flame,
   GraduationCap,
+  Headphones,
   LifeBuoy,
   LineChart as LineChartIcon,
   Lock,
@@ -216,6 +218,12 @@ function Inner() {
             <Link href="/plan">
               <Button variant="outline" size="md">
                 <Calendar className="h-4 w-4" /> Today's plan
+              </Button>
+            </Link>
+            <SRReviewButton />
+            <Link href="/listen">
+              <Button variant="outline" size="md" className="group border-cyan-300 bg-cyan-50/40 text-cyan-800 hover:bg-cyan-50">
+                <Headphones className="h-4 w-4" /> Listen
               </Button>
             </Link>
             <Link href="/mock">
@@ -602,11 +610,51 @@ function Inner() {
   );
 }
 
+function SRReviewButton() {
+  const { profile } = useApp();
+  const [dueCount, setDueCount] = useState(0);
+
+  useEffect(() => {
+    if (!profile) return;
+    // Dynamic import keeps SR off the SSR path (LS-only)
+    import("@/lib/sr").then((m) => {
+      setDueCount(m.getDueCards(profile.examId).length);
+    });
+  }, [profile]);
+
+  if (!profile) return null;
+
+  const hasDue = dueCount > 0;
+
+  return (
+    <Link href="/review">
+      <Button
+        variant="outline"
+        size="md"
+        className={
+          hasDue
+            ? "group border-violet-300 bg-violet-50/60 text-violet-800 hover:bg-violet-100"
+            : "group border-border"
+        }
+      >
+        <Brain className="h-4 w-4" />
+        Review
+        {hasDue && (
+          <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-violet-600 text-white text-[10px] font-semibold tabular-nums">
+            {dueCount}
+          </span>
+        )}
+      </Button>
+    </Link>
+  );
+}
+
 function kindLabel(
-  k: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock"
+  k: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock" | "sr-review"
 ) {
   if (k === "incorrect-only") return "Review drill";
   if (k === "mock") return "Mock exam";
+  if (k === "sr-review") return "SR review";
   return k;
 }
 

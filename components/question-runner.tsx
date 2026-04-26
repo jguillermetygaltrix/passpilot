@@ -11,10 +11,11 @@ import { CheckCircle2, XCircle, ArrowRight, Flag } from "lucide-react";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { WhyWrongExplainer } from "./why-wrong-explainer";
 import { track } from "@/lib/usage";
+import { recordWrongAnswer, gradeCard, getCard } from "@/lib/sr";
 
 interface Props {
   questions: Question[];
-  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue";
+  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "sr-review";
   topicId?: string;
   title?: string;
   subtitle?: string;
@@ -82,6 +83,28 @@ export function QuestionRunner({
     };
     // Track answer submission (usage tracking)
     track.questionAnswered(q.id, correct, examId);
+
+    // Spaced Repetition wiring:
+    //   - SR review session: grade the existing card (right → graduate, wrong → demote)
+    //   - Any other session: a wrong answer creates/refreshes an SR card. A right
+    //     answer on a card that already exists grades it (treat the regular drill
+    //     as an implicit review).
+    if (kind === "sr-review") {
+      gradeCard(q.id, correct);
+    } else {
+      const existing = getCard(q.id);
+      if (existing) {
+        gradeCard(q.id, correct);
+      } else if (!correct && examId) {
+        recordWrongAnswer({
+          questionId: q.id,
+          topicId: q.topicId,
+          examId,
+          attemptId: `inline-${Date.now()}`,
+        });
+      }
+    }
+
     setAnswers((a) => [...a, record]);
     setRevealed(true);
   };
