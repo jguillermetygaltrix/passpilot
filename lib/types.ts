@@ -126,12 +126,23 @@ export interface UserProfile {
 
 export interface QuizAttempt {
   id: string;
-  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue";
+  kind: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock";
   topicId?: string;
   startedAt: string;
   completedAt: string;
   answers: AnswerRecord[];
   scorePct: number;
+  // Mock-exam-only metadata (undefined for other kinds)
+  mock?: {
+    examId: ExamId;
+    durationSec: number;          // total time allowed
+    elapsedSec: number;           // actual time used
+    questionCount: number;
+    passScore: number;            // % needed (from EXAMS catalog)
+    passed: boolean;
+    flaggedQuestionIds: string[]; // questions user flagged for review
+    autoSubmittedOnTimeout: boolean;
+  };
 }
 
 export interface AnswerRecord {

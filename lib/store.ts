@@ -29,7 +29,8 @@ interface AppState {
   recordAttempt: (
     kind: QuizAttempt["kind"],
     answers: AnswerRecord[],
-    topicId?: string
+    topicId?: string,
+    mock?: QuizAttempt["mock"]
   ) => QuizAttempt;
   markBlockDone: (blockId: string) => void;
   markLessonComplete: (lessonId: string) => void;
@@ -60,7 +61,7 @@ export const useApp = create<AppState>()(
         set((s) =>
           s.profile ? { profile: { ...s.profile, ...patch } } : s
         ),
-      recordAttempt: (kind, answers, topicId) => {
+      recordAttempt: (kind, answers, topicId, mock) => {
         const attempt: QuizAttempt = {
           id: uid("att"),
           kind,
@@ -76,6 +77,7 @@ export const useApp = create<AppState>()(
                   100
               )
             : 0,
+          mock,
         };
         set((s) => {
           const today = new Date().toISOString().slice(0, 10);

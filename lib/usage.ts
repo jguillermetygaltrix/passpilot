@@ -35,7 +35,9 @@ export type UsageEventType =
   | "question.viewed"
   | "question.answered"
   | "ai.explanation_requested"
-  | "content.exported";
+  | "content.exported"
+  | "mock.started"
+  | "mock.completed";
 
 export interface UsageEvent {
   id: string;
@@ -241,4 +243,10 @@ export const track = {
 
   contentExported: (kind: string) =>
     logEvent("content.exported", { meta: { kind } }),
+
+  mockStarted: (examId?: string) =>
+    logEvent("mock.started", { examId }),
+
+  mockCompleted: (examId: string, opts: { questionCount: number; correctCount: number; durationSec: number; passed: boolean }) =>
+    logEvent("mock.completed", { examId, meta: opts }),
 };

@@ -212,10 +212,15 @@ function Inner() {
             </div>
             <h1 className="heading-2">Your pass dashboard</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link href="/plan">
               <Button variant="outline" size="md">
                 <Calendar className="h-4 w-4" /> Today's plan
+              </Button>
+            </Link>
+            <Link href="/mock">
+              <Button variant="outline" size="md" className="group border-amber-300 bg-amber-50/40 text-amber-800 hover:bg-amber-50">
+                <Sparkles className="h-4 w-4" /> Mock exam
               </Button>
             </Link>
             <Link href="/practice">
@@ -598,9 +603,11 @@ function Inner() {
 }
 
 function kindLabel(
-  k: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue"
+  k: "diagnostic" | "topic" | "mixed" | "incorrect-only" | "rescue" | "mock"
 ) {
-  return k === "incorrect-only" ? "Review drill" : k;
+  if (k === "incorrect-only") return "Review drill";
+  if (k === "mock") return "Mock exam";
+  return k;
 }
 
 function greeting() {
