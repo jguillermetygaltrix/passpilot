@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { CommandPalette } from "@/components/command-palette";
 import { NativeBootstrap } from "@/components/native-bootstrap";
 import { DeviceRegistry } from "@/components/device-registry";
+import { BadgeToastHost } from "@/components/badge-toast";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
         <DeviceRegistry />
         {children}
         <CommandPalette />
+        <BadgeToastHost />
       </body>
     </html>
   );

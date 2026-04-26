@@ -21,6 +21,8 @@ import { recordWrongAnswer } from "@/lib/sr";
 import { QUESTION_MAP, getQuestionsForExam, sampleQuestions } from "@/lib/data/questions";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { track } from "@/lib/usage";
+import { evaluateAll } from "@/lib/achievements";
+import { fireBadgeUnlocks } from "@/components/badge-toast";
 import {
   Mic,
   MicOff,
@@ -423,6 +425,18 @@ function ListenRunner({
         minutes: 0,
         kind: source === "sr" ? "sr-review-voice" : "voice-drill",
       });
+      // Fire Hands-Free Hero (and any others that mature on this completion)
+      try {
+        const store = useApp.getState();
+        const newly = evaluateAll({
+          profile: store.profile,
+          attempts: store.attempts,
+          recent: { voiceSessionCompleted: true },
+        });
+        if (newly.length > 0) fireBadgeUnlocks(newly);
+      } catch {
+        /* ignore */
+      }
       const score = Math.round((correctCount / questions.length) * 100);
       await speak(
         `Session complete. You got ${correctCount} out of ${questions.length}. That's ${score} percent.`,

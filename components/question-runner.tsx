@@ -12,6 +12,8 @@ import { TOPIC_MAP } from "@/lib/data/topics";
 import { WhyWrongExplainer } from "./why-wrong-explainer";
 import { track } from "@/lib/usage";
 import { recordWrongAnswer, gradeCard, getCard } from "@/lib/sr";
+import { evaluateAll } from "@/lib/achievements";
+import { fireBadgeUnlocks } from "./badge-toast";
 
 interface Props {
   questions: Question[];
@@ -131,6 +133,25 @@ export function QuestionRunner({
       if (kind === "diagnostic") {
         track.diagnosticCompleted(examId);
       }
+
+      // Evaluate badges — every drill completion is a candidate unlock moment.
+      // recent.perfectScore lets the Perfectionist badge fire on this attempt
+      // even before it's persisted into store.attempts (already persisted by
+      // recordAttempt above, but cheap to set explicitly for clarity).
+      try {
+        const store = useApp.getState();
+        const newly = evaluateAll({
+          profile: store.profile,
+          attempts: store.attempts,
+          recent: {
+            perfectScore: attempt.scorePct === 100 && finalAnswers.length >= 8,
+          },
+        });
+        if (newly.length > 0) fireBadgeUnlocks(newly);
+      } catch {
+        /* ignore — badges are non-blocking */
+      }
+
       onFinish?.(attempt.id, attempt.scorePct);
     }
   };

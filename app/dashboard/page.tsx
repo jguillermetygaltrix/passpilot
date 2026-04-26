@@ -43,6 +43,7 @@ import {
   Lock,
   PlayCircle,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -221,6 +222,7 @@ function Inner() {
                 <Calendar className="h-4 w-4" /> Today's plan
               </Button>
             </Link>
+            <DailyChallengeButton />
             <SRReviewButton />
             <Link href="/listen">
               <Button variant="outline" size="md" className="group border-cyan-300 bg-cyan-50/40 text-cyan-800 hover:bg-cyan-50">
@@ -237,6 +239,7 @@ function Inner() {
                 <Sparkles className="h-4 w-4" /> Mock exam
               </Button>
             </Link>
+            <BadgeCountButton />
             <Link href="/practice">
               <Button variant="primary" size="md" className="group">
                 Practice now
@@ -613,6 +616,74 @@ function Inner() {
         </div>
       </AppShell>
     </>
+  );
+}
+
+function DailyChallengeButton() {
+  const { profile, attempts } = useApp();
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!profile) return;
+    import("@/lib/daily").then((m) => {
+      setDone(m.hasCompletedDailyToday(attempts, profile.examId));
+    });
+  }, [profile, attempts]);
+
+  if (!profile) return null;
+
+  return (
+    <Link href="/daily">
+      <Button
+        variant="outline"
+        size="md"
+        className={
+          done
+            ? "group border-emerald-300 bg-emerald-50/40 text-emerald-800 hover:bg-emerald-50"
+            : "group border-emerald-400 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 ring-2 ring-emerald-200/60"
+        }
+      >
+        <Sparkles className="h-4 w-4" />
+        Daily
+        {done ? (
+          <CheckCircle2 className="h-3.5 w-3.5 ml-0.5" />
+        ) : (
+          <span className="ml-1 inline-flex items-center justify-center h-5 px-1.5 rounded-full bg-emerald-600 text-white text-[10px] font-semibold">
+            NEW
+          </span>
+        )}
+      </Button>
+    </Link>
+  );
+}
+
+function BadgeCountButton() {
+  const [unlocked, setUnlocked] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    import("@/lib/achievements").then((m) => {
+      setUnlocked(m.unlockedCount());
+      setTotal(m.totalCount());
+    });
+  }, []);
+
+  return (
+    <Link href="/achievements">
+      <Button
+        variant="outline"
+        size="md"
+        className="group border-amber-300 bg-amber-50/40 text-amber-800 hover:bg-amber-50"
+      >
+        <Trophy className="h-4 w-4" />
+        Badges
+        {total > 0 && (
+          <span className="ml-1 text-[11px] font-semibold tabular-nums opacity-80">
+            {unlocked}/{total}
+          </span>
+        )}
+      </Button>
+    </Link>
   );
 }
 

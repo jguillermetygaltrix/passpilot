@@ -39,6 +39,8 @@ import { ProgressBar } from "./ui/progress";
 import { useApp } from "@/lib/store";
 import { track } from "@/lib/usage";
 import { cn } from "@/lib/utils";
+import { evaluateAll } from "@/lib/achievements";
+import { fireBadgeUnlocks } from "./badge-toast";
 
 interface Props {
   exam: ExamMeta;
@@ -211,6 +213,24 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
       durationSec: elapsedSec,
       passed,
     });
+
+    // Fire badge evaluation — Mock Champion / Speed Demon / Game Day Rehearsal
+    // can all hit on this attempt. Pass `recent` so badges that depend on the
+    // just-finished mock fire even before store.attempts re-reads.
+    try {
+      const store = useApp.getState();
+      const newly = evaluateAll({
+        profile: store.profile,
+        attempts: store.attempts,
+        recent: {
+          mockPassed: passed,
+          mockTimeRatio: durationSec > 0 ? elapsedSec / durationSec : 1,
+        },
+      });
+      if (newly.length > 0) fireBadgeUnlocks(newly);
+    } catch {
+      /* ignore — badges are non-blocking */
+    }
 
     setSubmitted(true);
     setSubmittedScore(scorePct);

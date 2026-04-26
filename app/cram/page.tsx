@@ -11,6 +11,8 @@ import { useEntitlements } from "@/lib/entitlements";
 import { getExamMeta } from "@/lib/data/exams";
 import { getTopicsForExam, TOPIC_MAP } from "@/lib/data/topics";
 import { track } from "@/lib/usage";
+import { evaluateAll } from "@/lib/achievements";
+import { fireBadgeUnlocks } from "@/components/badge-toast";
 import {
   FileDown,
   Printer,
@@ -90,6 +92,18 @@ function Inner() {
       return;
     }
     track.contentExported("cram-sheet");
+    // Fire Cram Ready badge
+    try {
+      const store = useApp.getState();
+      const newly = evaluateAll({
+        profile: store.profile,
+        attempts: store.attempts,
+        recent: { cramExported: true },
+      });
+      if (newly.length > 0) fireBadgeUnlocks(newly);
+    } catch {
+      /* ignore */
+    }
     // Tiny tick so React paints the print-clean state before the dialog
     setTimeout(() => window.print(), 50);
   };
