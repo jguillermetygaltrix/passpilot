@@ -32,9 +32,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#3d60ff",
+  themeColor: "#0B0D13",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover", // honor iOS notch/home-indicator via env(safe-area-inset-*)
 };
 
 export default function RootLayout({

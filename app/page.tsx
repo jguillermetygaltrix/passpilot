@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/app-nav";
 import { CountUp } from "@/components/count-up";
@@ -11,6 +12,8 @@ import { Spotlight } from "@/components/spotlight";
 import { GradientBorder } from "@/components/ui/gradient-border";
 import { ModK } from "@/components/kbd";
 import { EXAMS } from "@/lib/data/exams";
+import { isNative } from "@/lib/platform";
+import { useApp } from "@/lib/store";
 import {
   ArrowRight,
   BrainCircuit,
@@ -34,6 +37,30 @@ import {
 } from "lucide-react";
 
 export default function Landing() {
+  const router = useRouter();
+  const profile = useApp((s) => s.profile);
+  const [redirecting, setRedirecting] = useState(false);
+
+  // On native (iOS/Android Capacitor builds): skip the marketing page entirely.
+  // Onboarded → /dashboard. Fresh install → /onboarding. Web users keep the
+  // marketing experience.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isNative()) return;
+    setRedirecting(true);
+    const target = profile?.examId ? "/dashboard" : "/onboarding";
+    router.replace(target);
+  }, [router, profile?.examId]);
+
+  // Brief native splash while routing — prevents marketing flash on app launch
+  if (redirecting) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0B0D13] text-white">
+        <Logo />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-background">
       <Nav />
