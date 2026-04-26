@@ -95,6 +95,44 @@
   }
 }
 
+/* ──────────────────────────────────────────────────────────
+ * Print stylesheet — used by /cram and any other printable surface.
+ * Strips chrome, forces a clean black-on-white page, and sets sane
+ * page margins. The .cram-sheet article handles its own typography.
+ * ────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: Letter;
+    margin: 12mm 14mm;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0B0D13 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    /* Cancel safe-area padding for print */
+    padding: 0 !important;
+  }
+  /* Hide all the chrome */
+  header, nav, footer.app-footer, .print\:hidden {
+    display: none !important;
+  }
+  /* The printable article should fill the page edge-to-edge */
+  .cram-sheet {
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  /* Avoid awkward page breaks inside topic sections */
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
 @layer components {
   .card-surface {
     @apply bg-card border border-border rounded-[var(--radius)] shadow-card;

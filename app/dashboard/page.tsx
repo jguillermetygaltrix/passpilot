@@ -34,6 +34,7 @@ import {
   ChevronDown,
   Clock,
   Command,
+  FileDown,
   Flame,
   GraduationCap,
   Headphones,
@@ -226,8 +227,13 @@ function Inner() {
                 <Headphones className="h-4 w-4" /> Listen
               </Button>
             </Link>
-            <Link href="/mock">
+            <Link href="/cram">
               <Button variant="outline" size="md" className="group border-amber-300 bg-amber-50/40 text-amber-800 hover:bg-amber-50">
+                <FileDown className="h-4 w-4" /> Cram sheet
+              </Button>
+            </Link>
+            <Link href="/mock">
+              <Button variant="outline" size="md" className="group border-rose-300 bg-rose-50/40 text-rose-800 hover:bg-rose-50">
                 <Sparkles className="h-4 w-4" /> Mock exam
               </Button>
             </Link>
