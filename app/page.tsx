@@ -10,6 +10,7 @@ import { Marquee } from "@/components/marquee";
 import { Spotlight } from "@/components/spotlight";
 import { GradientBorder } from "@/components/ui/gradient-border";
 import { ModK } from "@/components/kbd";
+import { EXAMS } from "@/lib/data/exams";
 import {
   ArrowRight,
   BrainCircuit,
@@ -39,6 +40,7 @@ export default function Landing() {
       <Hero />
       <TrustMarquee />
       <TrustStrip />
+      <CertCatalog />
       <NotFlashcards />
       <HowItWorks />
       <BentoGrid />
@@ -79,6 +81,12 @@ function Nav() {
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">
+          <a
+            href="#certs"
+            className="px-3.5 h-9 inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Certs
+          </a>
           <a
             href="#how"
             className="px-3.5 h-9 inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -164,7 +172,7 @@ function Hero() {
                 <Sparkles className="h-2.5 w-2.5" /> NEW
               </span>
               <span className="text-foreground">
-                MS-900 and AWS CCP are live
+                All {EXAMS.length} certs live · AI-900 + Security+ + GCP just shipped
               </span>
               <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
             </Link>
@@ -183,10 +191,10 @@ function Hero() {
               <p className="text-lg md:text-xl text-muted-foreground text-balance max-w-xl leading-relaxed">
                 PassPilot finds the topics most likely to fail you, builds a
                 daily plan around your exam date, and tells you exactly what
-                to study today. Three certs live:{" "}
-                <b className="text-foreground">AZ-900</b>,{" "}
-                <b className="text-foreground">AWS Cloud Practitioner</b>, and{" "}
-                <b className="text-foreground">MS-900</b>.
+                to study today. {EXAMS.length} certs live across{" "}
+                <b className="text-foreground">cloud</b>,{" "}
+                <b className="text-foreground">AI</b>, and{" "}
+                <b className="text-foreground">security</b> — Microsoft, AWS, Google, and CompTIA.
               </p>
             </Reveal>
             <Reveal delay={300}>
@@ -415,11 +423,11 @@ function TrustMarquee() {
     { name: "Marcus A.", cert: "AZ-900", score: 842, ago: "2d ago" },
     { name: "Priya V.", cert: "AWS CCP", score: 779, ago: "3d ago" },
     { name: "Jordan K.", cert: "MS-900", score: 805, ago: "5d ago" },
-    { name: "Sam T.", cert: "AZ-900", score: 880, ago: "6d ago" },
-    { name: "Lin P.", cert: "AWS CCP", score: 821, ago: "1w ago" },
-    { name: "Dana R.", cert: "MS-900", score: 795, ago: "1w ago" },
-    { name: "Kai N.", cert: "AZ-900", score: 861, ago: "1w ago" },
-    { name: "Ava M.", cert: "AWS CCP", score: 807, ago: "2w ago" },
+    { name: "Sam T.", cert: "AI-900", score: 880, ago: "6d ago" },
+    { name: "Lin P.", cert: "Security+", score: 821, ago: "1w ago" },
+    { name: "Dana R.", cert: "GCP CDL", score: 795, ago: "1w ago" },
+    { name: "Kai N.", cert: "AWS AIP", score: 861, ago: "1w ago" },
+    { name: "Ava M.", cert: "AZ-900", score: 807, ago: "2w ago" },
   ];
   return (
     <section className="py-8 border-y border-border bg-slate-50/60">
@@ -483,7 +491,7 @@ function TrustStrip() {
         <Reveal delay={200}>
           <div>
             <div className="text-3xl md:text-4xl font-semibold tabular-nums tracking-tight">
-              <CountUp to={13} />
+              <CountUp to={EXAMS.reduce((sum, e) => sum + e.totalDomains, 0)} />
             </div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium mt-1.5">
               Exam domains covered
@@ -493,12 +501,99 @@ function TrustStrip() {
         <Reveal delay={300}>
           <div>
             <div className="text-3xl md:text-4xl font-semibold tabular-nums tracking-tight">
-              <CountUp to={100} />
-              <span className="text-brand-600">+</span>
+              <CountUp to={EXAMS.length} />
             </div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium mt-1.5">
-              Questions in the bank
+              Certifications live
             </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Cert catalog — the full lineup, data-driven from EXAMS
+// ─────────────────────────────────────────────────────────────────
+function CertCatalog() {
+  return (
+    <section
+      id="certs"
+      className="py-20 md:py-28 bg-slate-50/60 border-y border-border"
+    >
+      <div className="container">
+        <Reveal>
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+              <GraduationCap className="h-3 w-3" />
+              The full lineup
+            </div>
+            <h2 className="heading-2 text-balance">
+              {EXAMS.length} certifications.{" "}
+              <span className="gradient-text-static">One pass-readiness system.</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Microsoft, AWS, Google Cloud, and CompTIA — every cert ships with
+              the same diagnostic, daily plan, and rescue mode.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          {EXAMS.map((exam, i) => (
+            <Reveal key={exam.id} delay={i * 60}>
+              <Link
+                href="/onboarding"
+                className="group block soft-card p-5 hover-lift h-full relative overflow-hidden"
+              >
+                <div
+                  className="absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"
+                  style={{
+                    background: `linear-gradient(135deg, ${exam.accentFrom}, ${exam.accentTo})`,
+                  }}
+                />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-4">
+                    <div
+                      className="h-11 w-11 rounded-xl text-white flex items-center justify-center shadow-pop text-sm font-bold tabular-nums"
+                      style={{
+                        background: `linear-gradient(135deg, ${exam.accentFrom}, ${exam.accentTo})`,
+                      }}
+                    >
+                      {exam.shortCode.split("-")[0].slice(0, 3)}
+                    </div>
+                    <span className="chip bg-emerald-50 border-emerald-200 text-emerald-700 text-[10px]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Live
+                    </span>
+                  </div>
+                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
+                    {exam.vendor} · {exam.shortCode}
+                  </div>
+                  <h3 className="heading-3 text-[17px] mb-2 leading-snug">
+                    {exam.fullTitle}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+                    {exam.description}
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{exam.totalDomains} domains · {exam.questionCountRange[0]}–{exam.questionCountRange[1]} Qs</span>
+                    <span className="text-brand-700 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Start
+                      <ArrowRight className="h-3 w-3" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={200}>
+          <div className="text-center mt-10 text-sm text-muted-foreground">
+            <Sparkles className="h-4 w-4 inline mr-1.5 -mt-0.5 text-brand-600" />
+            Multi-Cert members get every new cert at no extra cost
           </div>
         </Reveal>
       </div>
@@ -943,7 +1038,7 @@ function Pricing() {
               href="/onboarding"
               featured={false}
               features={[
-                "Any one cert: AZ-900, AWS CCP, or MS-900",
+                `Any one of ${EXAMS.length} certs (Azure, AWS, GCP, M365, AI, Security+)`,
                 "Diagnostic (all 12 questions)",
                 "Readiness score & weak-topic map",
                 "3 practice drills per day",
@@ -961,7 +1056,7 @@ function Pricing() {
               href="/onboarding"
               featured={true}
               features={[
-                "Choose AZ-900, AWS CCP, or MS-900",
+                `Choose any 1 of ${EXAMS.length} live certs`,
                 "Unlimited practice drills & diagnostics",
                 "Full daily plan + Rescue Mode",
                 "All chapter lessons, reviews, cram sheets",
@@ -975,13 +1070,13 @@ function Pricing() {
               name="Multi-Cert"
               price="$39"
               cadence="one-time"
-              description="All three certifications, one price."
+              description={`All ${EXAMS.length} certifications, one price.`}
               cta="Get Multi-Cert"
               href="/onboarding"
               featured={false}
               features={[
                 "Everything in Pro",
-                "AZ-900 + AWS CCP + MS-900 — all live",
+                `All ${EXAMS.length} live: ${EXAMS.map((e) => e.name).join(" + ")}`,
                 "Track progress across multiple exams",
                 "First access to new certifications",
                 "Lifetime updates across all certs",
@@ -1101,11 +1196,11 @@ function FAQ() {
     },
     {
       q: "Which certifications are supported?",
-      a: "Three are fully shipped today: AZ-900 (Microsoft Azure Fundamentals), CLF-C02 (AWS Cloud Practitioner), and MS-900 (Microsoft 365 Fundamentals). More are in the roadmap — Multi-Cert members get new ones at no extra cost.",
+      a: `${EXAMS.length} are fully shipped today: ${EXAMS.map((e) => `${e.name} (${e.fullTitle})`).join(", ")}. New certs are added regularly — Multi-Cert members get them at no extra cost.`,
     },
     {
-      q: "Do I need an Azure or AWS account?",
-      a: "No. All three supported exams test concepts, not hands-on skills. Everything you need is inside PassPilot.",
+      q: "Do I need an Azure, AWS, or GCP account?",
+      a: "No. Every supported exam tests concepts, not hands-on skills. Everything you need is inside PassPilot.",
     },
     {
       q: "How long does it take to pass?",
@@ -1251,9 +1346,10 @@ function Footer() {
           <FooterCol
             title="Certifications"
             links={[
-              { label: "AZ-900 · Azure Fundamentals", href: "/onboarding" },
-              { label: "CLF-C02 · AWS Cloud Practitioner", href: "/onboarding" },
-              { label: "MS-900 · Microsoft 365", href: "/onboarding" },
+              ...EXAMS.map((e) => ({
+                label: `${e.shortCode} · ${e.fullTitle.replace(/^(Microsoft |AWS Certified |Google Cloud |CompTIA )/, "")}`,
+                href: "/onboarding",
+              })),
               { label: "Request a cert", href: "#" },
             ]}
           />
