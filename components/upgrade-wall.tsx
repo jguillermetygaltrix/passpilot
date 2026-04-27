@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { GradientBorder } from "./ui/gradient-border";
 import { useApp } from "@/lib/store";
 import { verifyLicense, CHECKOUT_URLS } from "@/lib/licensing";
-import { getExamMeta } from "@/lib/data/exams";
+import { getExamMeta, EXAMS } from "@/lib/data/exams";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
@@ -143,12 +143,21 @@ function UpgradeTab() {
   const { profile } = useApp();
   const examMeta = profile ? getExamMeta(profile.examId) : null;
 
+  // Per-cert Pro checkout URLs. Lemon Squeezy products only exist for the
+  // first 3 certs right now — AI-900 / Security+ / AWS AIP / GCP CDL fall
+  // back to NULL so we hide the Pro card and force Multi-Cert (which DOES
+  // unlock those). Prevents silent mis-routing where someone pays the
+  // AZ-900 SKU expecting their actual cert. Boss to add Lemon Squeezy
+  // products + URL entries in lib/licensing.ts when ready.
   const proCheckoutUrl =
     profile?.examId === "aws-ccp"
       ? CHECKOUT_URLS.proAwsCcp
       : profile?.examId === "ms-900"
         ? CHECKOUT_URLS.proMs900
-        : CHECKOUT_URLS.proAz900;
+        : profile?.examId === "az-900"
+          ? CHECKOUT_URLS.proAz900
+          : null;
+  const showProCard = !!proCheckoutUrl;
 
   const proFeatures = [
     "Unlimited practice drills",
@@ -159,48 +168,54 @@ function UpgradeTab() {
     "Lifetime updates",
   ];
 
+  // Build the multi-cert feature list dynamically from EXAMS so future cert
+  // additions auto-update the upsell copy (same DEC-031/DEC-032 drift fix
+  // pattern as the homepage and lib/payment/native.ts).
+  const certShortList = EXAMS.map((e) => e.name).join(", ");
   const multiFeatures = [
     "Everything in Pro",
-    "All 3 exams unlocked (AZ-900, AWS CCP, MS-900)",
+    `All ${EXAMS.length} certs unlocked (${certShortList})`,
     "Switch between exams anytime",
     "First access to new certifications",
     "Best value for cert stackers",
   ];
 
   return (
-    <div className="grid md:grid-cols-2 gap-3">
-      <div className="relative rounded-2xl border-2 border-brand-500 bg-gradient-to-br from-brand-50/50 to-white p-5 flex flex-col">
-        <span className="absolute -top-3 left-4 chip bg-brand-600 text-white border-transparent shadow-soft">
-          <Sparkles className="h-3 w-3" /> Best for this exam
-        </span>
-        <div className="flex items-baseline justify-between mb-2 mt-1">
-          <div>
-            <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
-              Pro
+    <div className={`grid ${showProCard ? "md:grid-cols-2" : "md:grid-cols-1 max-w-md mx-auto"} gap-3`}>
+      {showProCard && (
+        <div className="relative rounded-2xl border-2 border-brand-500 bg-gradient-to-br from-brand-50/50 to-white p-5 flex flex-col">
+          <span className="absolute -top-3 left-4 chip bg-brand-600 text-white border-transparent shadow-soft">
+            <Sparkles className="h-3 w-3" /> Best for this exam
+          </span>
+          <div className="flex items-baseline justify-between mb-2 mt-1">
+            <div>
+              <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+                Pro
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {examMeta?.name ?? "1 exam"} · lifetime
+              </div>
             </div>
-            <div className="text-xs text-muted-foreground">
-              {examMeta?.name ?? "1 exam"} · lifetime
+            <div className="text-3xl font-semibold tracking-tight tabular-nums">
+              $19.99
             </div>
           </div>
-          <div className="text-3xl font-semibold tracking-tight tabular-nums">
-            $19.99
-          </div>
+          <ul className="space-y-2 mt-3 flex-1">
+            {proFeatures.map((f, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm">
+                <Check className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <a href={proCheckoutUrl ?? "#"} target="_blank" rel="noopener" className="mt-5">
+            <Button variant="primary" size="md" className="w-full group">
+              Get Pro — $19.99
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Button>
+          </a>
         </div>
-        <ul className="space-y-2 mt-3 flex-1">
-          {proFeatures.map((f, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm">
-              <Check className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-        <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-5">
-          <Button variant="primary" size="md" className="w-full group">
-            Get Pro — $19.99
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Button>
-        </a>
-      </div>
+      )}
 
       <div className="rounded-2xl border border-border bg-white p-5 flex flex-col">
         <div className="flex items-baseline justify-between mb-2">
@@ -209,7 +224,7 @@ function UpgradeTab() {
               Multi-Cert
             </div>
             <div className="text-xs text-muted-foreground">
-              All 3 exams · lifetime
+              All {EXAMS.length} exams · lifetime
             </div>
           </div>
           <div className="text-3xl font-semibold tracking-tight tabular-nums">
@@ -270,7 +285,7 @@ function RedeemTab({ onSuccess }: { onSuccess: () => void }) {
       setLicense(license);
       setSuccess(
         license.tier === "multi"
-          ? "Activated — all 3 exams unlocked."
+          ? `Activated — all ${EXAMS.length} exams unlocked.`
           : "Activated — your Pro exam is unlocked."
       );
       setTimeout(() => {
