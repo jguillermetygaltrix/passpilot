@@ -12,7 +12,7 @@ import { UsageBadge } from "@/components/usage-badge";
 import { useEntitlements } from "@/lib/entitlements";
 import { CHECKOUT_URLS } from "@/lib/licensing";
 import { useApp } from "@/lib/store";
-import { getExamMeta } from "@/lib/data/exams";
+import { getExamMeta, EXAMS } from "@/lib/data/exams";
 import { getPlatform, isIOS, allowExternalCheckout } from "@/lib/platform";
 import {
   isNativeIAPAvailable,
@@ -458,7 +458,7 @@ function WebPaywall() {
                   Multi-Cert
                 </div>
                 <div className="text-sm text-muted-foreground mt-0.5">
-                  All 3 exams · lifetime
+                  All {EXAMS.length} exams · lifetime
                 </div>
               </div>
               <div className="text-right">
@@ -470,15 +470,15 @@ function WebPaywall() {
             </div>
             <div className="rounded-xl bg-gradient-to-br from-brand-50 via-violet2-50 to-cyan-50 border border-brand-100 p-3 text-sm mb-4">
               <span className="font-medium text-brand-700">Unlocks:</span>{" "}
-              AZ-900 · AWS CCP · MS-900
+              {EXAMS.map((e) => e.name).join(" · ")}
             </div>
             <FeatureList
               features={[
-                "Everything in Pro, times three",
-                "All 3 certifications unlocked",
+                `Everything in Pro, times ${EXAMS.length}`,
+                `All ${EXAMS.length} certifications unlocked`,
                 "Switch exams anytime",
                 "First access to new certs",
-                "Cert-stacker-friendly — save $18 vs 3× Pro",
+                `Cert-stacker-friendly — save vs ${EXAMS.length}× Pro`,
                 "Priority on requested certifications",
               ]}
             />
