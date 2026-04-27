@@ -14,6 +14,7 @@ import { buildDailyPlan } from "./planner";
 import { computePriority, computeTopicMastery, readinessScore } from "./scoring";
 import { getTopicsForExam } from "./data/topics";
 import { uid } from "./utils";
+import { applyActivity, mergeStreakIntoProfile } from "./streak";
 
 interface AppState {
   hydrated: boolean;
@@ -80,24 +81,12 @@ export const useApp = create<AppState>()(
           mock,
         };
         set((s) => {
-          const today = new Date().toISOString().slice(0, 10);
-          const last = s.profile?.lastActiveDate?.slice(0, 10);
-          let streak = s.profile?.streakDays ?? 0;
-          if (last !== today) {
-            const yesterday = new Date(Date.now() - 86400000)
-              .toISOString()
-              .slice(0, 10);
-            streak = last === yesterday ? streak + 1 : 1;
-          }
+          const updatedProfile = s.profile
+            ? mergeStreakIntoProfile(s.profile, applyActivity(s.profile))
+            : s.profile;
           return {
             attempts: [...s.attempts, attempt],
-            profile: s.profile
-              ? {
-                  ...s.profile,
-                  streakDays: streak,
-                  lastActiveDate: new Date().toISOString(),
-                }
-              : s.profile,
+            profile: updatedProfile,
           };
         });
         return attempt;
@@ -111,24 +100,12 @@ export const useApp = create<AppState>()(
       markLessonComplete: (lessonId) =>
         set((s) => {
           if (s.completedLessonIds.includes(lessonId)) return s;
-          const today = new Date().toISOString().slice(0, 10);
-          const last = s.profile?.lastActiveDate?.slice(0, 10);
-          let streak = s.profile?.streakDays ?? 0;
-          if (last !== today) {
-            const yesterday = new Date(Date.now() - 86400000)
-              .toISOString()
-              .slice(0, 10);
-            streak = last === yesterday ? streak + 1 : 1;
-          }
+          const updatedProfile = s.profile
+            ? mergeStreakIntoProfile(s.profile, applyActivity(s.profile))
+            : s.profile;
           return {
             completedLessonIds: [...s.completedLessonIds, lessonId],
-            profile: s.profile
-              ? {
-                  ...s.profile,
-                  streakDays: streak,
-                  lastActiveDate: new Date().toISOString(),
-                }
-              : s.profile,
+            profile: updatedProfile,
           };
         }),
       setLicense: (license) => set({ license }),

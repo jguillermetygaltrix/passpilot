@@ -130,6 +130,10 @@ export interface UserProfile {
   startedAt: string;
   streakDays: number;
   lastActiveDate: string;
+  /** Banked streak shields (Duolingo-style). Earn one per 7-day streak milestone, cap 3. Optional for back-compat. */
+  streakShields?: number;
+  /** Bookkeeping: which streak lengths have already granted a shield. Prevents double-granting. */
+  shieldsEarnedAtStreaks?: number[];
 }
 
 export interface QuizAttempt {
