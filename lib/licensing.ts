@@ -1,4 +1,5 @@
 import type { ExamId, License } from "./types";
+import { EXAMS } from "./data/exams";
 
 /**
  * Licensing layer — Lemon Squeezy (live) + demo keys (testing).
@@ -13,16 +14,26 @@ import type { ExamId, License } from "./types";
  */
 
 // ── Lemon Squeezy products (store: passpilot.lemonsqueezy.com) ──────
+//
+// 2026-04-27 fix (DEC-040 follow-up): Multi-Cert was hardcoded to 3 exams,
+// matching the original DEC-031/DEC-032 drift class. Now driven from the
+// canonical EXAMS catalog — buying Multi-Cert correctly unlocks all 7
+// (and any future cert added to EXAMS).
+//
+// TODO (Boss): create Lemon Squeezy products for the 4 newer per-cert
+// SKUs (AI-900, Security+, AWS AIP, GCP CDL) and add their product IDs
+// here so users on those certs can also buy single-cert Pro at $19.99.
+// Until then, the upgrade-wall correctly upsells them to Multi-Cert.
 const LS_PRODUCT_MAP: Record<
   string,
   { tier: "pro" | "multi"; exams: ExamId[] }
 > = {
   "988342": { tier: "pro", exams: ["az-900"] }, // PassPilot Pro — AZ-900
-  "988347": { tier: "pro", exams: ["aws-ccp"] }, // PassPilot Pro — AWS Cloud Practitioner
+  "988347": { tier: "pro", exams: ["aws-ccp"] }, // PassPilot Pro — AWS CCP
   "988353": { tier: "pro", exams: ["ms-900"] }, // PassPilot Pro — MS-900
   "988355": {
     tier: "multi",
-    exams: ["az-900", "aws-ccp", "ms-900"],
+    exams: EXAMS.map((e) => e.id), // ALL 7 certs (catalog-driven)
   }, // PassPilot Multi-Cert
 };
 
@@ -59,7 +70,7 @@ const TEST_KEYS: TestKey[] = process.env.NODE_ENV !== "production"
       {
         pattern: /^PASSPILOT-MULTI-[A-Z0-9]+$/i,
         tier: "multi",
-        exams: ["az-900", "aws-ccp", "ms-900"],
+        exams: EXAMS.map((e) => e.id),
       },
     ]
   : [];
@@ -120,13 +131,10 @@ export async function verifyLicense(key: string): Promise<License | null> {
 }
 
 export function describeLicense(license: License): string {
-  if (license.tier === "multi") return "Multi-Cert · all 3 exams";
-  const examName =
-    license.unlockedExams[0] === "az-900"
-      ? "AZ-900"
-      : license.unlockedExams[0] === "aws-ccp"
-        ? "AWS Cloud Practitioner"
-        : "MS-900";
+  if (license.tier === "multi") return `Multi-Cert · all ${EXAMS.length} exams`;
+  const examId = license.unlockedExams[0];
+  const exam = EXAMS.find((e) => e.id === examId);
+  const examName = exam?.name ?? examId ?? "1 exam";
   return `Pro · ${examName}`;
 }
 

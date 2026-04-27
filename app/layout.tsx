@@ -12,23 +12,49 @@ const inter = Inter({
   display: "swap",
 });
 
+const OG_IMAGE = "/og-cover.png"; // 1200×630, drop a file at public/og-cover.png
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://passpilot.app"),
   title: "PassPilot — Pass your cert with the smart study plan",
   description:
     "AI-driven exam prep that finds your weak spots, measures pass-readiness, and tells you what to study today — not just more.",
   applicationName: "PassPilot",
   keywords: [
     "AZ-900",
+    "AWS CCP",
+    "MS-900",
+    "AI-900",
+    "Security+",
     "certification",
     "cloud exam",
     "adaptive study",
     "pass readiness",
+    "spaced repetition",
+    "mock exam",
   ],
   openGraph: {
-    title: "PassPilot — Don't just study more. Study what matters most.",
+    title: "PassPilot — Pass your cert. Actually pass it.",
     description:
-      "AI-driven pass-readiness for certifications. Diagnostic, daily plan, rescue mode.",
+      "Diagnostic + daily plan + spaced-repetition + voice-mode + mock exams. 7 certs across Microsoft, AWS, GCP, CompTIA. $19.99 one-time.",
     type: "website",
+    siteName: "PassPilot",
+    url: "https://passpilot.app",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "PassPilot — pass-readiness for cert prep",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PassPilot — Pass your cert. Actually pass it.",
+    description:
+      "AI-driven cert prep — diagnostic, daily plan, spaced repetition, voice mode, mock exams. 7 certs, $19.99 one-time.",
+    images: [OG_IMAGE],
   },
 };
 
