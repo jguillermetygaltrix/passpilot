@@ -8,6 +8,7 @@ import { HydrationGate } from "@/components/hydration-gate";
 import { ReadinessRing } from "@/components/readiness-ring";
 import { RiskBadge } from "@/components/risk-badge";
 import { TopicMasteryList } from "@/components/topic-mastery-list";
+import { NextCertCard } from "@/components/next-cert-card";
 import { useApp, useMasteryAndReadiness } from "@/lib/store";
 import { topInsight } from "@/lib/scoring";
 import { TOPIC_MAP } from "@/lib/data/topics";
@@ -204,6 +205,15 @@ function Inner() {
             <div className="font-semibold text-sm">Recommended focus order</div>
           </div>
           <TopicMasteryList mastery={mastery} showLink={false} />
+        </div>
+
+        {/* Multi-cert recommender — fires after the focus list so it doesn't
+            distract from the immediate next step (study plan generation). */}
+        <div className="mt-6">
+          <NextCertCard
+            currentExamId={profile.examId}
+            currentReadinessScore={readiness.score}
+          />
         </div>
 
         <div className="card-surface p-6 mt-6 border-l-4 border-brand-500">

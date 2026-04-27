@@ -14,6 +14,7 @@ import { QUESTION_MAP } from "@/lib/data/questions";
 import { useApp } from "@/lib/store";
 import { useEntitlements } from "@/lib/entitlements";
 import { UpgradeWall } from "@/components/upgrade-wall";
+import { NotesPanel } from "@/components/notes-panel";
 import type { ReviewSection, TopicReview } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
@@ -377,6 +378,17 @@ function Inner() {
             </div>
           )}
         </div>
+
+        {/* Smart Notes — sticky-note style scratchpad scoped to this topic. */}
+        {topic && (
+          <div className="mt-6">
+            <NotesPanel
+              topicId={topic.id}
+              examId={topic.examId}
+              title={`Notes on ${topic.shortName}`}
+            />
+          </div>
+        )}
       </AppShell>
     </>
   );

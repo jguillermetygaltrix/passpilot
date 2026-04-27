@@ -167,6 +167,18 @@ export const BADGES: BadgeDef[] = [
     check: (ctx) => detectComeback(ctx.attempts),
   },
 
+  {
+    id: "re-calibrator",
+    name: "Re-Calibrator",
+    emoji: "🔄",
+    description: "Re-take a diagnostic to measure your progress.",
+    rarity: "rare",
+    category: "study",
+    check: (ctx) => ctx.attempts.filter((a) => a.kind === "diagnostic").length >= 2,
+    progress: (ctx) =>
+      Math.min(1, ctx.attempts.filter((a) => a.kind === "diagnostic").length / 2),
+  },
+
   // ── Mastery (mock + accuracy) ──
   {
     id: "mock-attempted",

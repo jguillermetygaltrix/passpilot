@@ -75,6 +75,10 @@ function Inner() {
   const [topicId, setTopicId] = useState(initialTopic);
   const [questionCount, setQuestionCount] = useState(8);
   const [showWall, setShowWall] = useState(false);
+  // Difficulty filter — "all" = no filter, otherwise restrict pool to that band.
+  // When the active filter has too few questions to fill the count, we top up
+  // from the rest of the pool so a drill can always start.
+  const [difficulty, setDifficulty] = useState<"all" | "easy" | "medium" | "hard">("all");
 
   const incorrectIds = useMemo(() => {
     const ids = new Set<string>();
@@ -87,27 +91,44 @@ function Inner() {
   }, [attempts]);
 
   const selectedQuestions = useMemo(() => {
+    // Helper: respect the difficulty filter. Top-up from the full pool if
+    // the filtered set can't fill the requested count, so the drill always
+    // starts even if the user picks a sparse difficulty band.
+    function applyDifficultyFilter<T extends { id: string; difficulty: "easy" | "medium" | "hard" }>(
+      pool: T[]
+    ): T[] {
+      if (difficulty === "all") return pool;
+      const filtered = pool.filter((q) => q.difficulty === difficulty);
+      if (filtered.length >= questionCount) return filtered;
+      const fillerIds = new Set(filtered.map((q) => q.id));
+      const filler = pool.filter((q) => !fillerIds.has(q.id));
+      return [...filtered, ...filler];
+    }
+
     if (mode === "topic" && topicId) {
       // Topic drills: intersect topic pool with unlocked subset
       const pool = getQuestionsByTopic(topicId).filter((q) => unlockedIds.has(q.id));
+      const final = applyDifficultyFilter(pool);
       return sampleQuestions(
-        pool.map((q) => q.id),
-        Math.min(questionCount, pool.length)
+        final.map((q) => q.id),
+        Math.min(questionCount, final.length)
       );
     }
     if (mode === "incorrect-only") {
       if (!incorrectIds.length) return [];
       // Review drills: always allow, user already saw these
-      return incorrectIds
+      const pool = incorrectIds
         .map((id) => QUESTION_MAP[id])
-        .filter(Boolean)
-        .slice(0, Math.min(questionCount, incorrectIds.length));
+        .filter(Boolean);
+      const final = applyDifficultyFilter(pool);
+      return final.slice(0, Math.min(questionCount, final.length));
     }
+    const final = applyDifficultyFilter(examQuestions);
     return sampleQuestions(
-      examQuestions.map((q) => q.id),
-      Math.min(questionCount, examQuestions.length)
+      final.map((q) => q.id),
+      Math.min(questionCount, final.length)
     );
-  }, [mode, topicId, questionCount, incorrectIds, examQuestions, unlockedIds]);
+  }, [mode, topicId, questionCount, incorrectIds, examQuestions, unlockedIds, difficulty]);
 
   const handleStart = () => {
     if (!ent.canStartDrill) {
@@ -242,6 +263,38 @@ function Inner() {
             </div>
           </div>
         )}
+
+        <div className="card-surface p-5 mb-5">
+          <div className="font-semibold text-sm mb-3">Difficulty</div>
+          <div className="grid grid-cols-4 gap-2">
+            {([
+              { v: "all" as const, label: "Any", emoji: "🎲" },
+              { v: "easy" as const, label: "Easy", emoji: "🟢" },
+              { v: "medium" as const, label: "Medium", emoji: "🟡" },
+              { v: "hard" as const, label: "Hard", emoji: "🔴" },
+            ]).map((d) => (
+              <button
+                key={d.v}
+                onClick={() => setDifficulty(d.v)}
+                className={cn(
+                  "rounded-xl border py-2.5 px-3 text-sm transition-all flex flex-col items-center gap-0.5",
+                  difficulty === d.v
+                    ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200 font-semibold"
+                    : "border-border bg-white hover:border-brand-200"
+                )}
+              >
+                <span className="text-base leading-none">{d.emoji}</span>
+                <span className="text-xs">{d.label}</span>
+              </button>
+            ))}
+          </div>
+          {difficulty !== "all" && (
+            <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
+              Sparse bands top up from the full pool so your drill always starts
+              full-length.
+            </p>
+          )}
+        </div>
 
         <div className="card-surface p-5 mb-6">
           <div className="flex items-center justify-between mb-3">
