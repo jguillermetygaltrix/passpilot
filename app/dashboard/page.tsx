@@ -21,6 +21,7 @@ import { UpgradeWall } from "@/components/upgrade-wall";
 import { EXAMS } from "@/lib/data/exams";
 import { useEffect, useState } from "react";
 import { topInsight } from "@/lib/scoring";
+import { getWhyTone, getWhyLabel } from "@/lib/why-tone";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { getLessonsForExam } from "@/lib/data/lessons";
 import { getExamMeta } from "@/lib/data/exams";
@@ -215,6 +216,16 @@ function Inner() {
               </div>
             </div>
             <h1 className="heading-2">Your pass dashboard</h1>
+            {profile.why && (
+              <div className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1.5">
+                <span className="chip bg-violet-50 border-violet-100 text-violet-700 text-[10px] py-0.5">
+                  {getWhyLabel(profile.why)}
+                </span>
+                <span className="leading-snug">
+                  {getWhyTone(profile).dailyOpener}
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             <Link href="/plan">

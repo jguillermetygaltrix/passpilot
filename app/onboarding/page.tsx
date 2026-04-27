@@ -10,21 +10,26 @@ import type {
   ConfidenceLevel,
   ExamId,
   UserProfile,
+  WhyKind,
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
   ArrowRight,
+  Briefcase,
   Calendar,
   Check,
   ChevronRight,
   Clock,
+  Compass,
   Gauge,
+  GraduationCap,
+  Heart,
   Target,
   Trophy,
 } from "lucide-react";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 type OutcomeKind = "pass" | "pass-comfortably" | "top-10";
 
@@ -34,6 +39,7 @@ interface Draft {
   confidence: ConfidenceLevel;
   hoursPerDay: number;
   targetOutcome: OutcomeKind;
+  why: WhyKind;
 }
 
 const defaultDate = () => {
@@ -52,6 +58,7 @@ export default function OnboardingPage() {
     confidence: "some",
     hoursPerDay: 1,
     targetOutcome: "pass-comfortably",
+    why: "career-switch",
   });
 
   const commit = () => {
@@ -115,6 +122,12 @@ export default function OnboardingPage() {
               <OutcomeStep
                 value={draft.targetOutcome}
                 onChange={(v) => setDraft({ ...draft, targetOutcome: v })}
+              />
+            )}
+            {step === 5 && (
+              <WhyStep
+                value={draft.why}
+                onChange={(v) => setDraft({ ...draft, why: v })}
               />
             )}
           </div>
@@ -525,6 +538,72 @@ function OutcomeStep({
         icon={Trophy}
         title="What's your target outcome?"
         subtitle="This tunes how aggressively we push your plan."
+      />
+      <div className="space-y-3">
+        {opts.map((o) => (
+          <ChoiceRow
+            key={o.v}
+            active={value === o.v}
+            onClick={() => onChange(o.v)}
+          >
+            <div className="h-10 w-10 rounded-xl bg-brand-50 text-brand-700 border border-brand-100 flex items-center justify-center shrink-0">
+              <o.icon className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="font-semibold">{o.title}</div>
+              <div className="text-sm text-muted-foreground">{o.sub}</div>
+            </div>
+          </ChoiceRow>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WhyStep({
+  value,
+  onChange,
+}: {
+  value: WhyKind;
+  onChange: (v: WhyKind) => void;
+}) {
+  const opts: {
+    v: WhyKind;
+    title: string;
+    sub: string;
+    icon: typeof Briefcase;
+  }[] = [
+    {
+      v: "career-switch",
+      title: "Breaking into tech",
+      sub: "I want this cert to open doors to new roles.",
+      icon: Compass,
+    },
+    {
+      v: "job-mandate",
+      title: "Required for my job",
+      sub: "Promotion, role change, or a contract needs it.",
+      icon: Briefcase,
+    },
+    {
+      v: "curiosity",
+      title: "Personal curiosity",
+      sub: "Self-driven — I want to understand this stack.",
+      icon: Heart,
+    },
+    {
+      v: "school-credit",
+      title: "Class or program credit",
+      sub: "College, bootcamp, or certificate-program requirement.",
+      icon: GraduationCap,
+    },
+  ];
+  return (
+    <div>
+      <StepHeader
+        icon={Trophy}
+        title="What's driving you to pass?"
+        subtitle="We'll tune your daily plan tone, milestones, and reminders to fit."
       />
       <div className="space-y-3">
         {opts.map((o) => (

@@ -113,12 +113,20 @@ export interface Question {
   tags: string[];
 }
 
+export type WhyKind =
+  | "career-switch"      // breaking into tech / cloud
+  | "job-mandate"        // employer requires it for promotion / role / contract
+  | "curiosity"          // self-driven exploration
+  | "school-credit";     // college / certificate program credit
+
 export interface UserProfile {
   examId: ExamId;
   examDate: string;
   confidence: ConfidenceLevel;
   hoursPerDay: number;
   targetOutcome: "pass" | "pass-comfortably" | "top-10";
+  /** Why are you here — drives plan tone + dashboard greetings + email cadence. Optional for back-compat. */
+  why?: WhyKind;
   startedAt: string;
   streakDays: number;
   lastActiveDate: string;
