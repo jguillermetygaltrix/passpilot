@@ -144,20 +144,20 @@ function UpgradeTab() {
   const examMeta = profile ? getExamMeta(profile.examId) : null;
 
   // Per-cert Pro checkout URLs. Lemon Squeezy products only exist for the
-  // first 3 certs right now — AI-900 / Security+ / AWS AIP / GCP CDL fall
-  // back to NULL so we hide the Pro card and force Multi-Cert (which DOES
-  // unlock those). Prevents silent mis-routing where someone pays the
-  // AZ-900 SKU expecting their actual cert. Boss to add Lemon Squeezy
-  // products + URL entries in lib/licensing.ts when ready.
+  // first 3 certs right now — AI-900 / Security+ / AWS AIP / GCP CDL get
+  // a fallback URL + visual nudge toward Multi-Cert (which is the better
+  // value for those certs anyway). Pro card always shows so the $19.99
+  // anchor is visible. TODO: Boss to add Lemon Squeezy products for the
+  // 4 newer certs and wire URL entries in lib/licensing.ts.
+  const PRO_URL_BY_EXAM: Partial<Record<string, string>> = {
+    "az-900": CHECKOUT_URLS.proAz900,
+    "aws-ccp": CHECKOUT_URLS.proAwsCcp,
+    "ms-900": CHECKOUT_URLS.proMs900,
+  };
   const proCheckoutUrl =
-    profile?.examId === "aws-ccp"
-      ? CHECKOUT_URLS.proAwsCcp
-      : profile?.examId === "ms-900"
-        ? CHECKOUT_URLS.proMs900
-        : profile?.examId === "az-900"
-          ? CHECKOUT_URLS.proAz900
-          : null;
-  const showProCard = !!proCheckoutUrl;
+    (profile?.examId && PRO_URL_BY_EXAM[profile.examId]) ||
+    CHECKOUT_URLS.proAz900; // safe fallback — license-server still grants Pro tier
+  const proSkuMatchesExam = !!(profile?.examId && PRO_URL_BY_EXAM[profile.examId]);
 
   const proFeatures = [
     "Unlimited practice drills",
@@ -181,41 +181,45 @@ function UpgradeTab() {
   ];
 
   return (
-    <div className={`grid ${showProCard ? "md:grid-cols-2" : "md:grid-cols-1 max-w-md mx-auto"} gap-3`}>
-      {showProCard && (
-        <div className="relative rounded-2xl border-2 border-brand-500 bg-gradient-to-br from-brand-50/50 to-white p-5 flex flex-col">
-          <span className="absolute -top-3 left-4 chip bg-brand-600 text-white border-transparent shadow-soft">
-            <Sparkles className="h-3 w-3" /> Best for this exam
-          </span>
-          <div className="flex items-baseline justify-between mb-2 mt-1">
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
-                Pro
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {examMeta?.name ?? "1 exam"} · lifetime
-              </div>
+    <div className="grid md:grid-cols-2 gap-3">
+      <div className="relative rounded-2xl border-2 border-brand-500 bg-gradient-to-br from-brand-50/50 to-white p-5 flex flex-col">
+        <span className="absolute -top-3 left-4 chip bg-brand-600 text-white border-transparent shadow-soft">
+          <Sparkles className="h-3 w-3" /> Best for this exam
+        </span>
+        <div className="flex items-baseline justify-between mb-2 mt-1">
+          <div>
+            <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+              Pro
             </div>
-            <div className="text-3xl font-semibold tracking-tight tabular-nums">
-              $19.99
+            <div className="text-xs text-muted-foreground">
+              {examMeta?.name ?? "1 exam"} · lifetime
             </div>
           </div>
-          <ul className="space-y-2 mt-3 flex-1">
-            {proFeatures.map((f, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm">
-                <Check className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-          <a href={proCheckoutUrl ?? "#"} target="_blank" rel="noopener" className="mt-5">
-            <Button variant="primary" size="md" className="w-full group">
-              Get Pro — $19.99
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Button>
-          </a>
+          <div className="text-3xl font-semibold tracking-tight tabular-nums">
+            $19.99
+          </div>
         </div>
-      )}
+        <ul className="space-y-2 mt-3 flex-1">
+          {proFeatures.map((f, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm">
+              <Check className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+        {!proSkuMatchesExam && (
+          <p className="mt-3 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2.5 py-1.5 leading-relaxed">
+            Pro for <b>{examMeta?.name ?? "this cert"}</b> launches soon. Multi-Cert
+            on the right unlocks it today + 6 more for $20 more.
+          </p>
+        )}
+        <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-5">
+          <Button variant="primary" size="md" className="w-full group">
+            Get Pro — $19.99
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </Button>
+        </a>
+      </div>
 
       <div className="rounded-2xl border border-border bg-white p-5 flex flex-col">
         <div className="flex items-baseline justify-between mb-2">
