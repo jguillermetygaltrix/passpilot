@@ -265,7 +265,7 @@ function Inner() {
           onClose={() => setWallOpen(false)}
           reason={wallReason}
           headline="Unlock every lesson in this chapter"
-          sub="Free tier gets the first lesson per topic. Pro unlocks all 19 lessons, deep review, cram sheets, and rescue mode."
+          sub="Free tier gets the first lesson per topic. Pro unlocks every lesson, deep review, cram sheets, and rescue mode."
         />
 
         <div className="card-surface overflow-hidden">

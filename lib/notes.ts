@@ -30,6 +30,10 @@ export interface Note {
 
 const STORAGE_KEY = "passpilot.notes.v1";
 
+// 1KB body cap × 2000 ≈ 2MB worst case, comfortably under Safari's ~5MB
+// LS quota even with SR cards + usage events stored alongside.
+const MAX_NOTES = 2000;
+
 function loadAll(): Record<string, Note> {
   if (typeof window === "undefined") return {};
   try {
@@ -46,6 +50,21 @@ function saveAll(state: Record<string, Note>): void {
   } catch {
     /* quota — tolerate */
   }
+}
+
+// Drop oldest unpinned notes when over MAX_NOTES. Pinned notes are preserved
+// even past the cap (the user explicitly marked them important).
+function trimNotes(state: Record<string, Note>): Record<string, Note> {
+  const entries = Object.values(state);
+  if (entries.length <= MAX_NOTES) return state;
+  const unpinned = entries
+    .filter((n) => !n.pinned)
+    .sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
+  const overflow = entries.length - MAX_NOTES;
+  const toEvict = unpinned.slice(0, overflow);
+  const next = { ...state };
+  for (const note of toEvict) delete next[note.id];
+  return next;
 }
 
 function uid(): string {
@@ -96,7 +115,7 @@ export function addNote(opts: {
     pinned: false,
   };
   all[note.id] = note;
-  saveAll(all);
+  saveAll(trimNotes(all));
   return note;
 }
 

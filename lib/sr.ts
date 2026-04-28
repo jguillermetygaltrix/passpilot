@@ -53,6 +53,11 @@ const STORAGE_KEY = "passpilot.sr-cards.v1";
 // box 1 = 1 day; bumps roughly *2 each step out to 60 days.
 const BOX_INTERVALS_DAYS = [0, 1, 2, 4, 7, 14, 30, 60];
 
+// 7 certs × ~700 questions ≈ 4900 worst-case unique cards. 5000 keeps real
+// users safe while preventing unbounded LS growth on multi-cert power users
+// (Safari silently fails at ~5MB quota).
+const MAX_CARDS = 5000;
+
 function loadCards(): Record<string, SRCard> {
   if (typeof window === "undefined") return {};
   try {
@@ -69,6 +74,21 @@ function saveCards(cards: Record<string, SRCard>): void {
   } catch {
     /* quota — tolerate */
   }
+}
+
+// Drop excess cards when over MAX_CARDS. Eviction order: highest box first
+// (mature = least value to keep around), then oldest createdAt as tiebreaker.
+function trimCards(cards: Record<string, SRCard>): Record<string, SRCard> {
+  const entries = Object.values(cards);
+  if (entries.length <= MAX_CARDS) return cards;
+  const sorted = entries.slice().sort((a, b) => {
+    if (b.box !== a.box) return b.box - a.box; // higher box evicted first
+    return a.createdAt.localeCompare(b.createdAt); // older evicted first
+  });
+  const toEvict = sorted.slice(0, entries.length - MAX_CARDS);
+  const next = { ...cards };
+  for (const card of toEvict) delete next[card.questionId];
+  return next;
 }
 
 export function getAllCards(): SRCard[] {
@@ -118,7 +138,7 @@ export function recordWrongAnswer(opts: {
   };
 
   cards[opts.questionId] = card;
-  saveCards(cards);
+  saveCards(trimCards(cards));
   return card;
 }
 

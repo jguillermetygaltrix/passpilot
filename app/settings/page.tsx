@@ -115,7 +115,7 @@ function Inner() {
           <p className="text-xs text-muted-foreground mt-3">
             {ent.canSwitchExams
               ? "Switching certifications keeps your data — progress tracks per exam separately."
-              : "Free and Pro tiers are locked to one exam. Multi-Cert unlocks all three."}
+              : `Free and Pro tiers are locked to one exam. Multi-Cert unlocks all ${EXAMS.length}.`}
           </p>
         </div>
 
@@ -123,8 +123,8 @@ function Inner() {
           open={wallOpen}
           onClose={() => setWallOpen(false)}
           reason="Multi-Cert unlocks all exams"
-          headline="Switch between 3 certifications"
-          sub="Multi-Cert unlocks AZ-900, AWS Cloud Practitioner, and MS-900 with one purchase. Track progress across all three."
+          headline={`Switch between all ${EXAMS.length} certifications`}
+          sub={`Multi-Cert unlocks ${EXAMS.map((e) => e.name).join(", ")} with one purchase. Track progress across all of them.`}
         />
 
         <div className="card-surface p-6 mb-4">

@@ -373,7 +373,7 @@ function WebPaywall() {
           </h1>
           <p className="text-muted-foreground mt-4 leading-relaxed text-lg">
             Pay once, keep lifetime access. Pick the cert you&apos;re studying — or
-            grab all three for the cost of a takeout dinner.
+            grab all {EXAMS.length} for the cost of a takeout dinner.
           </p>
           <div className="mt-4">
             <UsageBadge />

@@ -1354,11 +1354,6 @@ function Footer() {
               The pass-readiness app for certification prep. Built by people
               who've failed a cert and wished this existed.
             </p>
-            <div className="flex items-center gap-3 mt-5">
-              <SocialLink label="X" />
-              <SocialLink label="IG" />
-              <SocialLink label="in" />
-            </div>
           </div>
           <FooterCol
             title="Product"
@@ -1372,21 +1367,18 @@ function Footer() {
           />
           <FooterCol
             title="Certifications"
-            links={[
-              ...EXAMS.map((e) => ({
-                label: `${e.shortCode} · ${e.fullTitle.replace(/^(Microsoft |AWS Certified |Google Cloud |CompTIA )/, "")}`,
-                href: "/onboarding",
-              })),
-              { label: "Request a cert", href: "#" },
-            ]}
+            links={EXAMS.map((e) => ({
+              label: `${e.shortCode} · ${e.fullTitle.replace(/^(Microsoft |AWS Certified |Google Cloud |CompTIA )/, "")}`,
+              href: "/onboarding",
+            }))}
           />
           <FooterCol
             title="Company"
             links={[
-              { label: "About", href: "#" },
-              { label: "Contact", href: "#" },
-              { label: "Privacy", href: "#" },
-              { label: "Terms", href: "#" },
+              { label: "Support", href: "/support" },
+              { label: "Refunds", href: "/refunds" },
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
             ]}
           />
         </div>
@@ -1399,7 +1391,9 @@ function Footer() {
             <span className="text-white/70">
               Crafted by{" "}
               <a
-                href="#"
+                href="https://nice-field-0d7fa7210.7.azurestaticapps.net/"
+                target="_blank"
+                rel="noopener"
                 className="font-semibold bg-gradient-to-r from-brand-400 to-violet2-400 bg-clip-text text-transparent hover:from-brand-300 hover:to-violet2-300 transition-colors"
               >
                 Galtrix
@@ -1412,17 +1406,6 @@ function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-
-function SocialLink({ label }: { label: string }) {
-  return (
-    <a
-      href="#"
-      className="h-9 w-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-xs font-semibold hover:bg-white/20 transition-colors"
-    >
-      {label}
-    </a>
   );
 }
 

@@ -162,8 +162,8 @@ function Inner() {
                                 setExamMenuOpen(false);
                                 openWall(
                                   "Multi-Cert unlocks all exams",
-                                  "Switch between 3 certifications",
-                                  "Multi-Cert unlocks AZ-900, AWS Cloud Practitioner, and MS-900 with one purchase. Track progress across all three."
+                                  `Switch between all ${EXAMS.length} certifications`,
+                                  `Multi-Cert unlocks ${EXAMS.map((e) => e.name).join(", ")} with one purchase. Track progress across all of them.`
                                 );
                                 return;
                               }
@@ -791,7 +791,7 @@ function ProBanner({
               openWall(
                 "Unlock the full pass plan",
                 "Study until you actually pass",
-                "Unlimited drills, all 19 lessons, Rescue Mode, cram sheets. $19.99 one-time, lifetime access."
+                "Unlimited drills, every lesson, Rescue Mode, cram sheets. $19.99 one-time, lifetime access."
               )
             }
             className="group"

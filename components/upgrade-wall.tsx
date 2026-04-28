@@ -161,7 +161,7 @@ function UpgradeTab() {
 
   const proFeatures = [
     "Unlimited practice drills",
-    "All 19 lessons in your exam's chapters",
+    "Every lesson in your exam's chapters",
     "Deep review, cram sheets, key facts",
     "Rescue mode when the exam is near",
     "Personal mistake sheet",
