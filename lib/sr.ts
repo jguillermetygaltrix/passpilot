@@ -21,7 +21,13 @@
  *
  * Storage: localStorage. Phase 2 will sync via the same backend that
  * mirrors usage events (TBD — currently LS-only).
+ *
+ * Quota safety: `saveCards` uses `safeSetItem` which retries with
+ * progressive trim if Safari's ~5MB quota is hit. Eviction order
+ * (highest box first) preserves the cards with the most learning value.
  */
+
+import { safeSetItem } from "./safe-storage";
 
 export interface SRCard {
   questionId: string;
@@ -69,11 +75,25 @@ function loadCards(): Record<string, SRCard> {
 
 function saveCards(cards: Record<string, SRCard>): void {
   if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-  } catch {
-    /* quota — tolerate */
-  }
+  // safeSetItem retries with progressive trim if Safari hits its ~5MB cap.
+  // Each shrink halves the active set (mature cards evicted first).
+  safeSetItem<Record<string, SRCard>>({
+    key: STORAGE_KEY,
+    value: cards,
+    trim: (current) => {
+      const entries = Object.values(current);
+      if (entries.length <= 1) return current;
+      const halfTarget = Math.max(1, Math.floor(entries.length / 2));
+      const sorted = entries.slice().sort((a, b) => {
+        if (b.box !== a.box) return b.box - a.box; // highest box first
+        return a.createdAt.localeCompare(b.createdAt);
+      });
+      const keep = sorted.slice(halfTarget); // drop top half (mature)
+      const next: Record<string, SRCard> = {};
+      for (const c of keep) next[c.questionId] = c;
+      return next;
+    },
+  });
 }
 
 // Drop excess cards when over MAX_CARDS. Eviction order: highest box first

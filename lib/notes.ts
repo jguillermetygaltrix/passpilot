@@ -13,7 +13,13 @@
  *   - Topic guide pages → "Add note" sticky button
  *   - Voice mode → spoken capture (TODO future: STT-driven note creation)
  *   - Cram sheet → optionally include notes for selected topics
+ *
+ * Quota safety: `saveAll` uses `safeSetItem` which retries with progressive
+ * trim if Safari's ~5MB quota is hit. Pinned notes are preserved through
+ * trim cycles (the user explicitly marked them important).
  */
+
+import { safeSetItem } from "./safe-storage";
 
 export interface Note {
   id: string;
@@ -45,11 +51,26 @@ function loadAll(): Record<string, Note> {
 
 function saveAll(state: Record<string, Note>): void {
   if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    /* quota — tolerate */
-  }
+  // safeSetItem retries with progressive trim if Safari hits its ~5MB cap.
+  // Pinned notes are preserved through trim cycles — they were explicitly
+  // marked important by the user. Unpinned + oldest-first is the eviction order.
+  safeSetItem<Record<string, Note>>({
+    key: STORAGE_KEY,
+    value: state,
+    trim: (current) => {
+      const entries = Object.values(current);
+      if (entries.length <= 1) return current;
+      const pinned = entries.filter((n) => n.pinned);
+      const unpinned = entries
+        .filter((n) => !n.pinned)
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)); // newest first
+      const halfTarget = Math.max(0, Math.floor(unpinned.length / 2));
+      const keep = [...pinned, ...unpinned.slice(0, halfTarget)];
+      const next: Record<string, Note> = {};
+      for (const n of keep) next[n.id] = n;
+      return next;
+    },
+  });
 }
 
 // Drop oldest unpinned notes when over MAX_NOTES. Pinned notes are preserved

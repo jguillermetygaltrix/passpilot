@@ -143,12 +143,13 @@ function UpgradeTab() {
   const { profile } = useApp();
   const examMeta = profile ? getExamMeta(profile.examId) : null;
 
-  // Per-cert Pro checkout URLs. Lemon Squeezy products only exist for the
-  // first 3 certs right now — AI-900 / Security+ / AWS AIP / GCP CDL get
-  // a fallback URL + visual nudge toward Multi-Cert (which is the better
-  // value for those certs anyway). Pro card always shows so the $19.99
-  // anchor is visible. TODO: Boss to add Lemon Squeezy products for the
-  // 4 newer certs and wire URL entries in lib/licensing.ts.
+  // Per-cert Pro checkout URLs. Lemon Squeezy products currently exist for
+  // AZ-900 / AWS CCP / MS-900. The newer certs (AI-900, Security+, AWS AIP,
+  // GCP CDL) fall back to the AZ-900 SKU — the license-server still grants
+  // the right entitlement, but the checkout page shows the wrong cert name.
+  // OPEN LOOP: Boss to create the 4 missing Lemon Squeezy products + add
+  // URL entries here + in lib/licensing.ts. Until then, Multi-Cert ($79
+  // tier) is the better nudge for those 4 certs anyway.
   const PRO_URL_BY_EXAM: Partial<Record<string, string>> = {
     "az-900": CHECKOUT_URLS.proAz900,
     "aws-ccp": CHECKOUT_URLS.proAwsCcp,

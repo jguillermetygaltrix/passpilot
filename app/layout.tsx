@@ -4,6 +4,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { NativeBootstrap } from "@/components/native-bootstrap";
 import { DeviceRegistry } from "@/components/device-registry";
 import { BadgeToastHost } from "@/components/badge-toast";
+import { EXAMS } from "@/lib/data/exams";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,6 +14,13 @@ const inter = Inter({
 });
 
 const OG_IMAGE = "/og-cover.png"; // 1200×630, drop a file at public/og-cover.png
+
+// Catalog-driven so cert count + vendor list never drift when Boss adds an exam.
+const CERT_COUNT = EXAMS.length;
+const VENDOR_LIST = Array.from(new Set(EXAMS.map((e) => e.vendor))).join(", ");
+// Pricing copy — kept short so OG cards don't truncate.
+// Real tiers are wired in lib/licensing.ts: Lifetime $99 · Annual $49 · Monthly $9.99 · Weekly $4.99.
+const PRICE_LINE = "from $4.99/wk · $99 lifetime";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://passpilot.app"),
@@ -26,6 +34,8 @@ export const metadata: Metadata = {
     "MS-900",
     "AI-900",
     "Security+",
+    "AWS AIP",
+    "GCP CDL",
     "certification",
     "cloud exam",
     "adaptive study",
@@ -36,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PassPilot — Pass your cert. Actually pass it.",
     description:
-      "Diagnostic + daily plan + spaced-repetition + voice-mode + mock exams. 7 certs across Microsoft, AWS, GCP, CompTIA. $19.99 one-time.",
+      `Diagnostic + daily plan + spaced-repetition + voice-mode + mock exams. ${CERT_COUNT} certs across ${VENDOR_LIST}. ${PRICE_LINE}.`,
     type: "website",
     siteName: "PassPilot",
     url: "https://passpilot.app",
@@ -53,7 +63,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PassPilot — Pass your cert. Actually pass it.",
     description:
-      "AI-driven cert prep — diagnostic, daily plan, spaced repetition, voice mode, mock exams. 7 certs, $19.99 one-time.",
+      `AI-driven cert prep — diagnostic, daily plan, spaced repetition, voice mode, mock exams. ${CERT_COUNT} certs, ${PRICE_LINE}.`,
     images: [OG_IMAGE],
   },
 };
