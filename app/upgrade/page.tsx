@@ -13,6 +13,7 @@ import { useEntitlements } from "@/lib/entitlements";
 import { CHECKOUT_URLS } from "@/lib/licensing";
 import { useApp } from "@/lib/store";
 import { getExamMeta, EXAMS } from "@/lib/data/exams";
+import type { ExamId } from "@/lib/types";
 import { getPlatform, isIOS, allowExternalCheckout } from "@/lib/platform";
 import {
   isNativeIAPAvailable,
@@ -340,9 +341,17 @@ function RestoreBlock({
 function WebPaywall() {
   const { profile } = useApp();
   const ent = useEntitlements();
-  const examMeta = profile ? getExamMeta(profile.examId) : null;
   const [proConsented, setProConsented] = useState(false);
   const [multiConsented, setMultiConsented] = useState(false);
+
+  // Cert switcher on the Pro card — lets visitors buy ANY of the 7 certs at
+  // $19.99 without leaving this page (was a UX gap: page-load locked Pro to
+  // their profile's cert, so switching meant going back to onboarding).
+  // Defaults to the user's profile cert; falls back to EXAMS[0] for fresh visitors.
+  const [selectedProExamId, setSelectedProExamId] = useState<string>(
+    profile?.examId ?? EXAMS[0].id,
+  );
+  const proExamMeta = getExamMeta(selectedProExamId as ExamId);
 
   // Per-cert checkout map — covers all 7 certs (DEC-045 follow-up; previously
   // only routed AZ-900/AWS-CCP/MS-900 and the 4 newer certs fell through to
@@ -366,11 +375,16 @@ function WebPaywall() {
     "gcp-cdl": "pro-gcp-cdl",
   };
   const proCheckoutUrl =
-    (profile?.examId && PRO_URL_BY_EXAM[profile.examId]) ||
-    CHECKOUT_URLS.proAz900; // safe fallback — license-server still grants Pro tier
+    PRO_URL_BY_EXAM[selectedProExamId] || CHECKOUT_URLS.proAz900;
   const proOfferId =
-    (profile?.examId && PRO_OFFER_BY_EXAM[profile.examId]) ||
-    "pro-az900";
+    PRO_OFFER_BY_EXAM[selectedProExamId] || "pro-az900";
+
+  // Switching cert mid-flow invalidates the prior consent (legally cleanest
+  // since each cert is a distinct product variant; user must re-acknowledge).
+  const handleProExamChange = (newId: string) => {
+    setSelectedProExamId(newId);
+    setProConsented(false);
+  };
 
   if (ent.hasPro) {
     return <AlreadyUnlocked tier={ent.hasMulti ? "multi" : "pro"} />;
@@ -416,10 +430,31 @@ function WebPaywall() {
                 <div className="text-[11px] text-muted-foreground">one-time</div>
               </div>
             </div>
-            <div className="rounded-xl border border-brand-100 bg-brand-50/40 p-3 text-sm mb-4">
-              <span className="font-medium text-brand-700">Unlocks:</span>{" "}
-              {examMeta?.fullTitle ?? "Your chosen exam"}
-            </div>
+            <label className="rounded-xl border border-brand-100 bg-brand-50/40 p-3 text-sm mb-4 flex items-center gap-2 cursor-pointer hover:border-brand-200 transition-colors">
+              <span className="font-medium text-brand-700 shrink-0">Unlocks:</span>
+              <select
+                value={selectedProExamId}
+                onChange={(e) => handleProExamChange(e.target.value)}
+                className="flex-1 bg-transparent border-0 outline-none font-medium text-foreground cursor-pointer focus:ring-0 -my-0.5"
+                aria-label="Pick which certification to unlock with Pro"
+              >
+                {EXAMS.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.fullTitle}
+                  </option>
+                ))}
+              </select>
+              <svg
+                className="h-3.5 w-3.5 text-brand-700 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </label>
             <FeatureList
               features={[
                 "Unlimited practice drills",
@@ -442,7 +477,7 @@ function WebPaywall() {
             {proConsented ? (
               <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-4">
                 <Button variant="primary" size="lg" className="w-full group">
-                  Get Pro — $19.99
+                  Get {proExamMeta.shortCode} Pro — $19.99
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
               </a>
@@ -454,7 +489,7 @@ function WebPaywall() {
                 disabled
                 title="Check the consent box above to continue"
               >
-                Get Pro — $19.99
+                Get {proExamMeta.shortCode} Pro — $19.99
               </Button>
             )}
           </div>
