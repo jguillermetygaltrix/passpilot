@@ -35,15 +35,14 @@ const LS_PRODUCT_MAP: Record<
   "988342": { tier: "pro", exams: ["az-900"] }, // PassPilot Pro — AZ-900
   "988347": { tier: "pro", exams: ["aws-ccp"] }, // PassPilot Pro — AWS CCP
   "988353": { tier: "pro", exams: ["ms-900"] }, // PassPilot Pro — MS-900
+  "1015168": { tier: "pro", exams: ["ai-900"] }, // PassPilot Pro — AI-900
+  "1015184": { tier: "pro", exams: ["aws-aip"] }, // PassPilot Pro — AWS AI Practitioner
+  "1015185": { tier: "pro", exams: ["gcp-cdl"] }, // PassPilot Pro — GCP CDL
+  "1015181": { tier: "pro", exams: ["sec-plus"] }, // PassPilot Pro — Security+ (SY0-701)
   "988355": {
     tier: "multi",
     exams: EXAMS.map((e) => e.id), // ALL 7 certs (catalog-driven)
   }, // PassPilot Multi-Cert
-  // ── BLOCKED: need numeric product IDs from LS dashboard (URL bar) ──
-  // "TBD-AI900":  { tier: "pro", exams: ["ai-900"] },   // PassPilot Pro — AI-900
-  // "TBD-SECPLUS":{ tier: "pro", exams: ["sec-plus"] }, // PassPilot Pro — Security+
-  // "TBD-AWSAIP": { tier: "pro", exams: ["aws-aip"] },  // PassPilot Pro — AWS AIP
-  // "TBD-GCPCDL": { tier: "pro", exams: ["gcp-cdl"] },  // PassPilot Pro — GCP CDL
 };
 
 // ── Demo keys (no network call) ─────────────────────────────────────
