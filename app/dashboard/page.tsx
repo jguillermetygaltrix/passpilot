@@ -130,11 +130,9 @@ function Inner() {
                       background: `linear-gradient(135deg, ${examMeta.accentFrom}, ${examMeta.accentTo})`,
                     }}
                   >
-                    {examMeta.id === "aws-ccp"
-                      ? "A"
-                      : examMeta.id === "ms-900"
-                        ? "M"
-                        : "Z"}
+                    {/* Data-driven badge: first char of cert-id prefix.
+                        AZ-900→A · AWS-CCP→A · MS-900→M · AI-900→A · SEC-PLUS→S · AWS-AIP→A · GCP-CDL→G */}
+                    {examMeta.id.split("-")[0][0].toUpperCase()}
                   </span>
                   {examMeta.name} path
                   <ChevronDown
@@ -184,11 +182,9 @@ function Inner() {
                                 background: `linear-gradient(135deg, ${e.accentFrom}, ${e.accentTo})`,
                               }}
                             >
-                              {e.id === "aws-ccp"
-                                ? "AWS"
-                                : e.id === "ms-900"
-                                  ? "MS"
-                                  : "AZ"}
+                              {/* Data-driven badge: cert-id prefix uppercased.
+                                  Covers all 7 certs: AZ / AWS / MS / AI / SEC / AWS / GCP */}
+                              {e.id.split("-")[0].toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium truncate">

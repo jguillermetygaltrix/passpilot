@@ -344,17 +344,33 @@ function WebPaywall() {
   const [proConsented, setProConsented] = useState(false);
   const [multiConsented, setMultiConsented] = useState(false);
 
+  // Per-cert checkout map — covers all 7 certs (DEC-045 follow-up; previously
+  // only routed AZ-900/AWS-CCP/MS-900 and the 4 newer certs fell through to
+  // the AZ-900 SKU, meaning AI-900 buyers landed on the wrong checkout page).
+  const PRO_URL_BY_EXAM: Partial<Record<string, string>> = {
+    "az-900": CHECKOUT_URLS.proAz900,
+    "aws-ccp": CHECKOUT_URLS.proAwsCcp,
+    "ms-900": CHECKOUT_URLS.proMs900,
+    "ai-900": CHECKOUT_URLS.proAi900,
+    "sec-plus": CHECKOUT_URLS.proSecPlus,
+    "aws-aip": CHECKOUT_URLS.proAwsAip,
+    "gcp-cdl": CHECKOUT_URLS.proGcpCdl,
+  };
+  const PRO_OFFER_BY_EXAM: Partial<Record<string, string>> = {
+    "az-900": "pro-az900",
+    "aws-ccp": "pro-aws-ccp",
+    "ms-900": "pro-ms900",
+    "ai-900": "pro-ai900",
+    "sec-plus": "pro-sec-plus",
+    "aws-aip": "pro-aws-aip",
+    "gcp-cdl": "pro-gcp-cdl",
+  };
   const proCheckoutUrl =
-    profile?.examId === "aws-ccp"
-      ? CHECKOUT_URLS.proAwsCcp
-      : profile?.examId === "ms-900"
-        ? CHECKOUT_URLS.proMs900
-        : CHECKOUT_URLS.proAz900;
-
+    (profile?.examId && PRO_URL_BY_EXAM[profile.examId]) ||
+    CHECKOUT_URLS.proAz900; // safe fallback — license-server still grants Pro tier
   const proOfferId =
-    profile?.examId === "aws-ccp" ? "pro-aws-ccp"
-      : profile?.examId === "ms-900" ? "pro-ms900"
-      : "pro-az900";
+    (profile?.examId && PRO_OFFER_BY_EXAM[profile.examId]) ||
+    "pro-az900";
 
   if (ent.hasPro) {
     return <AlreadyUnlocked tier={ent.hasMulti ? "multi" : "pro"} />;
