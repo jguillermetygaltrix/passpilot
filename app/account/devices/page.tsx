@@ -48,7 +48,7 @@ export default function DevicesPage() {
           </header>
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 flex gap-2">
+            <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-500/10 p-4 text-sm text-red-800 flex gap-2">
               <XCircle className="h-4 w-4 mt-0.5 shrink-0" />
               {error}
             </div>
@@ -56,11 +56,11 @@ export default function DevicesPage() {
 
           {/* Cooldown indicator */}
           {!cooldown.ok && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 text-sm flex items-start gap-2">
-              <Clock className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
+            <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/60 dark:bg-amber-500/10 p-4 text-sm flex items-start gap-2">
+              <Clock className="h-4 w-4 text-amber-700 dark:text-amber-300 mt-0.5 shrink-0" />
               <div>
-                <strong className="text-amber-900">Revocation cooldown active.</strong>
-                <span className="text-amber-800">
+                <strong className="text-amber-900 dark:text-amber-200">Revocation cooldown active.</strong>
+                <span className="text-amber-800 dark:text-amber-300">
                   {" "}You can revoke another device in <strong>{cooldown.waitHours}</strong> {cooldown.waitHours === 1 ? "hour" : "hours"}.
                   This prevents account sharing.
                 </span>
@@ -134,16 +134,16 @@ function DeviceCard({ device, canRevoke, onRevoke }: {
   :                                             Monitor;
 
   return (
-    <div className={`rounded-xl border p-4 ${device.isCurrent ? "border-brand-200 bg-brand-50/30" : "bg-card"}`}>
+    <div className={`rounded-xl border p-4 ${device.isCurrent ? "border-brand-200 dark:border-brand-500/40 bg-brand-50 dark:bg-brand-500/15/30" : "bg-card"}`}>
       <div className="flex items-start gap-3">
-        <div className={`rounded-lg p-2 ${device.isCurrent ? "bg-brand-100 text-brand-700" : "bg-muted text-muted-foreground"}`}>
+        <div className={`rounded-lg p-2 ${device.isCurrent ? "bg-brand-100 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300" : "bg-muted text-muted-foreground"}`}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-semibold">{device.nickname}</h3>
             {device.isCurrent && (
-              <span className="chip bg-brand-50 border-brand-100 text-brand-700 text-[10px]">
+              <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 text-[10px]">
                 This device
               </span>
             )}
@@ -163,7 +163,7 @@ function DeviceCard({ device, canRevoke, onRevoke }: {
             size="sm"
             onClick={onRevoke}
             disabled={!canRevoke}
-            className="shrink-0 text-red-600 hover:bg-red-50 disabled:text-muted-foreground"
+            className="shrink-0 text-red-600 hover:bg-red-50 dark:bg-red-500/10 disabled:text-muted-foreground"
           >
             Revoke
           </Button>

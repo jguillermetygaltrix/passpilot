@@ -139,7 +139,7 @@ function Inner() {
         <div className="space-y-6 max-w-2xl mx-auto">
           {/* Hero */}
           <div className="text-center space-y-3">
-            <div className="chip bg-emerald-50 border-emerald-100 text-emerald-700 mx-auto">
+            <div className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 text-emerald-700 dark:text-emerald-300 mx-auto">
               <Sparkles className="h-3 w-3" />
               Daily Challenge
             </div>
@@ -156,7 +156,7 @@ function Inner() {
           {/* Status card */}
           {completed && todayAttempt ? (
             <div className="card-surface p-6 sm:p-8 text-center bg-gradient-to-br from-emerald-50/50 via-white to-cyan-50/40">
-              <div className="h-14 w-14 rounded-2xl bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3">
+              <div className="h-14 w-14 rounded-2xl bg-emerald-100 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto mb-3">
                 <CheckCircle2 className="h-7 w-7" />
               </div>
               <div className="text-5xl font-semibold tabular-nums tracking-tight mb-1">
@@ -166,7 +166,7 @@ function Inner() {
                 {todayAttempt.answers.filter((a) => a.correct).length} of{" "}
                 {todayAttempt.answers.length} correct
               </div>
-              <div className="text-xs text-muted-foreground inline-flex items-center gap-1 bg-slate-50 border border-border rounded-full px-3 py-1.5">
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1 bg-slate-50 dark:bg-muted border border-border rounded-full px-3 py-1.5">
                 <Clock className="h-3 w-3" />
                 Next challenge unlocks in{" "}
                 <span className="font-semibold tabular-nums">
@@ -259,7 +259,7 @@ function Inner() {
                     return (
                       <div
                         key={a.id}
-                        className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg bg-slate-50/60 border border-border"
+                        className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg bg-slate-50 dark:bg-muted/60 border border-border"
                       >
                         <span className="text-xs text-muted-foreground tabular-nums">
                           {date.toLocaleDateString(undefined, {
@@ -300,7 +300,7 @@ function Stat({
   value: string;
 }) {
   return (
-    <div className="text-center px-3 py-2.5 rounded-xl bg-white border border-border">
+    <div className="text-center px-3 py-2.5 rounded-xl bg-white dark:bg-card border border-border">
       <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-0.5">
         {icon}
         {label}

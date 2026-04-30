@@ -131,7 +131,7 @@ function CompactRow({
     <Link
       href={href}
       onClick={() => hasMulti && onPick(examId)}
-      className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-50/60 border border-border hover:border-brand-200 hover:bg-brand-50/30 transition-all group"
+      className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-50 dark:bg-muted/60 border border-border hover:border-brand-200 dark:border-brand-500/40 hover:bg-brand-50 dark:bg-brand-500/15/30 transition-all group"
     >
       <div
         className="h-8 w-8 rounded-lg text-white flex items-center justify-center text-[10px] font-bold shrink-0"
@@ -171,7 +171,7 @@ function FullRow({
       onClick={() => hasMulti && onPick(rec.examId)}
       className={`block rounded-xl border p-4 transition-all group ${
         isPrimary
-          ? "border-violet-300 bg-white hover:border-violet-400 hover:shadow-card"
+          ? "border-violet-300 bg-white dark:bg-card hover:border-violet-400 hover:shadow-card"
           : "border-border bg-white/60 hover:border-violet-200"
       }`}
     >

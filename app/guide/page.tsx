@@ -95,7 +95,7 @@ function Inner() {
                   <Button
                     variant="secondary"
                     size="lg"
-                    className="w-full sm:w-auto bg-white text-brand-700 hover:bg-white/90 border-transparent group"
+                    className="w-full sm:w-auto bg-white dark:bg-card text-brand-700 dark:text-brand-300 hover:bg-white/90 border-transparent group"
                   >
                     <PlayCircle className="h-4 w-4" />
                     {resumeLabel}
@@ -171,7 +171,7 @@ function Inner() {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="h-4 w-4 text-brand-600" />
-                    <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+                    <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
                       Domain weights
                     </div>
                   </div>
@@ -340,7 +340,7 @@ function WeightBar({ topics }: { topics: ReturnType<typeof getTopicsForExam> }) 
   ];
   return (
     <div>
-      <div className="h-4 w-full rounded-full overflow-hidden flex shadow-inner bg-slate-100">
+      <div className="h-4 w-full rounded-full overflow-hidden flex shadow-inner bg-slate-100 dark:bg-muted">
         {topics.map((t, i) => (
           <div
             key={t.id}
@@ -455,11 +455,11 @@ function DomainCard({
   return (
     <Link
       href={`/guide/${topicId}`}
-      className="group rounded-2xl border border-border bg-white p-5 hover:border-brand-300 hover:shadow-soft transition-all"
+      className="group rounded-2xl border border-border bg-white dark:bg-card p-5 hover:border-brand-300 hover:shadow-soft transition-all"
     >
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center font-semibold tabular-nums text-sm shrink-0">
+          <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center font-semibold tabular-nums text-sm shrink-0">
             {index}
           </div>
           <div>
@@ -473,7 +473,7 @@ function DomainCard({
           </div>
         </div>
         {done === lessons.length && lessons.length > 0 && (
-          <span className="chip bg-emerald-50 border-emerald-200 text-emerald-700 shrink-0">
+          <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 shrink-0">
             <CheckCircle2 className="h-3 w-3" />
             Done
           </span>
@@ -491,7 +491,7 @@ function DomainCard({
         <span className="text-xs text-muted-foreground tabular-nums shrink-0">
           {done}/{lessons.length}
         </span>
-        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-brand-700 transition-colors shrink-0" />
+        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-brand-700 dark:text-brand-300 transition-colors shrink-0" />
       </div>
     </Link>
   );

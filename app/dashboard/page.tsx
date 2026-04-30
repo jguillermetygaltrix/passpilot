@@ -122,7 +122,7 @@ function Inner() {
               <div className="relative">
                 <button
                   onClick={() => setExamMenuOpen((v) => !v)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground hover:text-brand-700 transition-colors group"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground hover:text-brand-700 dark:text-brand-300 transition-colors group"
                 >
                   <span
                     className="h-4 w-4 rounded-md text-white flex items-center justify-center text-[8px] font-bold"
@@ -145,8 +145,8 @@ function Inner() {
                       className="fixed inset-0 z-30"
                       onClick={() => setExamMenuOpen(false)}
                     />
-                    <div className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-border bg-white shadow-card overflow-hidden z-40 animate-scale-in">
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 py-2 border-b border-border bg-slate-50">
+                    <div className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-border bg-white dark:bg-card shadow-card overflow-hidden z-40 animate-scale-in">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 py-2 border-b border-border bg-slate-50 dark:bg-muted">
                         Switch certification
                       </div>
                       {EXAMS.map((e) => {
@@ -170,9 +170,9 @@ function Inner() {
                             }}
                             className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${
                               isActive
-                                ? "bg-brand-50"
+                                ? "bg-brand-50 dark:bg-brand-500/15"
                                 : isLocked
-                                  ? "opacity-70 hover:bg-slate-50"
+                                  ? "opacity-70 hover:bg-slate-50 dark:bg-muted"
                                   : "hover:bg-muted/50"
                             }`}
                           >
@@ -198,7 +198,7 @@ function Inner() {
                               <CheckCircle2 className="h-4 w-4 text-brand-600 shrink-0" />
                             )}
                             {isLocked && (
-                              <span className="chip bg-rose-50 border-rose-200 text-rose-700 text-[9px] px-1.5 py-0.5 shrink-0">
+                              <span className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-[9px] px-1.5 py-0.5 shrink-0">
                                 <Lock className="h-2.5 w-2.5" />
                                 Multi
                               </span>
@@ -214,7 +214,7 @@ function Inner() {
             <h1 className="heading-2">Your pass dashboard</h1>
             {profile.why && (
               <div className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1.5">
-                <span className="chip bg-violet-50 border-violet-100 text-violet-700 text-[10px] py-0.5">
+                <span className="chip bg-violet-50 dark:bg-violet-500/15 border-violet-100 text-violet-700 text-[10px] py-0.5">
                   {getWhyLabel(profile.why)}
                 </span>
                 <span className="leading-snug">
@@ -232,17 +232,17 @@ function Inner() {
             <DailyChallengeButton />
             <SRReviewButton />
             <Link href="/listen">
-              <Button variant="outline" size="md" className="group border-cyan-300 bg-cyan-50/40 text-cyan-800 hover:bg-cyan-50">
+              <Button variant="outline" size="md" className="group border-cyan-300 bg-cyan-50/40 dark:bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-50">
                 <Headphones className="h-4 w-4" /> Listen
               </Button>
             </Link>
             <Link href="/cram">
-              <Button variant="outline" size="md" className="group border-amber-300 bg-amber-50/40 text-amber-800 hover:bg-amber-50">
+              <Button variant="outline" size="md" className="group border-amber-300 dark:border-amber-500/40 bg-amber-50/40 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 hover:bg-amber-50">
                 <FileDown className="h-4 w-4" /> Cram sheet
               </Button>
             </Link>
             <Link href="/mock">
-              <Button variant="outline" size="md" className="group border-rose-300 bg-rose-50/40 text-rose-800 hover:bg-rose-50">
+              <Button variant="outline" size="md" className="group border-rose-300 dark:border-rose-500/40 bg-rose-50/40 dark:bg-rose-500/10 text-rose-800 dark:text-rose-300 hover:bg-rose-50">
                 <Sparkles className="h-4 w-4" /> Mock exam
               </Button>
             </Link>
@@ -277,7 +277,7 @@ function Inner() {
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <RiskBadge risk={readiness.risk} />
-                  <span className="chip bg-white border-border text-foreground">
+                  <span className="chip bg-white dark:bg-card border-border text-foreground">
                     <Sparkles className="h-3 w-3 text-brand-600" />
                     AI read
                   </span>
@@ -384,7 +384,7 @@ function Inner() {
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-medium text-brand-700 hover:text-brand-800 flex items-center gap-1"
+                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1"
               >
                 Full plan <ArrowRight className="h-3 w-3" />
               </Link>
@@ -395,13 +395,13 @@ function Inner() {
                 return (
                   <li
                     key={b.id}
-                    className="flex items-center gap-3 p-3 rounded-xl border border-border bg-white"
+                    className="flex items-center gap-3 p-3 rounded-xl border border-border bg-white dark:bg-card"
                   >
                     <div
                       className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
                         done
                           ? "bg-emerald-500 text-white"
-                          : "bg-brand-50 text-brand-700 border border-brand-100"
+                          : "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30"
                       }`}
                     >
                       {done ? (
@@ -453,7 +453,7 @@ function Inner() {
               <div className="font-semibold text-sm">Topic mastery</div>
               <Link
                 href="/weakness"
-                className="text-xs font-medium text-brand-700 hover:text-brand-800 flex items-center gap-1"
+                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1"
               >
                 Weakness review <ArrowRight className="h-3 w-3" />
               </Link>
@@ -498,14 +498,14 @@ function Inner() {
                           </div>
                           <div className="h-1.5 rounded-full bg-white/20 overflow-hidden">
                             <div
-                              className="h-full bg-white rounded-full transition-all"
+                              className="h-full bg-white dark:bg-card rounded-full transition-all"
                               style={{ width: `${lessonsPct}%` }}
                             />
                           </div>
                         </div>
                         <Link
                           href={`/guide/${nextLesson.topicId}/${nextLesson.id}`}
-                          className="mt-4 inline-flex items-center gap-1.5 chip bg-white text-brand-700 border-transparent hover:bg-white/90"
+                          className="mt-4 inline-flex items-center gap-1.5 chip bg-white dark:bg-card text-brand-700 dark:text-brand-300 border-transparent hover:bg-white/90"
                         >
                           <PlayCircle className="h-3.5 w-3.5" />
                           Resume
@@ -521,7 +521,7 @@ function Inner() {
                         </div>
                         <Link
                           href="/practice"
-                          className="mt-4 inline-flex items-center gap-1.5 chip bg-white text-brand-700 border-transparent hover:bg-white/90"
+                          className="mt-4 inline-flex items-center gap-1.5 chip bg-white dark:bg-card text-brand-700 dark:text-brand-300 border-transparent hover:bg-white/90"
                         >
                           <PlayCircle className="h-3.5 w-3.5" />
                           Start drills
@@ -548,7 +548,7 @@ function Inner() {
                       <div className="min-w-0">
                         <Link
                           href={`/practice?topic=${m.topicId}`}
-                          className="text-sm font-medium hover:text-brand-700"
+                          className="text-sm font-medium hover:text-brand-700 dark:text-brand-300"
                         >
                           {TOPIC_MAP[m.topicId]?.name}
                         </Link>
@@ -559,7 +559,7 @@ function Inner() {
                       </div>
                       <Link
                         href={`/practice?topic=${m.topicId}`}
-                        className="chip bg-rose-50 border-rose-200 text-rose-700 shrink-0"
+                        className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 shrink-0"
                       >
                         Drill
                       </Link>
@@ -646,8 +646,8 @@ function DailyChallengeButton() {
         size="md"
         className={
           done
-            ? "group border-emerald-300 bg-emerald-50/40 text-emerald-800 hover:bg-emerald-50"
-            : "group border-emerald-400 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 ring-2 ring-emerald-200/60"
+            ? "group border-emerald-300 bg-emerald-50/40 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-50"
+            : "group border-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-900 hover:bg-emerald-100 ring-2 ring-emerald-200/60"
         }
       >
         <Sparkles className="h-4 w-4" />
@@ -680,7 +680,7 @@ function BadgeCountButton() {
       <Button
         variant="outline"
         size="md"
-        className="group border-amber-300 bg-amber-50/40 text-amber-800 hover:bg-amber-50"
+        className="group border-amber-300 dark:border-amber-500/40 bg-amber-50/40 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 hover:bg-amber-50"
       >
         <Trophy className="h-4 w-4" />
         Badges
@@ -758,7 +758,7 @@ function ProBanner({
 }) {
   return (
     <div className="mb-5 rounded-2xl p-[1.5px] bg-gradient-to-br from-brand-500/60 via-violet2-500/60 to-cyan-500/60">
-      <div className="rounded-[calc(1rem-1.5px)] bg-white p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+      <div className="rounded-[calc(1rem-1.5px)] bg-white dark:bg-card p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-500 to-violet2-600 text-white flex items-center justify-center shadow-pop shrink-0">
             <Sparkles className="h-4 w-4" />

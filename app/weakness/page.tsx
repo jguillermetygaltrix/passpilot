@@ -68,7 +68,7 @@ function Inner() {
 
         {clusters.length === 0 ? (
           <div className="card-surface p-10 text-center">
-            <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-3">
+            <div className="h-12 w-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto mb-3">
               <Shield className="h-5 w-5" />
             </div>
             <h3 className="font-semibold text-lg">No weak clusters detected</h3>
@@ -90,7 +90,7 @@ function Inner() {
               return (
                 <div key={c.topic.id} className="card-surface p-6">
                   <div className="flex items-start gap-4 flex-wrap">
-                    <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                    <div className="h-12 w-12 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-100 text-rose-700 dark:text-rose-300 flex items-center justify-center shrink-0">
                       <AlertTriangle className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-[220px]">
@@ -98,7 +98,7 @@ function Inner() {
                         <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
                           Risk #{idx + 1}
                         </span>
-                        <span className="chip bg-rose-50 text-rose-700 border-rose-200">
+                        <span className="chip bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-500/30">
                           Priority {c.mastery.priority.toFixed(2)}
                         </span>
                       </div>
@@ -122,7 +122,7 @@ function Inner() {
                         />
                       </div>
 
-                      <div className="mt-4 rounded-xl border border-border bg-slate-50/60 p-4">
+                      <div className="mt-4 rounded-xl border border-border bg-slate-50 dark:bg-muted/60 p-4">
                         <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-1.5">
                           Mini summary
                         </div>
@@ -162,7 +162,7 @@ function Inner() {
             <ul className="divide-y-soft">
               {topMisses.map(([id, v]) => (
                 <li key={id} className="py-3 flex items-start gap-3">
-                  <div className="h-7 w-7 rounded-lg bg-rose-50 border border-rose-100 text-rose-700 flex items-center justify-center shrink-0 text-[11px] font-semibold tabular-nums">
+                  <div className="h-7 w-7 rounded-lg bg-rose-50 dark:bg-rose-500/10 border border-rose-100 text-rose-700 dark:text-rose-300 flex items-center justify-center shrink-0 text-[11px] font-semibold tabular-nums">
                     ×{v.count}
                   </div>
                   <div className="min-w-0">

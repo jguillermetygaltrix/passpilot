@@ -297,10 +297,10 @@ export function QuestionRunner({
 
       <div className="card-surface p-6 sm:p-8 animate-slide-up">
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="chip bg-brand-50 text-brand-700 border-brand-100">
+          <span className="chip bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border-brand-100 dark:border-brand-500/30">
             {TOPIC_MAP[q.topicId]?.shortName ?? q.topicId}
           </span>
-          <span className="chip bg-slate-50 text-slate-700 border-slate-200 capitalize">
+          <span className="chip bg-slate-50 dark:bg-muted text-slate-700 dark:text-slate-300 border-slate-200 dark:border-border capitalize">
             {q.difficulty}
           </span>
         </div>
@@ -320,15 +320,15 @@ export function QuestionRunner({
                 disabled={revealed}
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3.5 text-[14.5px] transition-all flex items-start gap-3",
-                  !revealed && "hover:border-brand-300 hover:bg-brand-50/40",
+                  !revealed && "hover:border-brand-300 hover:bg-brand-50 dark:bg-brand-500/15/40",
                   !revealed && isSelected &&
-                    "border-brand-500 bg-brand-50 ring-2 ring-brand-200",
-                  !revealed && !isSelected && "border-border bg-white",
-                  showState && isCorrect && "border-emerald-400 bg-emerald-50",
+                    "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-200",
+                  !revealed && !isSelected && "border-border bg-white dark:bg-card",
+                  showState && isCorrect && "border-emerald-400 bg-emerald-50 dark:bg-emerald-500/10",
                   showState && isSelected && !isCorrect &&
-                    "border-rose-400 bg-rose-50",
+                    "border-rose-400 bg-rose-50 dark:bg-rose-500/10",
                   showState && !isCorrect && !isSelected &&
-                    "border-border bg-white opacity-60"
+                    "border-border bg-white dark:bg-card opacity-60"
                 )}
               >
                 <span
@@ -336,7 +336,7 @@ export function QuestionRunner({
                     "h-6 w-6 rounded-full border flex items-center justify-center text-[11px] font-semibold shrink-0 mt-0.5",
                     !revealed && isSelected &&
                       "border-brand-500 bg-brand-500 text-white",
-                    !revealed && !isSelected && "border-border bg-white text-muted-foreground",
+                    !revealed && !isSelected && "border-border bg-white dark:bg-card text-muted-foreground",
                     showState && isCorrect && "border-emerald-500 bg-emerald-500 text-white",
                     showState && isSelected && !isCorrect &&
                       "border-rose-500 bg-rose-500 text-white"
@@ -361,8 +361,8 @@ export function QuestionRunner({
             className={cn(
               "mt-5 rounded-xl border p-4 animate-fade-in text-sm",
               selected === q.correctIndex
-                ? "border-emerald-200 bg-emerald-50/60"
-                : "border-amber-200 bg-amber-50/60"
+                ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/60 dark:bg-emerald-500/10"
+                : "border-amber-200 dark:border-amber-500/30 bg-amber-50/60 dark:bg-amber-500/10"
             )}
           >
             <div className="font-medium mb-1 flex items-center gap-2">

@@ -249,8 +249,8 @@ function Inner() {
                   className={cn(
                     "text-left rounded-xl border p-4 transition-all",
                     topicId === t.id
-                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
-                      : "border-border bg-white hover:border-brand-200"
+                      ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-200"
+                      : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40"
                   )}
                 >
                   <div className="font-medium text-sm">{t.name}</div>
@@ -279,8 +279,8 @@ function Inner() {
                 className={cn(
                   "rounded-xl border py-2.5 px-3 text-sm transition-all flex flex-col items-center gap-0.5",
                   difficulty === d.v
-                    ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200 font-semibold"
-                    : "border-border bg-white hover:border-brand-200"
+                    ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-200 font-semibold"
+                    : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40"
                 )}
               >
                 <span className="text-base leading-none">{d.emoji}</span>
@@ -352,8 +352,8 @@ function Inner() {
         )}
 
         {!incorrectIds.length && (
-          <div className="mt-6 card-surface p-5 flex items-start gap-3 border-brand-100">
-            <div className="h-9 w-9 rounded-xl bg-brand-50 text-brand-700 border border-brand-100 flex items-center justify-center shrink-0">
+          <div className="mt-6 card-surface p-5 flex items-start gap-3 border-brand-100 dark:border-brand-500/30">
+            <div className="h-9 w-9 rounded-xl bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30 flex items-center justify-center shrink-0">
               <AlertTriangle className="h-4 w-4" />
             </div>
             <div>
@@ -366,7 +366,7 @@ function Inner() {
               </div>
               <Link
                 href="/diagnostic"
-                className="text-sm text-brand-700 hover:text-brand-800 font-medium inline-block mt-2"
+                className="text-sm text-brand-700 dark:text-brand-300 hover:text-brand-800 font-medium inline-block mt-2"
               >
                 Or take the diagnostic →
               </Link>
@@ -389,7 +389,7 @@ function DrillCounter({
 }) {
   if (hasPro) {
     return (
-      <div className="chip bg-emerald-50 border-emerald-200 text-emerald-700">
+      <div className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300">
         <InfinityIcon className="h-3.5 w-3.5" />
         Unlimited drills · Pro
       </div>
@@ -402,8 +402,8 @@ function DrillCounter({
       className={cn(
         "flex flex-col rounded-xl border px-4 py-2.5 transition-colors hover:shadow-soft",
         limited
-          ? "border-rose-200 bg-rose-50/60 text-rose-700 hover:bg-rose-50"
-          : "border-border bg-white text-foreground hover:border-brand-200"
+          ? "border-rose-200 dark:border-rose-500/30 bg-rose-50/60 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 hover:bg-rose-50"
+          : "border-border bg-white dark:bg-card text-foreground hover:border-brand-200 dark:border-brand-500/40"
       )}
     >
       <div className="text-[10px] uppercase tracking-wider font-semibold opacity-70">
@@ -446,8 +446,8 @@ function ModeCard({
       className={cn(
         "text-left rounded-2xl border p-5 transition-all h-full",
         selected
-          ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200 shadow-soft"
-          : "border-border bg-white hover:border-brand-200 hover:shadow-soft",
+          ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-200 shadow-soft"
+          : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40 hover:shadow-soft",
         disabled && "opacity-50 cursor-not-allowed"
       )}
     >
@@ -456,7 +456,7 @@ function ModeCard({
           "h-10 w-10 rounded-xl flex items-center justify-center mb-3",
           selected
             ? "bg-brand-600 text-white"
-            : "bg-brand-50 text-brand-700 border border-brand-100"
+            : "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30"
         )}
       >
         <Icon className="h-5 w-5" />

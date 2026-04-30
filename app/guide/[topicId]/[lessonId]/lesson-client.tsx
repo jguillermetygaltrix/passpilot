@@ -215,15 +215,15 @@ function Inner() {
         <ProgressBar value={progress} />
 
         <div className="mt-5 mb-2 flex items-center gap-2 flex-wrap">
-          <span className="chip bg-brand-50 border-brand-100 text-brand-700">
+          <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300">
             <BookOpen className="h-3 w-3" />
             Lesson {lesson.order}
           </span>
-          <span className="chip bg-slate-50 border-slate-200 text-slate-700">
+          <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
             {lesson.minutes} min read
           </span>
           {isComplete && (
-            <span className="chip bg-emerald-50 border-emerald-200 text-emerald-700">
+            <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300">
               <CheckCircle2 className="h-3 w-3" />
               Completed
             </span>
@@ -283,16 +283,16 @@ function Inner() {
 
         <div className="mt-6 flex items-center justify-center gap-4 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
-            <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+            <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
               ←
             </kbd>
-            <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+            <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
               →
             </kbd>
             navigate
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+            <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
               Space
             </kbd>
             next
@@ -302,7 +302,7 @@ function Inner() {
         {isLast && (
           <div className="mt-8 grid sm:grid-cols-2 gap-3 animate-fade-in">
             <Link href={`/practice?topic=${topic.id}`}>
-              <div className="rounded-2xl border border-border bg-white p-4 hover:border-brand-300 hover:shadow-soft transition-all h-full">
+              <div className="rounded-2xl border border-border bg-white dark:bg-card p-4 hover:border-brand-300 hover:shadow-soft transition-all h-full">
                 <div className="flex items-center gap-2 mb-1.5">
                   <Dumbbell className="h-4 w-4 text-brand-600" />
                   <div className="font-medium text-sm">Lock it in</div>
@@ -314,7 +314,7 @@ function Inner() {
               </div>
             </Link>
             <Link href={`/guide/${topic.id}`}>
-              <div className="rounded-2xl border border-border bg-white p-4 hover:border-brand-300 hover:shadow-soft transition-all h-full">
+              <div className="rounded-2xl border border-border bg-white dark:bg-card p-4 hover:border-brand-300 hover:shadow-soft transition-all h-full">
                 <div className="flex items-center gap-2 mb-1.5">
                   <Home className="h-4 w-4 text-brand-600" />
                   <div className="font-medium text-sm">Chapter home</div>
@@ -412,11 +412,11 @@ function CardView({ card }: { card: LessonCard }) {
       )}
 
       {card.table && (
-        <div className="mt-5 rounded-xl border border-border bg-white overflow-hidden">
+        <div className="mt-5 rounded-xl border border-border bg-white dark:bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 border-b border-border">
+                <tr className="bg-slate-50 dark:bg-muted border-b border-border">
                   {card.table.columns.map((c, i) => (
                     <th
                       key={i}
@@ -459,7 +459,7 @@ function CardView({ card }: { card: LessonCard }) {
             palette.quote
           )}
         >
-          <Quote className="h-4 w-4 absolute -top-2 -left-2 bg-white rounded-full p-0.5 text-brand-600 border border-brand-100" />
+          <Quote className="h-4 w-4 absolute -top-2 -left-2 bg-white dark:bg-card rounded-full p-0.5 text-brand-600 border border-brand-100 dark:border-brand-500/30" />
           <p className="text-[15px] italic font-medium leading-snug">
             "{card.highlight}"
           </p>
@@ -473,47 +473,47 @@ function kindPalette(kind: LessonCardKind) {
   switch (kind) {
     case "intro":
       return {
-        wrapper: "bg-gradient-to-br from-brand-50/70 to-white border-brand-100",
+        wrapper: "bg-gradient-to-br from-brand-50/70 to-white border-brand-100 dark:border-brand-500/30",
         iconBg: "bg-brand-600 text-white",
-        label: "text-brand-700",
-        bullet: "bg-brand-100 text-brand-700",
-        quote: "border-brand-500 bg-brand-50/40",
+        label: "text-brand-700 dark:text-brand-300",
+        bullet: "bg-brand-100 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300",
+        quote: "border-brand-500 bg-brand-50 dark:bg-brand-500/15/40",
         icon: Sparkles,
       };
     case "concept":
       return {
-        wrapper: "bg-white border-border",
-        iconBg: "bg-brand-50 text-brand-700 border border-brand-100",
-        label: "text-brand-700",
-        bullet: "bg-brand-50 text-brand-700 border border-brand-100",
-        quote: "border-brand-500 bg-brand-50/40",
+        wrapper: "bg-white dark:bg-card border-border",
+        iconBg: "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30",
+        label: "text-brand-700 dark:text-brand-300",
+        bullet: "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30",
+        quote: "border-brand-500 bg-brand-50 dark:bg-brand-500/15/40",
         icon: Target,
       };
     case "comparison":
       return {
-        wrapper: "bg-white border-border",
-        iconBg: "bg-sky-50 text-sky-700 border border-sky-100",
-        label: "text-sky-700",
-        bullet: "bg-sky-50 text-sky-700 border border-sky-100",
+        wrapper: "bg-white dark:bg-card border-border",
+        iconBg: "bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-100",
+        label: "text-sky-700 dark:text-sky-300",
+        bullet: "bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 border border-sky-100",
         quote: "border-sky-500 bg-sky-50/40",
         icon: GitCompare,
       };
     case "example":
       return {
-        wrapper: "bg-emerald-50/30 border-emerald-100",
+        wrapper: "bg-emerald-50/30 dark:bg-emerald-500/10 border-emerald-100",
         iconBg: "bg-emerald-500 text-white",
-        label: "text-emerald-700",
-        bullet: "bg-emerald-50 text-emerald-700 border border-emerald-100",
-        quote: "border-emerald-500 bg-emerald-50/40",
+        label: "text-emerald-700 dark:text-emerald-300",
+        bullet: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-100",
+        quote: "border-emerald-500 bg-emerald-50/40 dark:bg-emerald-500/10",
         icon: Lightbulb,
       };
     case "tip":
       return {
-        wrapper: "bg-amber-50/40 border-amber-100",
+        wrapper: "bg-amber-50/40 dark:bg-amber-500/10 border-amber-100",
         iconBg: "bg-amber-500 text-white",
-        label: "text-amber-700",
-        bullet: "bg-amber-50 text-amber-800 border border-amber-100",
-        quote: "border-amber-500 bg-amber-50/60",
+        label: "text-amber-700 dark:text-amber-300",
+        bullet: "bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-100",
+        quote: "border-amber-500 bg-amber-50/60 dark:bg-amber-500/10",
         icon: Zap,
       };
     case "recap":
@@ -575,8 +575,8 @@ function CelebrationOverlay({
 
       <div className="relative w-full max-w-md animate-bounce-in">
         <div className="rounded-[28px] bg-gradient-to-br from-brand-600 via-brand-500 to-violet2-600 p-[1.5px] shadow-pop">
-          <div className="rounded-[27px] bg-white p-7 md:p-8 relative overflow-hidden">
-            <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-brand-100 blur-3xl opacity-70" />
+          <div className="rounded-[27px] bg-white dark:bg-card p-7 md:p-8 relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-70" />
             <div className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-violet2-100 blur-3xl opacity-70" />
 
             <div className="relative text-center">
@@ -586,7 +586,7 @@ function CelebrationOverlay({
                   <Trophy className="h-9 w-9" />
                 </div>
               </div>
-              <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto mb-3">
+              <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
                 <Sparkles className="h-3 w-3" />
                 Lesson complete
               </div>
@@ -619,8 +619,8 @@ function CelebrationOverlay({
               </div>
 
               {nextLessonTitle && (
-                <div className="mt-6 rounded-xl border border-brand-100 bg-brand-50/60 p-3.5 text-left">
-                  <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+                <div className="mt-6 rounded-xl border border-brand-100 dark:border-brand-500/30 bg-brand-50 dark:bg-brand-500/15/60 p-3.5 text-left">
+                  <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
                     Up next
                   </div>
                   <div className="text-sm font-semibold mt-0.5 truncate">
@@ -678,10 +678,10 @@ function StatTile({
 }) {
   const bg =
     tone === "brand"
-      ? "bg-brand-50 border-brand-100 text-brand-700"
+      ? "bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300"
       : tone === "amber"
-        ? "bg-amber-50 border-amber-100 text-amber-700"
-        : "bg-emerald-50 border-emerald-100 text-emerald-700";
+        ? "bg-amber-50 dark:bg-amber-500/10 border-amber-100 text-amber-700 dark:text-amber-300"
+        : "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 text-emerald-700 dark:text-emerald-300";
   return (
     <div className={cn("rounded-xl border p-3", bg)}>
       <div className="flex items-center justify-center gap-1 mb-0.5">

@@ -255,7 +255,7 @@ export function CommandPalette() {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="rounded-2xl p-[1.5px] bg-gradient-to-br from-brand-500/70 via-violet2-500/70 to-cyan-500/70 shadow-pop">
-          <div className="rounded-[14px] bg-white overflow-hidden">
+          <div className="rounded-[14px] bg-white dark:bg-card overflow-hidden">
             <div className="flex items-center gap-3 px-4 h-14 border-b border-border">
               <Search className="h-4 w-4 text-muted-foreground shrink-0" />
               <input
@@ -266,7 +266,7 @@ export function CommandPalette() {
                 placeholder="Search or jump to anywhere in PassPilot…"
                 className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-muted-foreground"
               />
-              <kbd className="hidden sm:inline-flex h-6 items-center gap-1 px-2 rounded-md bg-slate-100 text-[11px] font-mono text-muted-foreground">
+              <kbd className="hidden sm:inline-flex h-6 items-center gap-1 px-2 rounded-md bg-slate-100 dark:bg-muted text-[11px] font-mono text-muted-foreground">
                 ESC
               </kbd>
             </div>
@@ -288,12 +288,12 @@ export function CommandPalette() {
                       const Icon = it.icon;
                       const toneBg =
                         it.tone === "rose"
-                          ? "bg-rose-50 text-rose-700 border-rose-100"
+                          ? "bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-100"
                           : it.tone === "emerald"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                            ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-100"
                             : it.tone === "violet"
-                              ? "bg-violet2-50 text-violet2-700 border-violet2-100"
-                              : "bg-brand-50 text-brand-700 border-brand-100";
+                              ? "bg-violet2-50 dark:bg-violet2-500/15 text-violet2-700 dark:text-violet2-300 border-violet2-100"
+                              : "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border-brand-100 dark:border-brand-500/30";
                       return (
                         <button
                           key={it.id}
@@ -306,7 +306,7 @@ export function CommandPalette() {
                           className={cn(
                             "w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors",
                             isActive
-                              ? "bg-brand-50"
+                              ? "bg-brand-50 dark:bg-brand-500/15"
                               : "hover:bg-muted/50"
                           )}
                         >
@@ -339,19 +339,19 @@ export function CommandPalette() {
               )}
             </div>
 
-            <div className="border-t border-border px-4 h-11 flex items-center justify-between text-[11px] text-muted-foreground bg-slate-50/60">
+            <div className="border-t border-border px-4 h-11 flex items-center justify-between text-[11px] text-muted-foreground bg-slate-50 dark:bg-muted/60">
               <div className="flex items-center gap-3">
                 <span className="inline-flex items-center gap-1">
-                  <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+                  <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
                     ↑
                   </kbd>
-                  <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+                  <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
                     ↓
                   </kbd>
                   move
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <kbd className="h-5 px-1.5 rounded bg-white border border-border font-mono">
+                  <kbd className="h-5 px-1.5 rounded bg-white dark:bg-card border border-border font-mono">
                     ↵
                   </kbd>
                   select

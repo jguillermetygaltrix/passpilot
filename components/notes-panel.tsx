@@ -94,7 +94,7 @@ export function NotesPanel({ topicId, examId, title = "Your notes", compact = fa
           placeholder="Capture a thought, mnemonic, or 'wait, what does that mean?' moment…"
           rows={2}
           maxLength={1000}
-          className="flex-1 resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300 placeholder:text-muted-foreground/60"
+          className="flex-1 resize-none rounded-lg border border-border bg-white dark:bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300 dark:border-amber-500/40 placeholder:text-muted-foreground/60"
           onKeyDown={(e) => {
             // Cmd/Ctrl+Enter to save
             if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {

@@ -99,7 +99,7 @@ function NativePaywall({ platform }: { platform: "ios" | "android" }) {
     return (
       <Reveal>
         <div className="text-center max-w-xl mx-auto pt-8">
-          <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto mb-3">
+          <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
             <Sparkles className="h-3 w-3" />
             PassPilot Pro
           </div>
@@ -138,7 +138,7 @@ function NativePaywall({ platform }: { platform: "ios" | "android" }) {
   return (
     <Reveal>
       <div className="text-center max-w-2xl mx-auto pt-4 mb-10">
-        <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto mb-3">
+        <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
           <Sparkles className="h-3 w-3" />
           Choose your plan
         </div>
@@ -394,7 +394,7 @@ function WebPaywall() {
     <>
       <Reveal>
         <div className="text-center max-w-2xl mx-auto mb-12 pt-4">
-          <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto mb-3">
+          <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
             <Sparkles className="h-3 w-3" />
             One-time upgrade · no subscription
           </div>
@@ -430,8 +430,8 @@ function WebPaywall() {
                 <div className="text-[11px] text-muted-foreground">one-time</div>
               </div>
             </div>
-            <label className="rounded-xl border border-brand-100 bg-brand-50/40 p-3 text-sm mb-4 flex items-center gap-2 cursor-pointer hover:border-brand-200 transition-colors">
-              <span className="font-medium text-brand-700 shrink-0">Unlocks:</span>
+            <label className="rounded-xl border border-brand-100 dark:border-brand-500/30 bg-brand-50 dark:bg-brand-500/15/40 p-3 text-sm mb-4 flex items-center gap-2 cursor-pointer hover:border-brand-200 dark:border-brand-500/40 transition-colors">
+              <span className="font-medium text-brand-700 dark:text-brand-300 shrink-0">Unlocks:</span>
               <select
                 value={selectedProExamId}
                 onChange={(e) => handleProExamChange(e.target.value)}
@@ -445,7 +445,7 @@ function WebPaywall() {
                 ))}
               </select>
               <svg
-                className="h-3.5 w-3.5 text-brand-700 shrink-0"
+                className="h-3.5 w-3.5 text-brand-700 dark:text-brand-300 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2.5}
@@ -505,7 +505,7 @@ function WebPaywall() {
             </span>
             <div className="flex items-baseline justify-between mb-3">
               <div>
-                <div className="text-xs uppercase tracking-wider text-brand-700 font-semibold">
+                <div className="text-xs uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
                   Multi-Cert
                 </div>
                 <div className="text-sm text-muted-foreground mt-0.5">
@@ -519,8 +519,8 @@ function WebPaywall() {
                 <div className="text-[11px] text-muted-foreground">one-time</div>
               </div>
             </div>
-            <div className="rounded-xl bg-gradient-to-br from-brand-50 via-violet2-50 to-cyan-50 border border-brand-100 p-3 text-sm mb-4">
-              <span className="font-medium text-brand-700">Unlocks:</span>{" "}
+            <div className="rounded-xl bg-gradient-to-br from-brand-50 via-violet2-50 to-cyan-50 border border-brand-100 dark:border-brand-500/30 p-3 text-sm mb-4">
+              <span className="font-medium text-brand-700 dark:text-brand-300">Unlocks:</span>{" "}
               {EXAMS.map((e) => e.name).join(" · ")}
             </div>
             <FeatureList
@@ -578,7 +578,7 @@ function WebPaywall() {
 
       <Reveal delay={300}>
         <div className="mt-12 max-w-2xl mx-auto card-surface p-6 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center shrink-0">
+          <div className="h-12 w-12 rounded-2xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center shrink-0">
             <KeyRound className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
@@ -627,7 +627,7 @@ function AlreadyUnlocked({ tier }: { tier: "pro" | "multi" }) {
   return (
     <Reveal>
       <div className="text-center max-w-2xl mx-auto mb-12 pt-4">
-        <div className="chip bg-emerald-50 border-emerald-200 text-emerald-700 mx-auto mb-3">
+        <div className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 mx-auto mb-3">
           <CheckCircle2 className="h-3 w-3" />
           You&apos;re on {tier === "multi" ? "Multi-Cert" : "Pro"}
         </div>
@@ -689,7 +689,7 @@ function Guarantee({
 }) {
   return (
     <div className="soft-card p-5 text-center">
-      <div className="h-10 w-10 rounded-xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center mx-auto mb-3">
+      <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center mx-auto mb-3">
         <Icon className="h-4 w-4" />
       </div>
       <div className="font-semibold text-sm">{title}</div>

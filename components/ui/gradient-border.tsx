@@ -29,7 +29,7 @@ export function GradientBorder({
       {...props}
     >
       <div
-        className={cn("bg-white relative", innerClassName)}
+        className={cn("bg-white dark:bg-card relative", innerClassName)}
         style={{
           borderRadius: `calc(${radius} - ${thickness}px)`,
         }}

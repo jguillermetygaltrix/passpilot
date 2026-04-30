@@ -38,7 +38,7 @@ export default function AccountPage() {
           </header>
 
           {/* Status card */}
-          <div className={`rounded-2xl border p-5 ${ent.hasPro ? "border-brand-200 bg-brand-50/30" : "bg-muted/20"}`}>
+          <div className={`rounded-2xl border p-5 ${ent.hasPro ? "border-brand-200 dark:border-brand-500/40 bg-brand-50 dark:bg-brand-500/15/30" : "bg-muted/20"}`}>
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
@@ -49,7 +49,7 @@ export default function AccountPage() {
                     {ent.hasMulti ? "Multi-Cert" : ent.hasPro ? "Pro" : "Free"}
                   </span>
                   {ent.hasPro && (
-                    <span className="chip bg-emerald-50 border-emerald-100 text-emerald-700">
+                    <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 text-emerald-700 dark:text-emerald-300">
                       <CheckCircle2 className="h-3 w-3" /> Active
                     </span>
                   )}
@@ -65,7 +65,7 @@ export default function AccountPage() {
               </div>
               {!ent.hasPro && (
                 <Link href="/upgrade">
-                  <div className="chip bg-brand-50 border-brand-100 text-brand-700 cursor-pointer hover:bg-brand-100 transition-colors">
+                  <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 cursor-pointer hover:bg-brand-100 dark:bg-brand-500/20 transition-colors">
                     <Sparkles className="h-3 w-3" /> Upgrade
                   </div>
                 </Link>
@@ -73,7 +73,7 @@ export default function AccountPage() {
             </div>
 
             {ent.hasMulti && profile && (
-              <div className="mt-4 pt-4 border-t border-brand-100 text-xs text-muted-foreground">
+              <div className="mt-4 pt-4 border-t border-brand-100 dark:border-brand-500/30 text-xs text-muted-foreground">
                 Studying: <span className="font-medium text-foreground">{profile.examId}</span>
                 {" · "}
                 <Link href="/settings" className="underline hover:text-foreground">change</Link>
@@ -139,8 +139,8 @@ function LinkCard({ href, icon: Icon, title, body, accent = "gray" }: {
   accent?: "brand" | "cyan" | "gray";
 }) {
   const accents: Record<string, string> = {
-    brand: "hover:border-brand-200 hover:bg-brand-50/30",
-    cyan:  "hover:border-cyan-200 hover:bg-cyan-50/30",
+    brand: "hover:border-brand-200 dark:border-brand-500/40 hover:bg-brand-50 dark:bg-brand-500/15/30",
+    cyan:  "hover:border-cyan-200 dark:border-cyan-500/30 hover:bg-cyan-50/30 dark:bg-cyan-500/10",
     gray:  "hover:border-gray-300 hover:bg-muted/30",
   };
   return (

@@ -156,7 +156,7 @@ function FounderDashboard() {
           {/* Hero */}
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <div className="chip bg-amber-50 border-amber-200 text-amber-800 mb-2">
+              <div className="chip bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 mb-2">
                 <Crown className="h-3 w-3" />
                 Founder console
               </div>
@@ -241,7 +241,7 @@ function FounderDashboard() {
                 const intensity = d.count / maxDayCount;
                 const bg =
                   d.count === 0
-                    ? "bg-slate-100"
+                    ? "bg-slate-100 dark:bg-muted"
                     : intensity < 0.34
                       ? "bg-emerald-200"
                       : intensity < 0.67
@@ -284,7 +284,7 @@ function FounderDashboard() {
                           {count} · {pct}%
                         </span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="h-1.5 rounded-full bg-slate-100 dark:bg-muted overflow-hidden">
                         <div
                           className="h-full rounded-full"
                           style={{
@@ -340,7 +340,7 @@ function FounderDashboard() {
                     <span className="text-muted-foreground tabular-nums shrink-0">
                       {e.timestamp.slice(11, 19)}
                     </span>
-                    <span className="font-semibold text-brand-700">{e.type}</span>
+                    <span className="font-semibold text-brand-700 dark:text-brand-300">{e.type}</span>
                     <span className="text-muted-foreground truncate">
                       {e.examId && `· ${e.examId}`}
                       {e.questionId && ` · ${e.questionId}`}
@@ -375,10 +375,10 @@ function KPI({
   tone: "brand" | "violet" | "amber" | "emerald";
 }) {
   const accent = {
-    brand: "text-brand-700 bg-brand-50 border-brand-200",
-    violet: "text-violet-700 bg-violet-50 border-violet-200",
-    amber: "text-amber-700 bg-amber-50 border-amber-200",
-    emerald: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    brand: "text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-500/15 border-brand-200 dark:border-brand-500/40",
+    violet: "text-violet-700 bg-violet-50 dark:bg-violet-500/15 border-violet-200",
+    amber: "text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30",
+    emerald: "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30",
   }[tone];
   return (
     <div className="card-surface p-4">

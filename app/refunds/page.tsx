@@ -29,7 +29,7 @@ export default function RefundsPage() {
 
           {/* TL;DR box */}
           <div className="rounded-2xl border bg-gradient-to-br from-emerald-50 to-cyan-50 p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-700 flex items-center gap-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" /> TL;DR
             </h2>
             <ul className="mt-3 space-y-2 text-sm">
@@ -95,10 +95,10 @@ export default function RefundsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  <tr><td className="p-3">Never logged in after purchase</td><td className="p-3 text-emerald-700 font-medium">Full refund</td></tr>
-                  <tr><td className="p-3">Logged in but no drills started</td><td className="p-3 text-emerald-700 font-medium">Full refund</td></tr>
-                  <tr><td className="p-3">Completed diagnostic only</td><td className="p-3 text-emerald-700 font-medium">Full refund (&lt; 14 days)</td></tr>
-                  <tr><td className="p-3">1-25% content consumed</td><td className="p-3 text-amber-700 font-medium">Case-by-case</td></tr>
+                  <tr><td className="p-3">Never logged in after purchase</td><td className="p-3 text-emerald-700 dark:text-emerald-300 font-medium">Full refund</td></tr>
+                  <tr><td className="p-3">Logged in but no drills started</td><td className="p-3 text-emerald-700 dark:text-emerald-300 font-medium">Full refund</td></tr>
+                  <tr><td className="p-3">Completed diagnostic only</td><td className="p-3 text-emerald-700 dark:text-emerald-300 font-medium">Full refund (&lt; 14 days)</td></tr>
+                  <tr><td className="p-3">1-25% content consumed</td><td className="p-3 text-amber-700 dark:text-amber-300 font-medium">Case-by-case</td></tr>
                   <tr><td className="p-3">25-50% content consumed</td><td className="p-3 text-red-700 font-medium">No refund</td></tr>
                   <tr><td className="p-3">&gt;50% content consumed</td><td className="p-3 text-red-700 font-medium">No refund. Period.</td></tr>
                   <tr><td className="p-3">Used AI "Why wrong?" 10+ times</td><td className="p-3 text-red-700 font-medium">No refund (AI costs us $)</td></tr>
@@ -137,9 +137,9 @@ export default function RefundsPage() {
           {/* Chargebacks */}
           <section className="space-y-4">
             <h2 className="text-xl font-semibold">Chargebacks / Payment Disputes</h2>
-            <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 text-sm">
+            <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/60 dark:bg-amber-500/10 p-4 text-sm">
               <p className="flex gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
+                <AlertTriangle className="h-4 w-4 text-amber-700 dark:text-amber-300 mt-0.5 shrink-0" />
                 <span>
                   If you file a chargeback instead of emailing us, we respond with:
                   consent record, usage logs, and a copy of this policy. This almost always resolves

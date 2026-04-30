@@ -143,7 +143,7 @@ function rarityTone(r: BadgeDef["rarity"]): {
         border: "border-amber-400",
         bg: "bg-gradient-to-br from-amber-50 via-white to-amber-50/50",
         glow: "bg-amber-300",
-        text: "text-amber-700",
+        text: "text-amber-700 dark:text-amber-300",
       };
     case "epic":
       return {
@@ -157,12 +157,12 @@ function rarityTone(r: BadgeDef["rarity"]): {
         border: "border-cyan-400",
         bg: "bg-gradient-to-br from-cyan-50 via-white to-cyan-50/50",
         glow: "bg-cyan-300",
-        text: "text-cyan-700",
+        text: "text-cyan-700 dark:text-cyan-300",
       };
     default:
       return {
         border: "border-slate-300",
-        bg: "bg-white",
+        bg: "bg-white dark:bg-card",
         glow: "bg-slate-200",
         text: "text-slate-600",
       };

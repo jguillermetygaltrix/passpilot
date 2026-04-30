@@ -91,7 +91,7 @@ export default function OnboardingPage() {
 
       <main className="container flex-1 flex flex-col items-center justify-center py-10 max-w-xl w-full">
         <div className="w-full">
-          <div className="h-1.5 w-full bg-slate-100 rounded-full mb-8 overflow-hidden">
+          <div className="h-1.5 w-full bg-slate-100 dark:bg-muted rounded-full mb-8 overflow-hidden">
             <div
               className="h-full bg-brand-600 rounded-full transition-all duration-500"
               style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
@@ -171,7 +171,7 @@ function StepHeader({
 }) {
   return (
     <div className="text-center mb-8">
-      <div className="h-12 w-12 rounded-2xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center mx-auto mb-4">
+      <div className="h-12 w-12 rounded-2xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center mx-auto mb-4">
         <Icon className="h-5 w-5" />
       </div>
       <h2 className="heading-2 text-balance">{title}</h2>
@@ -200,8 +200,8 @@ function ChoiceRow({
       className={cn(
         "w-full text-left rounded-2xl border p-5 transition-all flex items-center gap-4",
         active
-          ? "border-brand-500 bg-brand-50 ring-4 ring-brand-100 shadow-soft"
-          : "border-border bg-white hover:border-brand-200",
+          ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-4 ring-brand-100 shadow-soft"
+          : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40",
         disabled && "opacity-50 cursor-not-allowed"
       )}
     >
@@ -365,8 +365,8 @@ function DateStep({
             className={cn(
               "rounded-full py-2 text-xs font-medium border transition-colors",
               value === p.v
-                ? "border-brand-500 bg-brand-50 text-brand-700"
-                : "border-border bg-white text-muted-foreground hover:border-brand-200"
+                ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300"
+                : "border-border bg-white dark:bg-card text-muted-foreground hover:border-brand-200 dark:border-brand-500/40"
             )}
           >
             {p.label}
@@ -383,7 +383,7 @@ function DateStep({
           min={todayIso}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="mt-2 w-full h-12 rounded-xl border border-border px-4 text-base focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white"
+          className="mt-2 w-full h-12 rounded-xl border border-border px-4 text-base focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white dark:bg-card"
         />
       </label>
     </div>
@@ -546,7 +546,7 @@ function OutcomeStep({
             active={value === o.v}
             onClick={() => onChange(o.v)}
           >
-            <div className="h-10 w-10 rounded-xl bg-brand-50 text-brand-700 border border-brand-100 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30 flex items-center justify-center shrink-0">
               <o.icon className="h-5 w-5" />
             </div>
             <div>
@@ -612,7 +612,7 @@ function WhyStep({
             active={value === o.v}
             onClick={() => onChange(o.v)}
           >
-            <div className="h-10 w-10 rounded-xl bg-brand-50 text-brand-700 border border-brand-100 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30 flex items-center justify-center shrink-0">
               <o.icon className="h-5 w-5" />
             </div>
             <div>

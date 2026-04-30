@@ -57,11 +57,11 @@ export function UpgradeWall({
           gradient="linear-gradient(135deg, rgba(61, 96, 255, 0.8), rgba(130, 80, 245, 0.8), rgba(6, 182, 212, 0.8))"
           radius="24px"
           thickness={1.5}
-          innerClassName="bg-white overflow-hidden"
+          innerClassName="bg-white dark:bg-card overflow-hidden"
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 h-9 w-9 rounded-full bg-white/80 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white transition-colors backdrop-blur"
+            className="absolute top-4 right-4 z-10 h-9 w-9 rounded-full bg-white/80 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white dark:bg-card transition-colors backdrop-blur"
             aria-label="Close"
           >
             <X className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function UpgradeWall({
 
           <div className="p-6 md:p-8 bg-gradient-to-br from-brand-50/60 to-white">
             {reason && (
-              <div className="chip bg-rose-50 border-rose-200 text-rose-700 mb-3">
+              <div className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 mb-3">
                 <Lock className="h-3 w-3" />
                 {reason}
               </div>
@@ -84,7 +84,7 @@ export function UpgradeWall({
           </div>
 
           <div className="px-6 md:px-8">
-            <div className="flex gap-1.5 p-1 bg-slate-100 rounded-full w-fit mb-5">
+            <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-muted rounded-full w-fit mb-5">
               <TabBtn
                 active={tab === "upgrade"}
                 onClick={() => setTab("upgrade")}
@@ -130,7 +130,7 @@ function TabBtn({
       className={cn(
         "inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-semibold transition-all",
         active
-          ? "bg-white text-foreground shadow-soft"
+          ? "bg-white dark:bg-card text-foreground shadow-soft"
           : "text-muted-foreground hover:text-foreground"
       )}
     >
@@ -190,7 +190,7 @@ function UpgradeTab() {
         </span>
         <div className="flex items-baseline justify-between mb-2 mt-1">
           <div>
-            <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+            <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
               Pro
             </div>
             <div className="text-xs text-muted-foreground">
@@ -210,7 +210,7 @@ function UpgradeTab() {
           ))}
         </ul>
         {!proSkuMatchesExam && (
-          <p className="mt-3 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2.5 py-1.5 leading-relaxed">
+          <p className="mt-3 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-md px-2.5 py-1.5 leading-relaxed">
             Pro for <b>{examMeta?.name ?? "this cert"}</b> launches soon. Multi-Cert
             on the right unlocks it today + 6 more for $20 more.
           </p>
@@ -223,7 +223,7 @@ function UpgradeTab() {
         </a>
       </div>
 
-      <div className="rounded-2xl border border-border bg-white p-5 flex flex-col">
+      <div className="rounded-2xl border border-border bg-white dark:bg-card p-5 flex flex-col">
         <div className="flex items-baseline justify-between mb-2">
           <div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
@@ -316,7 +316,7 @@ function RedeemTab({ onSuccess }: { onSuccess: () => void }) {
           onChange={(e) => setKey(e.target.value)}
           placeholder="PASSPILOT-XXXX-XXXX-XXXX"
           disabled={loading || !!success}
-          className="w-full h-12 rounded-xl border border-border px-4 font-mono text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white uppercase disabled:opacity-60"
+          className="w-full h-12 rounded-xl border border-border px-4 font-mono text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white dark:bg-card uppercase disabled:opacity-60"
         />
       </label>
       <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
@@ -325,12 +325,12 @@ function RedeemTab({ onSuccess }: { onSuccess: () => void }) {
       </p>
 
       {error && (
-        <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-sm p-3 animate-fade-in">
+        <div className="mt-3 rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 text-sm p-3 animate-fade-in">
           {error}
         </div>
       )}
       {success && (
-        <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm p-3 flex items-center gap-2 animate-fade-in">
+        <div className="mt-3 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-sm p-3 flex items-center gap-2 animate-fade-in">
           <CheckCircle2 className="h-4 w-4" /> {success}
         </div>
       )}
@@ -360,7 +360,7 @@ function RedeemTab({ onSuccess }: { onSuccess: () => void }) {
 
       <div className="text-center text-xs text-muted-foreground mt-4">
         No key yet?{" "}
-        <Link href="/upgrade" className="text-brand-700 font-medium hover:underline">
+        <Link href="/upgrade" className="text-brand-700 dark:text-brand-300 font-medium hover:underline">
           See pricing →
         </Link>
       </div>
@@ -396,7 +396,7 @@ export function LockCard({
         </div>
       </div>
       {reason && (
-        <div className="chip bg-rose-50 border-rose-200 text-rose-700 mx-auto mb-3">
+        <div className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 mx-auto mb-3">
           <Lock className="h-3 w-3" />
           {reason}
         </div>

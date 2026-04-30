@@ -147,7 +147,7 @@ function Inner() {
         <div className="space-y-6 max-w-3xl mx-auto">
           {/* Hero */}
           <div className="text-center space-y-3">
-            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+            <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto">
               <Trophy className="h-3 w-3" />
               Mock Exam Mode
             </div>
@@ -199,12 +199,12 @@ function Inner() {
               />
             </div>
 
-            <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-4 text-sm text-amber-900 mb-6">
+            <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/40 dark:bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-200 mb-6">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
+                <AlertTriangle className="h-4 w-4 text-amber-700 dark:text-amber-300 mt-0.5 shrink-0" />
                 <div className="space-y-1.5">
                   <div className="font-medium">Read before you start</div>
-                  <ul className="text-[13px] leading-relaxed text-amber-900/90 list-disc pl-4 space-y-0.5">
+                  <ul className="text-[13px] leading-relaxed text-amber-900 dark:text-amber-200/90 list-disc pl-4 space-y-0.5">
                     <li>Once you click Start, the timer doesn't pause.</li>
                     <li>No answers shown until the end (real exam behavior).</li>
                     <li>Skip + flag questions to revisit; navigate freely.</li>
@@ -220,7 +220,7 @@ function Inner() {
             </div>
 
             {cooldownActive ? (
-              <div className="rounded-xl border border-border bg-slate-50/60 p-5 text-center">
+              <div className="rounded-xl border border-border bg-slate-50 dark:bg-muted/60 p-5 text-center">
                 <Lock className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
                 <div className="font-semibold text-sm mb-1">
                   Mock cooldown active
@@ -236,7 +236,7 @@ function Inner() {
                       {" · "}
                       <button
                         onClick={() => setShowUpgrade(true)}
-                        className="text-brand-700 hover:underline"
+                        className="text-brand-700 dark:text-brand-300 hover:underline"
                       >
                         Upgrade to Pro for 24h cooldown
                       </button>
@@ -284,14 +284,14 @@ function Inner() {
                   return (
                     <div
                       key={a.id}
-                      className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg bg-slate-50/60 border border-border"
+                      className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg bg-slate-50 dark:bg-muted/60 border border-border"
                     >
                       <div className="flex items-center gap-3">
                         <span
                           className={
                             passed
-                              ? "chip bg-emerald-50 border-emerald-200 text-emerald-700"
-                              : "chip bg-rose-50 border-rose-200 text-rose-700"
+                              ? "chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                              : "chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300"
                           }
                         >
                           {passed ? "Passed" : "Below pass"}
@@ -322,7 +322,7 @@ function Inner() {
                   <Link
                     key={e.id}
                     href={`/mock?exam=${e.id}`}
-                    className="rounded-lg border border-border bg-white px-3 py-2.5 text-sm font-medium hover:border-brand-300 hover:bg-brand-50/40 transition-colors flex items-center justify-between"
+                    className="rounded-lg border border-border bg-white dark:bg-card px-3 py-2.5 text-sm font-medium hover:border-brand-300 hover:bg-brand-50 dark:bg-brand-500/15/40 transition-colors flex items-center justify-between"
                   >
                     <span className="truncate">{e.name}</span>
                     <span className="text-xs text-muted-foreground tabular-nums shrink-0 ml-2">
@@ -349,7 +349,7 @@ function Stat({
   value: string;
 }) {
   return (
-    <div className="text-center px-3 py-3 rounded-xl bg-slate-50/60 border border-border">
+    <div className="text-center px-3 py-3 rounded-xl bg-slate-50 dark:bg-muted/60 border border-border">
       <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
         {icon}
         {label}

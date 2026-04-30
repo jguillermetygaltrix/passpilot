@@ -73,10 +73,10 @@ function Inner() {
                   }}
                   className={`w-full text-left rounded-xl border p-3.5 transition-all flex items-center gap-3 ${
                     isActive
-                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-100"
+                      ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-100"
                       : isLocked
-                        ? "border-border bg-slate-50/60 hover:bg-slate-50 opacity-80"
-                        : "border-border bg-white hover:border-brand-200"
+                        ? "border-border bg-slate-50 dark:bg-muted/60 hover:bg-slate-50 dark:bg-muted opacity-80"
+                        : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40"
                   }`}
                 >
                   <div
@@ -103,7 +103,7 @@ function Inner() {
                     </span>
                   )}
                   {isLocked && (
-                    <span className="chip bg-rose-50 border-rose-200 text-rose-700 shrink-0">
+                    <span className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 shrink-0">
                       <Lock className="h-3 w-3" />
                       Multi-Cert
                     </span>
@@ -133,7 +133,7 @@ function Inner() {
             Subscription
           </div>
           {license ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-4 flex items-start gap-3">
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-500/10 p-4 flex items-start gap-3">
               <Sparkles className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <div className="text-sm font-semibold">
@@ -149,7 +149,7 @@ function Inner() {
                     setLicense(null);
                   }
                 }}
-                className="text-xs text-rose-600 hover:text-rose-700 font-medium"
+                className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-300 font-medium"
               >
                 Remove
               </button>
@@ -187,7 +187,7 @@ function Inner() {
               value={profile.examDate}
               min={new Date().toISOString().slice(0, 10)}
               onChange={(e) => updateProfile({ examDate: e.target.value })}
-              className="w-full h-11 rounded-xl border border-border px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white"
+              className="w-full h-11 rounded-xl border border-border px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white dark:bg-card"
             />
           </label>
         </div>
@@ -233,8 +233,8 @@ function Inner() {
                 }
                 className={`rounded-full h-10 text-sm font-medium border transition-colors ${
                   profile.targetOutcome === o.v
-                    ? "border-brand-500 bg-brand-50 text-brand-700"
-                    : "border-border bg-white text-muted-foreground hover:border-brand-200"
+                    ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300"
+                    : "border-border bg-white dark:bg-card text-muted-foreground hover:border-brand-200 dark:border-brand-500/40"
                 }`}
               >
                 {o.label}
@@ -243,8 +243,8 @@ function Inner() {
           </div>
         </div>
 
-        <div className="card-surface p-6 border-rose-200 bg-rose-50/30 mb-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-rose-700 mb-1">
+        <div className="card-surface p-6 border-rose-200 dark:border-rose-500/30 bg-rose-50/30 dark:bg-rose-500/10 mb-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-rose-700 dark:text-rose-300 mb-1">
             <RotateCcw className="h-4 w-4" />
             Start fresh
           </div>
@@ -271,13 +271,13 @@ function Inner() {
         </div>
 
         <div className="relative overflow-hidden rounded-[var(--radius)] p-[1.5px] bg-gradient-to-br from-brand-500/40 via-violet2-500/40 to-cyan-500/40">
-          <div className="rounded-[calc(var(--radius)-1.5px)] bg-white p-6 relative">
+          <div className="rounded-[calc(var(--radius)-1.5px)] bg-white dark:bg-card p-6 relative">
             <div className="flex items-start gap-4">
               <Logo className="h-10 w-10 rounded-2xl" />
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-semibold text-[15px]">PassPilot</span>
-                  <span className="chip bg-brand-50 border-brand-100 text-brand-700 text-[10px] px-1.5 py-0.5">
+                  <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 text-[10px] px-1.5 py-0.5">
                     v1.0
                   </span>
                 </div>

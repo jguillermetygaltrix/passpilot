@@ -94,7 +94,7 @@ function Inner() {
         <div className="space-y-6 max-w-4xl mx-auto">
           {/* Hero */}
           <div className="text-center space-y-3">
-            <div className="chip bg-amber-50 border-amber-100 text-amber-700 mx-auto">
+            <div className="chip bg-amber-50 dark:bg-amber-500/10 border-amber-100 text-amber-700 dark:text-amber-300 mx-auto">
               <Trophy className="h-3 w-3" />
               Achievements
             </div>
@@ -114,7 +114,7 @@ function Inner() {
                 {completionPct}%
               </div>
             </div>
-            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div className="h-2 rounded-full bg-slate-100 dark:bg-muted overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 transition-all duration-500"
                 style={{ width: `${completionPct}%` }}
@@ -129,7 +129,7 @@ function Inner() {
                   {recentUnlocks.map((b) => (
                     <div
                       key={b.id}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-300"
                     >
                       <span className="text-base leading-none">{b.emoji}</span>
                       <span className="text-xs font-medium">{b.name}</span>
@@ -150,7 +150,7 @@ function Inner() {
                   "px-3.5 h-8 rounded-full text-xs font-medium transition-colors capitalize",
                   filter === f
                     ? "bg-foreground text-background"
-                    : "bg-slate-100 text-muted-foreground hover:bg-slate-200"
+                    : "bg-slate-100 dark:bg-muted text-muted-foreground hover:bg-slate-200"
                 )}
               >
                 {f}
@@ -213,7 +213,7 @@ function BadgeCard({ badge }: { badge: BadgeView }) {
         "rounded-2xl border p-4 transition-all relative overflow-hidden",
         badge.unlocked
           ? `${tone.border} ${tone.bg} hover:shadow-card`
-          : "border-border bg-slate-50/40 grayscale-[0.6]"
+          : "border-border bg-slate-50 dark:bg-muted/40 grayscale-[0.6]"
       )}
     >
       {badge.unlocked && (
@@ -308,7 +308,7 @@ function rarityTone(r: BadgeView["rarity"]): {
         border: "border-amber-400",
         bg: "bg-gradient-to-br from-amber-50/70 via-white to-amber-50/40",
         glow: "bg-amber-300",
-        text: "text-amber-700",
+        text: "text-amber-700 dark:text-amber-300",
         progressBar: "bg-gradient-to-r from-amber-400 to-amber-600",
       };
     case "epic":
@@ -324,13 +324,13 @@ function rarityTone(r: BadgeView["rarity"]): {
         border: "border-cyan-400",
         bg: "bg-gradient-to-br from-cyan-50/70 via-white to-cyan-50/40",
         glow: "bg-cyan-300",
-        text: "text-cyan-700",
+        text: "text-cyan-700 dark:text-cyan-300",
         progressBar: "bg-gradient-to-r from-cyan-400 to-cyan-600",
       };
     default:
       return {
         border: "border-slate-300",
-        bg: "bg-white",
+        bg: "bg-white dark:bg-card",
         glow: "bg-slate-200",
         text: "text-slate-600",
         progressBar: "bg-slate-400",

@@ -12,10 +12,10 @@ const buttonVariants = cva(
         primary:
           "bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-pop hover:shadow-lg hover:-translate-y-0.5 hover:brightness-110",
         secondary:
-          "bg-white text-brand-700 border border-brand-200 hover:border-brand-300 hover:bg-brand-50 hover:-translate-y-0.5 shadow-soft",
+          "bg-white dark:bg-card text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-500/40 hover:border-brand-300 hover:bg-brand-50 dark:bg-brand-500/15 hover:-translate-y-0.5 shadow-soft",
         ghost: "text-foreground hover:bg-muted",
         outline:
-          "border border-border bg-white hover:bg-muted text-foreground hover:-translate-y-0.5",
+          "border border-border bg-white dark:bg-card hover:bg-muted text-foreground hover:-translate-y-0.5",
         dark: "bg-gradient-to-b from-slate-800 to-slate-950 text-white hover:brightness-110 hover:-translate-y-0.5 shadow-pop",
         danger:
           "bg-gradient-to-b from-rose-500 to-rose-700 text-white hover:brightness-110 hover:-translate-y-0.5 shadow-sm",

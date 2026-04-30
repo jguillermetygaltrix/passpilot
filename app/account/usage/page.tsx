@@ -218,11 +218,11 @@ export default function UsagePage() {
 function StatCard({ label, value, accent = "gray" }: { label: string; value: string; accent?: "gray" | "brand" | "emerald" | "cyan" | "red" | "amber" }) {
   const accents: Record<string, string> = {
     gray:    "border-gray-200 text-foreground",
-    brand:   "border-brand-200 bg-brand-50/30 text-brand-700",
-    emerald: "border-emerald-200 bg-emerald-50/30 text-emerald-700",
-    cyan:    "border-cyan-200 bg-cyan-50/30 text-cyan-700",
+    brand:   "border-brand-200 dark:border-brand-500/40 bg-brand-50 dark:bg-brand-500/15/30 text-brand-700 dark:text-brand-300",
+    emerald: "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/30 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    cyan:    "border-cyan-200 dark:border-cyan-500/30 bg-cyan-50/30 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
     red:     "border-red-200 bg-red-50/30 text-red-700",
-    amber:   "border-amber-200 bg-amber-50/30 text-amber-700",
+    amber:   "border-amber-200 dark:border-amber-500/30 bg-amber-50/30 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
   };
   return (
     <div className={`rounded-xl border p-3 ${accents[accent] ?? accents.gray}`}>

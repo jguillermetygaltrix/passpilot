@@ -91,7 +91,7 @@ function Inner() {
       <AppNav />
       <AppShell className="max-w-3xl">
         <div className="mb-6">
-          <div className="chip bg-rose-50 border-rose-200 text-rose-700 mb-3">
+          <div className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 mb-3">
             <LifeBuoy className="h-3.5 w-3.5" />
             Rescue mode
           </div>
@@ -147,7 +147,7 @@ function Inner() {
                     </div>
                     <Link
                       href={`/practice?topic=${t.id}`}
-                      className="chip bg-rose-50 border-rose-200 text-rose-700 shrink-0"
+                      className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 shrink-0"
                     >
                       Drill
                     </Link>
@@ -180,7 +180,7 @@ function Inner() {
                         You're solid here — don't burn energy
                       </div>
                     </div>
-                    <span className="chip bg-emerald-50 border-emerald-200 text-emerald-700 shrink-0">
+                    <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 shrink-0">
                       <CheckCheck className="h-3 w-3" /> Hold
                     </span>
                   </li>
@@ -226,7 +226,7 @@ function Inner() {
           </ul>
         </div>
 
-        <div className="card-surface p-6 bg-gradient-to-br from-brand-50 to-white border-brand-100">
+        <div className="card-surface p-6 bg-gradient-to-br from-brand-50 to-white border-brand-100 dark:border-brand-500/30">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
             <div>
               <div className="text-sm font-semibold">Truth moment</div>
@@ -259,7 +259,7 @@ function Cycle({
   minutes: number;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-white p-4">
+    <div className="rounded-xl border border-border bg-white dark:bg-card p-4">
       <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
         Cycle {num}
       </div>

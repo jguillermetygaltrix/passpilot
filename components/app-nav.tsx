@@ -58,7 +58,7 @@ export function AppNav() {
                   className={cn(
                     "inline-flex items-center gap-2 px-3.5 h-9 rounded-full text-sm font-medium transition-colors",
                     active
-                      ? "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+                      ? "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
@@ -75,7 +75,7 @@ export function AppNav() {
                 className={cn(
                   "chip border bg-card text-foreground",
                   daysLeft <= 7
-                    ? "border-rose-200 text-rose-700 bg-rose-50 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300"
+                    ? "border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10"
                     : "border-border"
                 )}
               >

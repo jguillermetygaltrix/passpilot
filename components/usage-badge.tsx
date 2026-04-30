@@ -24,7 +24,7 @@ export function UsageBadge({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/account/usage"
-      className={`inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50/50 px-3 py-1 text-[11px] font-medium text-brand-700 hover:bg-brand-50 transition-colors ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-brand-200 dark:border-brand-500/40 bg-brand-50 dark:bg-brand-500/15/50 px-3 py-1 text-[11px] font-medium text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:bg-brand-500/15 transition-colors ${className}`}
     >
       <BarChart3 className="h-3 w-3" />
       {summary.consumptionPct.toFixed(0)}% of content explored

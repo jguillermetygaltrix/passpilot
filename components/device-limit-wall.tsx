@@ -20,7 +20,7 @@ export function DeviceLimitWall() {
       <AppShell className="max-w-xl">
         <div className="py-12">
           <div className="rounded-2xl border bg-card p-8 text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10 text-red-600">
               <ShieldAlert className="h-8 w-8" />
             </div>
             <h1 className="text-2xl font-semibold tracking-tight">

@@ -113,17 +113,17 @@ function Inner() {
         </div>
 
         <div className="card-surface p-6 md:p-8 mb-6 relative overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-brand-100 blur-3xl opacity-60" />
+          <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-60" />
           <div className="relative">
             <div className="flex items-center gap-2 flex-wrap mb-2">
-              <span className="chip bg-brand-50 border-brand-100 text-brand-700">
+              <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300">
                 Chapter {topicIndex + 1} of {examTopics.length}
               </span>
-              <span className="chip bg-slate-50 border-slate-200 text-slate-700">
+              <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
                 <Target className="h-3 w-3" />
                 Weight {Math.round(topic.weight * 100)}%
               </span>
-              <span className="chip bg-slate-50 border-slate-200 text-slate-700">
+              <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
                 <Clock className="h-3 w-3" />
                 {totalMin} min
               </span>
@@ -176,12 +176,12 @@ function Inner() {
                     className={cn(
                       "h-11 w-11 rounded-xl flex items-center justify-center shrink-0 font-semibold text-sm",
                       isLocked
-                        ? "bg-slate-100 border border-border text-muted-foreground"
+                        ? "bg-slate-100 dark:bg-muted border border-border text-muted-foreground"
                         : isDone
                           ? "bg-emerald-500 text-white"
                           : isNext
                             ? "bg-brand-600 text-white"
-                            : "bg-brand-50 border border-brand-100 text-brand-700"
+                            : "bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300"
                     )}
                   >
                     {isLocked ? (
@@ -195,7 +195,7 @@ function Inner() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       {isLocked && (
-                        <span className="chip bg-rose-50 border-rose-200 text-rose-700">
+                        <span className="chip bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300">
                           <Lock className="h-3 w-3" />
                           Pro
                         </span>
@@ -222,7 +222,7 @@ function Inner() {
                       "h-5 w-5 shrink-0 transition-transform",
                       isLocked
                         ? "text-muted-foreground/40"
-                        : "text-muted-foreground group-hover:translate-x-0.5 group-hover:text-brand-700"
+                        : "text-muted-foreground group-hover:translate-x-0.5 group-hover:text-brand-700 dark:text-brand-300"
                     )}
                   />
                 </div>
@@ -235,7 +235,7 @@ function Inner() {
                         setWallReason(`Lesson ${l.order} is a Pro lesson`);
                         setWallOpen(true);
                       }}
-                      className="group block w-full text-left rounded-2xl border p-5 transition-all border-border bg-slate-50/60 hover:bg-slate-50 hover:border-rose-200"
+                      className="group block w-full text-left rounded-2xl border p-5 transition-all border-border bg-slate-50 dark:bg-muted/60 hover:bg-slate-50 dark:bg-muted hover:border-rose-200 dark:border-rose-500/30"
                     >
                       {content}
                     </button>
@@ -245,10 +245,10 @@ function Inner() {
                       className={cn(
                         "group block rounded-2xl border p-5 transition-all",
                         isDone
-                          ? "border-emerald-200 bg-emerald-50/30 hover:bg-emerald-50/60"
+                          ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/30 dark:bg-emerald-500/10 hover:bg-emerald-50/60"
                           : isNext
-                            ? "border-brand-500 bg-brand-50/40 ring-2 ring-brand-100 hover:bg-brand-50/70"
-                            : "border-border bg-white hover:border-brand-200 hover:shadow-soft"
+                            ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15/40 ring-2 ring-brand-100 hover:bg-brand-50 dark:bg-brand-500/15/70"
+                            : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40 hover:shadow-soft"
                       )}
                     >
                       {content}
@@ -274,7 +274,7 @@ function Inner() {
             className="w-full p-5 md:p-6 text-left flex items-center justify-between hover:bg-muted/30 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center">
+              <div className="h-9 w-9 rounded-xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center">
                 <BookOpen className="h-4 w-4" />
               </div>
               <div>
@@ -327,7 +327,7 @@ function Inner() {
                   {topic.cramSheet.map((c, i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-3 rounded-xl border border-amber-200/60 bg-amber-50/40 p-4"
+                      className="flex items-start gap-3 rounded-xl border border-amber-200 dark:border-amber-500/30/60 bg-amber-50/40 dark:bg-amber-500/10 p-4"
                     >
                       <span className="h-7 w-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs font-semibold shrink-0 tabular-nums">
                         {i + 1}
@@ -342,7 +342,7 @@ function Inner() {
                   {topic.keyFacts.map((k, i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-3 rounded-xl border border-border bg-white p-4"
+                      className="flex items-start gap-3 rounded-xl border border-border bg-white dark:bg-card p-4"
                     >
                       <CheckCircle2 className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
                       <div className="text-sm leading-relaxed">{k}</div>
@@ -361,7 +361,7 @@ function Inner() {
                         <div className="font-medium text-sm leading-snug">
                           {q.prompt}
                         </div>
-                        <div className="text-sm text-emerald-700 mt-2">
+                        <div className="text-sm text-emerald-700 dark:text-emerald-300 mt-2">
                           ✓ Correct answer: {q.choices[q.correctIndex]}
                         </div>
                         <div className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
@@ -412,7 +412,7 @@ function RefTab({
         "inline-flex items-center gap-2 h-9 px-3.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
         active
           ? "bg-brand-600 text-white"
-          : "bg-slate-50 text-muted-foreground hover:bg-slate-100"
+          : "bg-slate-50 dark:bg-muted text-muted-foreground hover:bg-slate-100"
       )}
     >
       <Icon className="h-4 w-4" />
@@ -424,10 +424,10 @@ function RefTab({
 function ReviewView({ review }: { review: TopicReview }) {
   return (
     <div className="space-y-8">
-      <div className="rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50/70 to-white p-5">
+      <div className="rounded-2xl border border-brand-100 dark:border-brand-500/30 bg-gradient-to-br from-brand-50/70 to-white p-5">
         <div className="flex items-center gap-2 mb-2">
-          <GraduationCap className="h-4 w-4 text-brand-700" />
-          <div className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold">
+          <GraduationCap className="h-4 w-4 text-brand-700 dark:text-brand-300" />
+          <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
             Overview · {review.examWeight}
           </div>
         </div>
@@ -452,9 +452,9 @@ function ReviewView({ review }: { review: TopicReview }) {
             {review.gotchas.map((g, i) => (
               <div
                 key={i}
-                className="rounded-xl border border-amber-200/70 bg-amber-50/30 p-4"
+                className="rounded-xl border border-amber-200 dark:border-amber-500/30/70 bg-amber-50/30 dark:bg-amber-500/10 p-4"
               >
-                <div className="text-sm font-semibold text-amber-900">
+                <div className="text-sm font-semibold text-amber-900 dark:text-amber-200">
                   {g.confusion}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1 leading-relaxed">
@@ -476,7 +476,7 @@ function ReviewView({ review }: { review: TopicReview }) {
             {review.examTips.map((t, i) => (
               <li
                 key={i}
-                className="flex items-start gap-3 rounded-xl border border-brand-100 bg-brand-50/30 p-3.5"
+                className="flex items-start gap-3 rounded-xl border border-brand-100 dark:border-brand-500/30 bg-brand-50 dark:bg-brand-500/15/30 p-3.5"
               >
                 <Zap className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
                 <div className="text-sm leading-relaxed">{t}</div>
@@ -528,11 +528,11 @@ function SectionBlock({
         )}
 
         {section.table && (
-          <div className="rounded-xl border border-border bg-white overflow-hidden">
+          <div className="rounded-xl border border-border bg-white dark:bg-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50/80 border-b border-border">
+                  <tr className="bg-slate-50 dark:bg-muted/80 border-b border-border">
                     {section.table.columns.map((c, i) => (
                       <th
                         key={i}
@@ -547,7 +547,7 @@ function SectionBlock({
                   {section.table.rows.map((r, i) => (
                     <tr
                       key={i}
-                      className="border-b border-border last:border-b-0 hover:bg-slate-50/40"
+                      className="border-b border-border last:border-b-0 hover:bg-slate-50 dark:bg-muted/40"
                     >
                       <td className="px-4 py-3 font-medium text-foreground align-top w-[28%]">
                         {r.label}

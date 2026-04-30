@@ -98,7 +98,7 @@ export function RefundConsent({ offerId, priceCents, currency = "USD", onConsent
   };
 
   return (
-    <div className={`rounded-xl border border-amber-200 bg-amber-50/60 p-3.5 text-sm ${className}`}>
+    <div className={`rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/60 dark:bg-amber-500/10 p-3.5 text-sm ${className}`}>
       <label className="flex gap-3 items-start cursor-pointer select-none">
         <input
           type="checkbox"
@@ -107,14 +107,14 @@ export function RefundConsent({ offerId, priceCents, currency = "USD", onConsent
           className="mt-0.5 h-4 w-4 shrink-0 rounded border-amber-400 text-brand-600 focus:ring-brand-500"
           aria-describedby={`refund-consent-${offerId}`}
         />
-        <span id={`refund-consent-${offerId}`} className="leading-relaxed text-amber-900">
+        <span id={`refund-consent-${offerId}`} className="leading-relaxed text-amber-900 dark:text-amber-200">
           <strong className="font-semibold">I understand PassPilot is a digital product.</strong>{" "}
           I consent to <strong>immediate access</strong> to all content upon purchase, and I acknowledge that by accessing the content I{" "}
           <strong>waive my 14-day right of withdrawal</strong> under EU Consumer Rights Directive Article 16(m).
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); setShowDetails(v => !v); }}
-            className="ml-1 underline text-amber-700 hover:text-amber-900"
+            className="ml-1 underline text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:text-amber-200"
           >
             {showDetails ? "hide details" : "what does this mean?"}
           </button>
@@ -122,7 +122,7 @@ export function RefundConsent({ offerId, priceCents, currency = "USD", onConsent
       </label>
 
       {showDetails && (
-        <div className="mt-3 pl-7 text-xs text-amber-900/80 space-y-2 leading-relaxed">
+        <div className="mt-3 pl-7 text-xs text-amber-900 dark:text-amber-200/80 space-y-2 leading-relaxed">
           <p className="flex gap-2">
             <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
             <span>

@@ -88,7 +88,7 @@ export default function DiagnosticPage() {
             <div className="absolute inset-x-0 top-0 -z-10 h-96 mesh-bg" />
             <div className="text-center pt-6 pb-10">
               <div
-                className={`chip mx-auto mb-4 ${isRetake ? "bg-violet-50 border-violet-100 text-violet-700" : "bg-brand-50 border-brand-100 text-brand-700"}`}
+                className={`chip mx-auto mb-4 ${isRetake ? "bg-violet-50 dark:bg-violet-500/15 border-violet-100 text-violet-700" : "bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300"}`}
               >
                 {isRetake ? (
                   <RotateCcw className="h-3.5 w-3.5" />
@@ -155,7 +155,7 @@ export default function DiagnosticPage() {
                         return (
                           <>
                             <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
-                            <span className="text-emerald-700 font-semibold tabular-nums">
+                            <span className="text-emerald-700 dark:text-emerald-300 font-semibold tabular-nums">
                               +{delta} pts since last
                             </span>
                           </>
@@ -164,7 +164,7 @@ export default function DiagnosticPage() {
                         return (
                           <>
                             <TrendingDown className="h-3.5 w-3.5 text-rose-600" />
-                            <span className="text-rose-700 font-semibold tabular-nums">
+                            <span className="text-rose-700 dark:text-rose-300 font-semibold tabular-nums">
                               {delta} pts since last
                             </span>
                           </>
@@ -252,7 +252,7 @@ function InfoTile({
 }) {
   return (
     <div className="card-surface p-4 flex items-center gap-3">
-      <div className="h-9 w-9 rounded-xl bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center shrink-0">
+      <div className="h-9 w-9 rounded-xl bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center shrink-0">
         <Icon className="h-4 w-4" />
       </div>
       <div>

@@ -28,7 +28,7 @@ export function HydrationGate({
   if (!mounted) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="h-8 w-8 rounded-full border-2 border-brand-200 border-t-brand-600 animate-spin" />
+        <div className="h-8 w-8 rounded-full border-2 border-brand-200 dark:border-brand-500/40 border-t-brand-600 animate-spin" />
       </div>
     );
   }

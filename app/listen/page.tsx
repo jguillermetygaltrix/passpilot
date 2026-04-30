@@ -127,7 +127,7 @@ function Inner() {
         <div className="space-y-6 max-w-2xl mx-auto">
           {/* Hero */}
           <div className="text-center space-y-3">
-            <div className="chip bg-cyan-50 border-cyan-100 text-cyan-700 mx-auto">
+            <div className="chip bg-cyan-50 dark:bg-cyan-500/10 border-cyan-100 text-cyan-700 dark:text-cyan-300 mx-auto">
               <Headphones className="h-3 w-3" />
               Commute Mode
             </div>
@@ -168,8 +168,8 @@ function Inner() {
                 className={cn(
                   "rounded-xl border p-4 text-left transition-all",
                   source === "drill"
-                    ? "border-brand-500 bg-brand-50/60 ring-2 ring-brand-200"
-                    : "border-border hover:border-brand-200 hover:bg-brand-50/30"
+                    ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15/60 ring-2 ring-brand-200"
+                    : "border-border hover:border-brand-200 dark:border-brand-500/40 hover:bg-brand-50 dark:bg-brand-500/15/30"
                 )}
               >
                 <div className="text-sm font-semibold mb-1 flex items-center gap-2">
@@ -180,8 +180,8 @@ function Inner() {
               </button>
             </div>
             {source === "sr" && dueQuestions.length === 0 && (
-              <div className="mt-3 text-xs text-muted-foreground bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-start gap-2">
-                <AlertTriangle className="h-3.5 w-3.5 text-amber-700 mt-0.5 shrink-0" />
+              <div className="mt-3 text-xs text-muted-foreground bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-3 py-2 flex items-start gap-2">
+                <AlertTriangle className="h-3.5 w-3.5 text-amber-700 dark:text-amber-300 mt-0.5 shrink-0" />
                 <span>
                   No cards due right now. Pick "Mixed drill" or come back after
                   a practice session.
@@ -215,7 +215,7 @@ function Inner() {
                 >
                   <span
                     className={cn(
-                      "inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow",
+                      "inline-block h-5 w-5 transform rounded-full bg-white dark:bg-card transition-transform shadow",
                       handsFree && cap.sttAvailable ? "translate-x-5" : "translate-x-1"
                     )}
                   />
@@ -569,7 +569,7 @@ function ListenRunner({
             <button
               key={i}
               onClick={() => tapAnswer(i)}
-              className="w-full text-left rounded-xl border border-border bg-white px-4 py-3.5 hover:border-brand-300 hover:bg-brand-50/40 transition-all flex items-start gap-3"
+              className="w-full text-left rounded-xl border border-border bg-white dark:bg-card px-4 py-3.5 hover:border-brand-300 hover:bg-brand-50 dark:bg-brand-500/15/40 transition-all flex items-start gap-3"
             >
               <span className="h-7 w-7 rounded-full border border-border flex items-center justify-center shrink-0 text-sm font-semibold tabular-nums">
                 {String.fromCharCode(65 + i)}

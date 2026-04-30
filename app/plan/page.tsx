@@ -63,14 +63,14 @@ function Inner() {
         </div>
 
         <div className="card-surface p-6 mb-5 border-l-4 border-brand-500 relative overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-brand-100 blur-3xl opacity-60" />
+          <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-60" />
           <div className="relative">
             <div className="flex items-start gap-3">
               <div className="h-10 w-10 rounded-xl bg-brand-600 text-white flex items-center justify-center shrink-0">
                 <BrainCircuit className="h-5 w-5" />
               </div>
               <div>
-                <div className="chip bg-white border-brand-100 text-brand-700 mb-1.5">
+                <div className="chip bg-white dark:bg-card border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mb-1.5">
                   <Sparkles className="h-3 w-3" /> Mission
                 </div>
                 <div className="font-semibold text-[15px] leading-snug">
@@ -115,7 +115,7 @@ function Inner() {
               ).map((tid) => (
                 <span
                   key={tid as string}
-                  className="chip bg-brand-50 border-brand-100 text-brand-700"
+                  className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300"
                 >
                   {TOPIC_MAP[tid as string]?.shortName}
                 </span>
@@ -164,8 +164,8 @@ function Inner() {
                   className={cn(
                     "rounded-2xl border transition-all",
                     isDone
-                      ? "border-emerald-200 bg-emerald-50/40"
-                      : "border-border bg-white hover:border-brand-200"
+                      ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-500/10"
+                      : "border-border bg-white dark:bg-card hover:border-brand-200 dark:border-brand-500/40"
                   )}
                 >
                   <div className="p-4 flex items-start gap-4">
@@ -174,7 +174,7 @@ function Inner() {
                         "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
                         isDone
                           ? "bg-emerald-500 text-white"
-                          : "bg-brand-50 text-brand-700 border border-brand-100"
+                          : "bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30"
                       )}
                     >
                       {isDone ? (
@@ -188,11 +188,11 @@ function Inner() {
                         <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
                           {b.kind === "cram" ? "Cram" : b.kind}
                         </span>
-                        <span className="chip bg-slate-50 border-slate-200 text-slate-700">
+                        <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
                           <Clock className="h-3 w-3" /> {b.minutes}m
                         </span>
                         {b.topicId && (
-                          <span className="chip bg-brand-50 border-brand-100 text-brand-700">
+                          <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300">
                             {TOPIC_MAP[b.topicId]?.shortName}
                           </span>
                         )}

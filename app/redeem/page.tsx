@@ -78,7 +78,7 @@ function Inner() {
           </div>
 
           {existingLicense && !success && (
-            <div className="card-surface p-5 mb-5 border-emerald-200 bg-emerald-50/40">
+            <div className="card-surface p-5 mb-5 border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-500/10">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
                 <div className="flex-1">
@@ -110,18 +110,18 @@ function Inner() {
                   onChange={(e) => setKey(e.target.value)}
                   placeholder="PASSPILOT-XXXX-XXXX-XXXX"
                   disabled={loading || !!success}
-                  className="w-full h-12 rounded-xl border border-border px-4 font-mono text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white uppercase disabled:opacity-60"
+                  className="w-full h-12 rounded-xl border border-border px-4 font-mono text-sm tracking-wide focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 bg-white dark:bg-card uppercase disabled:opacity-60"
                   autoFocus
                 />
               </label>
 
               {error && (
-                <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-sm p-3 animate-fade-in">
+                <div className="mt-4 rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 text-sm p-3 animate-fade-in">
                   {error}
                 </div>
               )}
               {success && (
-                <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 text-sm p-4 flex items-start gap-3 animate-fade-in">
+                <div className="mt-4 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 text-sm p-4 flex items-start gap-3 animate-fade-in">
                   <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
                   <div>
                     <div className="font-semibold">Activated — {success}</div>
@@ -163,7 +163,7 @@ function Inner() {
             <span className="text-muted-foreground">No key yet? </span>
             <Link
               href="/upgrade"
-              className="text-brand-700 font-medium hover:underline"
+              className="text-brand-700 dark:text-brand-300 font-medium hover:underline"
             >
               See pricing →
             </Link>
@@ -174,7 +174,7 @@ function Inner() {
               so even if this UI gate fails, the values would be undefined.
               Webpack tree-shakes the entire branch in production builds. */}
           {process.env.NODE_ENV !== "production" && (
-            <div className="mt-10 rounded-2xl border border-dashed border-border bg-slate-50/60 p-5">
+            <div className="mt-10 rounded-2xl border border-dashed border-border bg-slate-50 dark:bg-muted/60 p-5">
               <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">
                 <Sparkles className="h-3.5 w-3.5" />
                 Demo keys (for testing)
@@ -209,7 +209,7 @@ function DemoKey({
       </span>
       <button
         onClick={() => onUse(value)}
-        className="font-mono text-brand-700 hover:text-brand-800 hover:underline"
+        className="font-mono text-brand-700 dark:text-brand-300 hover:text-brand-800 hover:underline"
       >
         {value}
       </button>

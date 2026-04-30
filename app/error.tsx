@@ -20,7 +20,7 @@ export default function ErrorBoundary({
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-6 py-16">
       <div className="card-surface max-w-md w-full p-8 text-center">
-        <div className="h-12 w-12 mx-auto rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mb-4">
+        <div className="h-12 w-12 mx-auto rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-100 flex items-center justify-center text-amber-600 mb-4">
           <AlertTriangle className="h-6 w-6" />
         </div>
         <h2 className="text-xl font-semibold mb-2">Something went sideways</h2>
@@ -40,7 +40,7 @@ export default function ErrorBoundary({
           </button>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-sm font-medium hover:bg-slate-50 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-border text-sm font-medium hover:bg-slate-50 dark:bg-muted transition-colors"
           >
             <Home className="h-4 w-4" />
             Dashboard

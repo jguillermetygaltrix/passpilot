@@ -75,7 +75,7 @@ function Inner() {
 
       <main className="container max-w-3xl pb-20 animate-fade-in">
         <div className="text-center pt-4 pb-10">
-          <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto mb-3">
+          <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
             <Sparkles className="h-3.5 w-3.5" />
             Diagnostic complete
           </div>
@@ -86,7 +86,7 @@ function Inner() {
         </div>
 
         <div className="card-surface p-6 md:p-8 relative overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-brand-100 blur-3xl opacity-50" />
+          <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-50" />
           <div className="relative grid md:grid-cols-[auto_1fr] gap-6 md:gap-10 items-center">
             <ReadinessRing
               score={readiness.score}
@@ -96,12 +96,12 @@ function Inner() {
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <RiskBadge risk={readiness.risk} />
-                <span className="chip bg-white border-border text-foreground">
+                <span className="chip bg-white dark:bg-card border-border text-foreground">
                   <Calendar className="h-3 w-3" />
                   {readiness.daysLeft} days to exam
                 </span>
                 {diagnosticAttempt && (
-                  <span className="chip bg-slate-50 border-slate-200 text-slate-700">
+                  <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
                     {diagnosticAttempt.scorePct}% diagnostic accuracy
                   </span>
                 )}

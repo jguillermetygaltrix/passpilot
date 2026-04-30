@@ -337,22 +337,22 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
 
         {/* Next steps */}
         {!passed && weakestTopics.length > 0 && (
-          <div className="card-surface p-5 border-amber-200 bg-amber-50/40">
-            <div className="text-sm font-medium mb-2 flex items-center gap-2 text-amber-800">
+          <div className="card-surface p-5 border-amber-200 dark:border-amber-500/30 bg-amber-50/40 dark:bg-amber-500/10">
+            <div className="text-sm font-medium mb-2 flex items-center gap-2 text-amber-800 dark:text-amber-300">
               <AlertTriangle className="h-4 w-4" />
               What to study before retrying
             </div>
             <ul className="space-y-2 text-sm">
               {weakestTopics.map((t) => (
                 <li key={t.tid} className="flex items-start gap-2">
-                  <span className="text-amber-700 font-semibold tabular-nums shrink-0">
+                  <span className="text-amber-700 dark:text-amber-300 font-semibold tabular-nums shrink-0">
                     {t.pct}%
                   </span>
                   <span className="text-foreground">
                     {TOPIC_MAP[t.tid]?.name ?? t.tid}
                     <Link
                       href={`/practice?topic=${t.tid}&mode=topic`}
-                      className="ml-2 text-brand-700 hover:underline text-xs"
+                      className="ml-2 text-brand-700 dark:text-brand-300 hover:underline text-xs"
                     >
                       Drill this →
                     </Link>
@@ -396,13 +396,13 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
                     </div>
                   </div>
                   {skipped && (
-                    <div className="text-xs text-amber-700 ml-6 mb-1 italic">
+                    <div className="text-xs text-amber-700 dark:text-amber-300 ml-6 mb-1 italic">
                       You didn't answer this question.
                     </div>
                   )}
                   {!correct && (
                     <div className="text-xs text-muted-foreground ml-6 mb-1">
-                      <span className="font-semibold text-emerald-700">Correct:</span>{" "}
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">Correct:</span>{" "}
                       {q.choices[q.correctIndex]}
                     </div>
                   )}
@@ -449,10 +449,10 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
             className={cn(
               "inline-flex items-center gap-1.5 chip tabular-nums font-semibold",
               timeCrit
-                ? "bg-rose-50 border-rose-200 text-rose-700 animate-pulse"
+                ? "bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 animate-pulse"
                 : timeWarn
-                  ? "bg-amber-50 border-amber-200 text-amber-700"
-                  : "bg-slate-50 border-border text-foreground"
+                  ? "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300"
+                  : "bg-slate-50 dark:bg-muted border-border text-foreground"
             )}
             aria-live={timeCrit ? "assertive" : "off"}
           >
@@ -474,7 +474,7 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
       {/* Question card */}
       <div className="card-surface p-6 sm:p-8 animate-slide-up">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <span className="chip bg-brand-50 text-brand-700 border-brand-100">
+          <span className="chip bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border-brand-100 dark:border-brand-500/30">
             {TOPIC_MAP[currentQ.topicId]?.shortName ?? currentQ.topicId}
           </span>
           <button
@@ -482,8 +482,8 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
             className={cn(
               "chip transition-colors",
               currentState.flagged
-                ? "bg-amber-100 border-amber-300 text-amber-800"
-                : "bg-slate-50 border-border text-muted-foreground hover:bg-amber-50 hover:text-amber-700"
+                ? "bg-amber-100 border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-300"
+                : "bg-slate-50 dark:bg-muted border-border text-muted-foreground hover:bg-amber-50 dark:bg-amber-500/10 hover:text-amber-700 dark:text-amber-300"
             )}
             aria-pressed={currentState.flagged}
           >
@@ -505,8 +505,8 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
                 className={cn(
                   "w-full text-left rounded-xl border px-4 py-3.5 text-[14.5px] transition-all flex items-start gap-3",
                   isSelected
-                    ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
-                    : "hover:border-brand-300 hover:bg-brand-50/40"
+                    ? "border-brand-500 bg-brand-50 dark:bg-brand-500/15 ring-2 ring-brand-200"
+                    : "hover:border-brand-300 hover:bg-brand-50 dark:bg-brand-500/15/40"
                 )}
               >
                 <span
@@ -586,8 +586,8 @@ export function MockExamRunner({ exam, questions, durationSec, onComplete }: Pro
                   isCurrent
                     ? "border-brand-600 bg-brand-600 text-white shadow-sm"
                     : isAnswered
-                      ? "border-brand-200 bg-brand-50 text-brand-800 hover:bg-brand-100"
-                      : "border-border bg-slate-50 text-muted-foreground hover:bg-slate-100"
+                      ? "border-brand-200 dark:border-brand-500/40 bg-brand-50 dark:bg-brand-500/15 text-brand-800 dark:text-brand-300 hover:bg-brand-100 dark:bg-brand-500/20"
+                      : "border-border bg-slate-50 dark:bg-muted text-muted-foreground hover:bg-slate-100"
                 )}
                 aria-label={`Question ${i + 1}${isAnswered ? ", answered" : ", unanswered"}${isFlagged ? ", flagged" : ""}`}
               >

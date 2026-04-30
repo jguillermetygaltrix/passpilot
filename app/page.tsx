@@ -304,7 +304,7 @@ function HeroVisual() {
           <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
             Pass readiness
           </div>
-          <span className="chip bg-amber-50 border-amber-200 text-amber-700">
+          <span className="chip bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300">
             <CircleAlert className="h-3 w-3" />
             Borderline
           </span>
@@ -327,7 +327,7 @@ function HeroVisual() {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="chip bg-brand-50 border-brand-100 text-brand-700 text-[10px] px-2 py-0.5">
+              <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 text-[10px] px-2 py-0.5">
                 Today's mission
               </span>
             </div>
@@ -343,7 +343,7 @@ function HeroVisual() {
 
       <div className="relative soft-card p-4 mt-4 shadow-card animate-slide-up [animation-delay:220ms] -rotate-1 ml-2 md:ml-4 bg-white/95 backdrop-blur">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-rose-50 text-rose-700 border border-rose-100 flex items-center justify-center shrink-0">
+          <div className="h-9 w-9 rounded-xl bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-100 flex items-center justify-center shrink-0">
             <LifeBuoy className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
@@ -432,7 +432,7 @@ function MiniTopic({
         <span className="text-foreground/80 truncate font-medium">{name}</span>
         <span className="text-muted-foreground tabular-nums">{pct}%</span>
       </div>
-      <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+      <div className="h-1.5 rounded-full bg-slate-100 dark:bg-muted overflow-hidden">
         <div
           className={`h-full rounded-full bg-gradient-to-r ${barClass}`}
           style={{ width: `${pct}%` }}
@@ -457,12 +457,12 @@ function TrustMarquee() {
     { name: "Ava M.", cert: "AZ-900", score: 807, ago: "2w ago" },
   ];
   return (
-    <section className="py-8 border-y border-border bg-slate-50/60">
+    <section className="py-8 border-y border-border bg-slate-50 dark:bg-muted/60">
       <Marquee speed={50}>
         {items.map((it, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-border shadow-soft shrink-0"
+            className="flex items-center gap-3 px-4 py-2 rounded-full bg-white dark:bg-card border border-border shadow-soft shrink-0"
           >
             <div className="h-6 w-6 rounded-full bg-gradient-to-br from-brand-500 to-violet2-500 text-white flex items-center justify-center text-[10px] font-semibold">
               {it.name
@@ -473,7 +473,7 @@ function TrustMarquee() {
             <div className="text-xs">
               <span className="font-semibold">{it.name}</span>
               <span className="text-muted-foreground"> passed </span>
-              <span className="font-medium text-brand-700">{it.cert}</span>
+              <span className="font-medium text-brand-700 dark:text-brand-300">{it.cert}</span>
               <span className="text-muted-foreground"> · {it.score}</span>
             </div>
             <span className="text-[10px] text-muted-foreground tabular-nums">
@@ -491,7 +491,7 @@ function TrustMarquee() {
 // ─────────────────────────────────────────────────────────────────
 function TrustStrip() {
   return (
-    <section className="py-14 md:py-16 bg-white">
+    <section className="py-14 md:py-16 bg-white dark:bg-card">
       <div className="container grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <Reveal delay={0}>
           <div>
@@ -547,12 +547,12 @@ function CertCatalog() {
   return (
     <section
       id="certs"
-      className="py-20 md:py-28 bg-slate-50/60 border-y border-border"
+      className="py-20 md:py-28 bg-slate-50 dark:bg-muted/60 border-y border-border"
     >
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+            <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto">
               <GraduationCap className="h-3 w-3" />
               The full lineup
             </div>
@@ -590,7 +590,7 @@ function CertCatalog() {
                     >
                       {exam.shortCode.split("-")[0].slice(0, 3)}
                     </div>
-                    <span className="chip bg-emerald-50 border-emerald-200 text-emerald-700 text-[10px]">
+                    <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-[10px]">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       Live
                     </span>
@@ -606,7 +606,7 @@ function CertCatalog() {
                   </p>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>{exam.totalDomains} domains · {exam.questionCountRange[0]}–{exam.questionCountRange[1]} Qs</span>
-                    <span className="text-brand-700 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    <span className="text-brand-700 dark:text-brand-300 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                       Start
                       <ArrowRight className="h-3 w-3" />
                     </span>
@@ -650,7 +650,7 @@ function NotFlashcards() {
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+            <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto">
               <Zap className="h-3 w-3" />
               Why PassPilot exists
             </div>
@@ -669,7 +669,7 @@ function NotFlashcards() {
 
         <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
           <Reveal direction="right" delay={100}>
-            <div className="soft-card p-6 border-border bg-slate-50/60 h-full">
+            <div className="soft-card p-6 border-border bg-slate-50 dark:bg-muted/60 h-full">
               <div className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-4">
                 Every other app
               </div>
@@ -697,7 +697,7 @@ function NotFlashcards() {
               <span className="absolute -top-3 left-6 chip bg-brand-600 text-white border-transparent shadow-pop z-10">
                 <Sparkles className="h-3 w-3" /> PassPilot
               </span>
-              <div className="text-xs uppercase tracking-wider text-brand-700 font-semibold mb-4 mt-1">
+              <div className="text-xs uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold mb-4 mt-1">
                 The pass-readiness system
               </div>
               <ul className="space-y-3">
@@ -743,12 +743,12 @@ function HowItWorks() {
   return (
     <section
       id="how"
-      className="py-20 md:py-28 bg-slate-50/60 border-y border-border"
+      className="py-20 md:py-28 bg-slate-50 dark:bg-muted/60 border-y border-border"
     >
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
-            <div className="chip bg-white border-border text-muted-foreground mx-auto">
+            <div className="chip bg-white dark:bg-card border-border text-muted-foreground mx-auto">
               How it works
             </div>
             <h2 className="heading-2 text-balance">
@@ -795,7 +795,7 @@ function BentoGrid() {
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
-            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+            <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto">
               <LineChart className="h-3 w-3" />
               Inside PassPilot
             </div>
@@ -808,7 +808,7 @@ function BentoGrid() {
         <div className="grid md:grid-cols-6 gap-4 max-w-6xl mx-auto">
           <Reveal className="md:col-span-4">
             <div className="soft-card p-7 md:p-9 hover-lift h-full relative overflow-hidden group">
-              <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-brand-100 blur-3xl opacity-60 group-hover:opacity-80 transition-opacity" />
+              <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-60 group-hover:opacity-80 transition-opacity" />
               <div className="relative">
                 <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center shadow-pop mb-5">
                   <BrainCircuit className="h-5 w-5" />
@@ -824,8 +824,8 @@ function BentoGrid() {
                   models." PassPilot reads your mistakes and writes the
                   guidance out loud.
                 </p>
-                <div className="mt-6 rounded-xl border border-brand-200 bg-gradient-to-br from-brand-50/70 to-white p-4">
-                  <div className="text-xs font-semibold text-brand-700 mb-1">
+                <div className="mt-6 rounded-xl border border-brand-200 dark:border-brand-500/40 bg-gradient-to-br from-brand-50/70 to-white p-4">
+                  <div className="text-xs font-semibold text-brand-700 dark:text-brand-300 mb-1">
                     Today's AI read
                   </div>
                   <p className="text-sm">
@@ -909,8 +909,8 @@ function BentoGrid() {
                   </p>
                 </div>
                 <div className="hidden md:block">
-                  <div className="rounded-2xl border border-rose-200 bg-rose-50/40 p-4 w-52 rotate-3">
-                    <div className="text-[10px] uppercase tracking-wider text-rose-700 font-semibold mb-1">
+                  <div className="rounded-2xl border border-rose-200 dark:border-rose-500/30 bg-rose-50/40 dark:bg-rose-500/10 p-4 w-52 rotate-3">
+                    <div className="text-[10px] uppercase tracking-wider text-rose-700 dark:text-rose-300 font-semibold mb-1">
                       3 days left
                     </div>
                     <div className="text-sm font-semibold mb-3">
@@ -924,10 +924,10 @@ function BentoGrid() {
                       ].map((c, i) => (
                         <div
                           key={i}
-                          className="flex items-center justify-between text-xs bg-white rounded-lg px-2.5 py-1.5 border border-rose-100"
+                          className="flex items-center justify-between text-xs bg-white dark:bg-card rounded-lg px-2.5 py-1.5 border border-rose-100"
                         >
                           <span className="truncate">{c.t}</span>
-                          <span className="text-rose-700 tabular-nums font-semibold">
+                          <span className="text-rose-700 dark:text-rose-300 tabular-nums font-semibold">
                             {c.m}m
                           </span>
                         </div>
@@ -980,7 +980,7 @@ function Testimonials() {
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-slate-50/60 border-y border-border">
+    <section className="py-20 md:py-28 bg-slate-50 dark:bg-muted/60 border-y border-border">
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
@@ -1041,7 +1041,7 @@ function Pricing() {
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
-            <div className="chip bg-brand-50 border-brand-100 text-brand-700 mx-auto">
+            <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto">
               Pricing
             </div>
             <h2 className="heading-2 text-balance">
@@ -1143,7 +1143,7 @@ function PricingCard({
   const inner = (
     <>
       {featured && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 chip bg-white text-brand-700 border-transparent shadow-soft">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 chip bg-white dark:bg-card text-brand-700 dark:text-brand-300 border-transparent shadow-soft">
           <Sparkles className="h-3 w-3" /> Most popular
         </span>
       )}
@@ -1185,7 +1185,7 @@ function PricingCard({
         <Button
           variant={featured ? "secondary" : "outline"}
           size="lg"
-          className={`w-full group ${featured ? "bg-white text-brand-700 border-transparent" : ""}`}
+          className={`w-full group ${featured ? "bg-white dark:bg-card text-brand-700 dark:text-brand-300 border-transparent" : ""}`}
         >
           {cta}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -1242,7 +1242,7 @@ function FAQ() {
   return (
     <section
       id="faq"
-      className="py-20 md:py-28 bg-slate-50/60 border-y border-border"
+      className="py-20 md:py-28 bg-slate-50 dark:bg-muted/60 border-y border-border"
     >
       <div className="container max-w-3xl">
         <Reveal>
@@ -1256,7 +1256,7 @@ function FAQ() {
               <details className="soft-card p-5 md:p-6 group cursor-pointer">
                 <summary className="flex items-center justify-between gap-4 list-none">
                   <span className="font-semibold text-[15px]">{f.q}</span>
-                  <span className="h-7 w-7 rounded-full bg-brand-50 border border-brand-100 text-brand-700 flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
+                  <span className="h-7 w-7 rounded-full bg-brand-50 dark:bg-brand-500/15 border border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 flex items-center justify-center shrink-0 transition-transform group-open:rotate-45">
                     <svg
                       width="14"
                       height="14"
@@ -1311,7 +1311,7 @@ function FinalCTA() {
                   <Button
                     variant="secondary"
                     size="xl"
-                    className="w-full sm:w-auto bg-white text-brand-700 border-transparent hover:bg-white/90 group"
+                    className="w-full sm:w-auto bg-white dark:bg-card text-brand-700 dark:text-brand-300 border-transparent hover:bg-white/90 group"
                   >
                     Start my plan free
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

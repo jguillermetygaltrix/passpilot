@@ -99,7 +99,7 @@ function Inner() {
         <div className="space-y-6 max-w-3xl mx-auto">
           {/* Hero */}
           <div className="text-center space-y-3">
-            <div className="chip bg-violet-50 border-violet-100 text-violet-700 mx-auto">
+            <div className="chip bg-violet-50 dark:bg-violet-500/15 border-violet-100 text-violet-700 mx-auto">
               <Brain className="h-3 w-3" />
               Spaced Repetition
             </div>
@@ -141,7 +141,7 @@ function Inner() {
             </div>
           ) : stats.totalCards === 0 ? (
             <div className="card-surface p-8 text-center">
-              <div className="h-14 w-14 rounded-2xl bg-violet-50 border border-violet-100 text-violet-700 flex items-center justify-center mx-auto mb-4">
+              <div className="h-14 w-14 rounded-2xl bg-violet-50 dark:bg-violet-500/15 border border-violet-100 text-violet-700 flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="h-6 w-6" />
               </div>
               <div className="text-base font-semibold mb-2">
@@ -161,7 +161,7 @@ function Inner() {
             </div>
           ) : (
             <div className="card-surface p-8 text-center bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/30">
-              <div className="h-14 w-14 rounded-2xl bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-4">
+              <div className="h-14 w-14 rounded-2xl bg-emerald-100 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mx-auto mb-4">
                 <Trophy className="h-6 w-6" />
               </div>
               <div className="text-base font-semibold mb-2">
@@ -198,7 +198,7 @@ function Inner() {
                         <div
                           className={`w-full rounded-t-md transition-all ${
                             count === 0
-                              ? "bg-slate-100"
+                              ? "bg-slate-100 dark:bg-muted"
                               : isMature
                                 ? "bg-gradient-to-t from-emerald-500 to-emerald-400"
                                 : "bg-gradient-to-t from-brand-500 to-violet-400"
@@ -266,8 +266,8 @@ function CardPreviewRow({ card }: { card: SRCard }) {
     ? Math.round((card.correctReviews / card.totalReviews) * 100)
     : 0;
   return (
-    <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg bg-slate-50/60 border border-border">
-      <span className="chip bg-violet-50 border-violet-200 text-violet-700 text-[10px] tabular-nums shrink-0">
+    <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg bg-slate-50 dark:bg-muted/60 border border-border">
+      <span className="chip bg-violet-50 dark:bg-violet-500/15 border-violet-200 text-violet-700 text-[10px] tabular-nums shrink-0">
         Box {card.box}
       </span>
       <div className="min-w-0 flex-1">

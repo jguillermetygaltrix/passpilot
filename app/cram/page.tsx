@@ -126,7 +126,7 @@ function Inner() {
         onClose={() => setWallOpen(false)}
         reason="Cram Sheet · Pro feature"
         headline="Take your one-page cram sheet anywhere"
-        sub="Auto-built from your weakest topics + the highest-yield facts on the exam blueprint."
+        sub="Auto-built from your weakest topics + the highest-yield facts on exam blueprint."
       />
 
       {/* Screen-only chrome: nav + controls */}
@@ -138,7 +138,7 @@ function Inner() {
         {/* Screen-only intro + controls */}
         <div className="print:hidden mb-6 max-w-3xl mx-auto space-y-5">
           <div className="text-center space-y-3">
-            <div className="chip bg-amber-50 border-amber-100 text-amber-700 mx-auto">
+            <div className="chip bg-amber-50 dark:bg-amber-500/10 border-amber-100 text-amber-700 dark:text-amber-300 mx-auto">
               <FileDown className="h-3 w-3" />
               Cram Sheet
             </div>
@@ -154,8 +154,8 @@ function Inner() {
           </div>
 
           {!ent.canAccessCramAndKeyFacts && (
-            <div className="card-surface p-5 border-amber-200 bg-amber-50/40 flex items-start gap-3">
-              <Lock className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
+            <div className="card-surface p-5 border-amber-200 dark:border-amber-500/30 bg-amber-50/40 dark:bg-amber-500/10 flex items-start gap-3">
+              <Lock className="h-4 w-4 text-amber-700 dark:text-amber-300 mt-0.5 shrink-0" />
               <div className="flex-1">
                 <div className="font-semibold text-sm mb-1">
                   Cram Sheet is a Pro feature
@@ -184,7 +184,7 @@ function Inner() {
               </div>
               <button
                 onClick={() => setSelectedIds(null)}
-                className="text-xs text-brand-700 hover:underline"
+                className="text-xs text-brand-700 dark:text-brand-300 hover:underline"
               >
                 Auto-pick weakest
               </button>
@@ -203,8 +203,8 @@ function Inner() {
                     className={cn(
                       "flex items-start gap-3 p-3 rounded-lg border text-left transition-all",
                       checked
-                        ? "border-amber-400 bg-amber-50/60 ring-2 ring-amber-200"
-                        : "border-border hover:border-amber-200 hover:bg-amber-50/30"
+                        ? "border-amber-400 bg-amber-50/60 dark:bg-amber-500/10 ring-2 ring-amber-200"
+                        : "border-border hover:border-amber-200 dark:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/15/30 dark:bg-amber-500/10"
                     )}
                   >
                     <span
@@ -212,7 +212,7 @@ function Inner() {
                         "h-5 w-5 rounded border flex items-center justify-center shrink-0 mt-0.5",
                         checked
                           ? "border-amber-600 bg-amber-600 text-white"
-                          : "border-border bg-white"
+                          : "border-border bg-white dark:bg-card"
                       )}
                     >
                       {checked && <CheckCircle2 className="h-3 w-3" />}
@@ -259,7 +259,7 @@ function Inner() {
         </div>
 
         {/* THE PRINTABLE SHEET — visible on screen as a preview, scaled for print */}
-        <article className="cram-sheet bg-white text-[#0B0D13] mx-auto max-w-[820px] border border-border rounded-2xl shadow-card print:shadow-none print:border-0 print:rounded-none print:max-w-none p-6 sm:p-8 print:p-6">
+        <article className="cram-sheet bg-white dark:bg-card text-[#0B0D13] mx-auto max-w-[820px] border border-border rounded-2xl shadow-card print:shadow-none print:border-0 print:rounded-none print:max-w-none p-6 sm:p-8 print:p-6">
           {/* Header */}
           <header className="border-b-2 border-[#0B0D13] pb-3 mb-4 flex items-end justify-between gap-4 flex-wrap">
             <div>
