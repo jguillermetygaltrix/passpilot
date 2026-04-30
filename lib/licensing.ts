@@ -20,10 +20,14 @@ import { EXAMS } from "./data/exams";
 // canonical EXAMS catalog — buying Multi-Cert correctly unlocks all 7
 // (and any future cert added to EXAMS).
 //
-// TODO (Boss): create Lemon Squeezy products for the 4 newer per-cert
-// SKUs (AI-900, Security+, AWS AIP, GCP CDL) and add their product IDs
-// here so users on those certs can also buy single-cert Pro at $19.99.
-// Until then, the upgrade-wall correctly upsells them to Multi-Cert.
+// 2026-04-28: Boss created LS products for the 4 newer per-cert SKUs
+// (AI-900, AWS AIP, GCP CDL, Security+). Checkout URLs are wired in
+// CHECKOUT_URLS below. Numeric LS product IDs needed here for webhook
+// validation routing — placeholder zeros until Boss grabs them from
+// each product's URL bar in the LS dashboard. Without the IDs, real
+// buyers of these 4 certs will FAIL license validation (the upgrade-wall
+// will still show the right buy buttons, but redemption flow won't grant
+// entitlement). Tracked in open_loops.
 const LS_PRODUCT_MAP: Record<
   string,
   { tier: "pro" | "multi"; exams: ExamId[] }
@@ -35,6 +39,11 @@ const LS_PRODUCT_MAP: Record<
     tier: "multi",
     exams: EXAMS.map((e) => e.id), // ALL 7 certs (catalog-driven)
   }, // PassPilot Multi-Cert
+  // ── BLOCKED: need numeric product IDs from LS dashboard (URL bar) ──
+  // "TBD-AI900":  { tier: "pro", exams: ["ai-900"] },   // PassPilot Pro — AI-900
+  // "TBD-SECPLUS":{ tier: "pro", exams: ["sec-plus"] }, // PassPilot Pro — Security+
+  // "TBD-AWSAIP": { tier: "pro", exams: ["aws-aip"] },  // PassPilot Pro — AWS AIP
+  // "TBD-GCPCDL": { tier: "pro", exams: ["gcp-cdl"] },  // PassPilot Pro — GCP CDL
 };
 
 // ── Demo keys (no network call) ─────────────────────────────────────
@@ -66,6 +75,26 @@ const TEST_KEYS: TestKey[] = process.env.NODE_ENV !== "production"
         pattern: /^PASSPILOT-PRO-MS900-[A-Z0-9]+$/i,
         tier: "pro",
         exams: ["ms-900"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-AI900-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["ai-900"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-SECPLUS-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["sec-plus"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-AWSAIP-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["aws-aip"],
+      },
+      {
+        pattern: /^PASSPILOT-PRO-GCPCDL-[A-Z0-9]+$/i,
+        tier: "pro",
+        exams: ["gcp-cdl"],
       },
       {
         pattern: /^PASSPILOT-MULTI-[A-Z0-9]+$/i,
@@ -148,13 +177,27 @@ export function describeLicense(license: License): string {
  * wouldn't authenticate), but exposing the strings in source-mapped
  * production bundles was a code smell. Now production = empty object.
  */
-type DemoKeyMap = Partial<Record<"proAz900" | "proAwsCcp" | "proMs900" | "multi", string>>;
+type CheckoutKey =
+  | "proAz900"
+  | "proAwsCcp"
+  | "proMs900"
+  | "proAi900"
+  | "proSecPlus"
+  | "proAwsAip"
+  | "proGcpCdl"
+  | "multi";
+
+type DemoKeyMap = Partial<Record<CheckoutKey, string>>;
 export const DEMO_KEYS: DemoKeyMap =
   process.env.NODE_ENV !== "production"
     ? {
         proAz900: "PASSPILOT-PRO-AZ900-DEMO",
         proAwsCcp: "PASSPILOT-PRO-AWSCCP-DEMO",
         proMs900: "PASSPILOT-PRO-MS900-DEMO",
+        proAi900: "PASSPILOT-PRO-AI900-DEMO",
+        proSecPlus: "PASSPILOT-PRO-SECPLUS-DEMO",
+        proAwsAip: "PASSPILOT-PRO-AWSAIP-DEMO",
+        proGcpCdl: "PASSPILOT-PRO-GCPCDL-DEMO",
         multi: "PASSPILOT-MULTI-DEMO",
       }
     : {};
@@ -163,17 +206,26 @@ export const DEMO_KEYS: DemoKeyMap =
  * Live Lemon Squeezy checkout URLs.
  * Each product has redirect_url set to /redeem so buyers land on the
  * license entry screen immediately after paying.
+ *
+ * 2026-04-28: 4 new per-cert SKUs added (AI-900 / Security+ / AWS AIP /
+ * GCP CDL) — full 7-cert per-cert catalog now buyable. Multi-Cert remains
+ * the better-value upsell for users buying 2+ certs.
  */
-export const CHECKOUT_URLS: Record<
-  "proAz900" | "proAwsCcp" | "proMs900" | "multi",
-  string
-> = {
+export const CHECKOUT_URLS: Record<CheckoutKey, string> = {
   proAz900:
     "https://passpilot.lemonsqueezy.com/checkout/buy/38214c21-6ca7-480c-9aaa-afa8148d5628",
   proAwsCcp:
     "https://passpilot.lemonsqueezy.com/checkout/buy/85be4af1-3b63-493c-91f8-fa0c4161530b",
   proMs900:
     "https://passpilot.lemonsqueezy.com/checkout/buy/3105f792-9e61-4fb9-a791-f16f68095311",
+  proAi900:
+    "https://passpilot.lemonsqueezy.com/checkout/buy/c9e2e32e-7592-4691-8251-64dec2474487",
+  proAwsAip:
+    "https://passpilot.lemonsqueezy.com/checkout/buy/1613c8d4-058c-4094-be13-dad74c305423",
+  proGcpCdl:
+    "https://passpilot.lemonsqueezy.com/checkout/buy/bd7f2a50-033e-462a-879f-957aff6c4982",
+  proSecPlus:
+    "https://passpilot.lemonsqueezy.com/checkout/buy/8e57a4ee-470e-4ea1-b9e2-45c55140b0e4",
   multi:
     "https://passpilot.lemonsqueezy.com/checkout/buy/a3d33fab-ad28-47f5-83fe-8039a1f2e6d1",
 };
