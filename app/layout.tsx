@@ -75,6 +75,20 @@ export const viewport: Viewport = {
   viewportFit: "cover", // honor iOS notch/home-indicator via env(safe-area-inset-*)
 };
 
+// No-flash dark-mode script — runs in <head> BEFORE React hydrates, so the
+// page paints with the right theme on first frame (no FOUC). The toggle
+// component (ThemeToggle) syncs React state to whatever this set.
+const NO_FLASH_THEME_SCRIPT = `
+(function() {
+  try {
+    var stored = localStorage.getItem('passpilot.theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = stored === 'dark' || (!stored && prefersDark);
+    if (dark) document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: {
@@ -82,6 +96,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        {/* dangerouslySetInnerHTML is intentional — this script must run
+            synchronously before paint to avoid a light-flash on dark-mode users. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: NO_FLASH_THEME_SCRIPT }}
+        />
+      </head>
       <body className="min-h-screen antialiased font-sans">
         <NativeBootstrap />
         <DeviceRegistry />

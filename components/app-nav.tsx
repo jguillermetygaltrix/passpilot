@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const items = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
@@ -57,7 +58,7 @@ export function AppNav() {
                   className={cn(
                     "inline-flex items-center gap-2 px-3.5 h-9 rounded-full text-sm font-medium transition-colors",
                     active
-                      ? "bg-brand-50 text-brand-700"
+                      ? "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
@@ -72,9 +73,9 @@ export function AppNav() {
               <Link
                 href="/rescue"
                 className={cn(
-                  "chip border bg-white text-foreground",
+                  "chip border bg-card text-foreground",
                   daysLeft <= 7
-                    ? "border-rose-200 text-rose-700 bg-rose-50"
+                    ? "border-rose-200 text-rose-700 bg-rose-50 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300"
                     : "border-border"
                 )}
               >
@@ -82,9 +83,10 @@ export function AppNav() {
                 {daysLeft === 0 ? "Exam today" : `${daysLeft} days left`}
               </Link>
             )}
+            <ThemeToggle />
             <Link
               href="/settings"
-              className="h-9 w-9 rounded-full border border-border bg-white flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="h-9 w-9 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               aria-label="Settings"
             >
               <SettingsIcon className="h-4 w-4" />
@@ -94,7 +96,7 @@ export function AppNav() {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-border pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border pb-[env(safe-area-inset-bottom)]">
         <div className="grid grid-cols-5">
           {items.map((it) => {
             const active = pathname?.startsWith(it.href);
