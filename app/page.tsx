@@ -1091,8 +1091,8 @@ function Pricing() {
         <div className="text-center mt-8 text-sm text-muted-foreground">
           <ShieldCheck className="h-4 w-4 inline mr-1.5 -mt-0.5 text-emerald-600" />
           Pass Guarantee — full refund if you don't pass within 60 days.{" "}
-          <Link href="/refunds" className="text-foreground font-medium underline-offset-2 hover:underline">
-            See terms
+          <Link href="/guarantee" className="text-foreground font-medium underline-offset-2 hover:underline">
+            How it works
           </Link>
         </div>
       </div>
