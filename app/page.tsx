@@ -65,13 +65,13 @@ export default function Landing() {
     <div className="min-h-screen relative overflow-x-hidden bg-background">
       <Nav />
       <Hero />
-      <TrustMarquee />
+      <FeatureMarquee />
       <TrustStrip />
       <CertCatalog />
       <NotFlashcards />
       <HowItWorks />
       <BentoGrid />
-      <Testimonials />
+      <HowItHelps />
       <Pricing />
       <FAQ />
       <FinalCTA />
@@ -249,15 +249,9 @@ function Hero() {
             </Reveal>
             <Reveal delay={400}>
               <div className="flex flex-wrap items-center gap-5 pt-4 text-sm text-muted-foreground">
-                <Stars />
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
                 <span className="text-foreground font-medium">
-                  Trusted by{" "}
-                  <CountUp
-                    to={2347}
-                    className="tabular-nums"
-                    suffix=""
-                  />
-                  + cert candidates
+                  60-day Pass Guarantee — full refund if you don&apos;t pass
                 </span>
                 <span className="hidden sm:inline text-border">·</span>
                 <span>No credit card to start</span>
@@ -443,18 +437,21 @@ function MiniTopic({
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Trust marquee (social proof ticker)
+// Feature marquee — replaced the old "fake user pass scores" ticker
+// with a what-PassPilot-actually-does strip. Honest. Cite-able. Real.
+// When real testimonials land, swap this back to a marquee of those.
 // ─────────────────────────────────────────────────────────────────
-function TrustMarquee() {
+function FeatureMarquee() {
   const items = [
-    { name: "Marcus A.", cert: "AZ-900", score: 842, ago: "2d ago" },
-    { name: "Priya V.", cert: "AWS CCP", score: 779, ago: "3d ago" },
-    { name: "Jordan K.", cert: "MS-900", score: 805, ago: "5d ago" },
-    { name: "Sam T.", cert: "AI-900", score: 880, ago: "6d ago" },
-    { name: "Lin P.", cert: "Security+", score: 821, ago: "1w ago" },
-    { name: "Dana R.", cert: "GCP CDL", score: 795, ago: "1w ago" },
-    { name: "Kai N.", cert: "AWS AIP", score: 861, ago: "1w ago" },
-    { name: "Ava M.", cert: "AZ-900", score: 807, ago: "2w ago" },
+    { label: "Diagnostic that scores 12 questions across the blueprint", icon: "✦" },
+    { label: "Readiness score blends accuracy + topic weight + urgency", icon: "◆" },
+    { label: "Daily plan retunes after every drill", icon: "◇" },
+    { label: "Voice mode for commute study", icon: "◈" },
+    { label: "Mock exam mode — full-length timed runner", icon: "◉" },
+    { label: "Spaced repetition catches every wrong answer", icon: "◎" },
+    { label: "Cram sheet PDF for the final stretch", icon: "◐" },
+    { label: "Rescue mode when exam day is < 7 days out", icon: "◑" },
+    { label: "60-day pass-or-refund guarantee", icon: "◆" },
   ];
   return (
     <section className="py-8 border-y border-border bg-slate-50 dark:bg-muted/60">
@@ -465,20 +462,11 @@ function TrustMarquee() {
             className="flex items-center gap-3 px-4 py-2 rounded-full bg-white dark:bg-card border border-border shadow-soft shrink-0"
           >
             <div className="h-6 w-6 rounded-full bg-gradient-to-br from-brand-500 to-violet2-500 text-white flex items-center justify-center text-[10px] font-semibold">
-              {it.name
-                .split(" ")
-                .map((p) => p[0])
-                .join("")}
+              {it.icon}
             </div>
             <div className="text-xs">
-              <span className="font-semibold">{it.name}</span>
-              <span className="text-muted-foreground"> passed </span>
-              <span className="font-medium text-brand-700 dark:text-brand-300">{it.cert}</span>
-              <span className="text-muted-foreground"> · {it.score}</span>
+              <span className="font-medium text-brand-700 dark:text-brand-300">{it.label}</span>
             </div>
-            <span className="text-[10px] text-muted-foreground tabular-nums">
-              {it.ago}
-            </span>
           </div>
         ))}
       </Marquee>
@@ -496,22 +484,21 @@ function TrustStrip() {
         <Reveal delay={0}>
           <div>
             <div className="text-3xl md:text-4xl font-semibold tabular-nums tracking-tight">
-              +<CountUp to={23} />
-              <span className="text-muted-foreground"> pts</span>
+              <CountUp to={12} />
             </div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium mt-1.5">
-              Avg readiness lift
+              Diagnostic questions
             </div>
           </div>
         </Reveal>
         <Reveal delay={100}>
           <div>
             <div className="text-3xl md:text-4xl font-semibold tabular-nums tracking-tight">
-              <CountUp to={2347} />
-              <span className="text-brand-600">+</span>
+              <CountUp to={60} />
+              <span className="text-muted-foreground"> days</span>
             </div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium mt-1.5">
-              Students past diagnostic
+              Pass Guarantee window
             </div>
           </div>
         </Reveal>
@@ -945,36 +932,30 @@ function BentoGrid() {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Testimonials
+// What the system actually does (founder-honest replacement for the
+// old "Testimonials" section). When real consented testimonials land,
+// drop them in here — keep the same surface, swap the content.
 // ─────────────────────────────────────────────────────────────────
-function Testimonials() {
-  const quotes = [
+function HowItHelps() {
+  const pillars = [
     {
-      name: "Marcus A.",
-      role: "IT analyst · passed AZ-900",
-      initials: "MA",
-      body: "I failed AZ-900 twice with Quizlet. PassPilot told me exactly where I was wasting time. Passed with an 842 three weeks later.",
+      title: "It tells you where you actually stand",
+      body: "The diagnostic is real — 12 questions across the full blueprint, weighted to the exam. The readiness score blends accuracy, topic weight, and urgency into one number you can trust.",
       tone: "brand",
     },
     {
-      name: "Priya V.",
-      role: "Career switcher · passed AWS CCP",
-      initials: "PV",
-      body: "I had nine days and a full-time job. Rescue mode literally saved me — the condensed plan was the difference.",
+      title: "It cuts the guessing out of daily study",
+      body: "Most apps hand you a question bank and say good luck. PassPilot writes a daily plan tuned to your weakest topics first, your strongest last, retunes after every drill.",
       tone: "violet",
     },
     {
-      name: "Jordan K.",
-      role: "Student · passed MS-900",
-      initials: "JK",
-      body: "The readiness score is the thing. Every other app gives you a percentage correct. This one gives you a number you actually trust.",
+      title: "It saves you when the exam is close",
+      body: "Rescue mode kicks in when your exam date is 7 days out and your readiness isn't there. Compressed plan, only what moves the needle. No wasted minutes.",
       tone: "emerald",
     },
     {
-      name: "Sam T.",
-      role: "DevOps engineer · passed AZ-900",
-      initials: "ST",
-      body: "I stopped studying at random. The daily plan is short and specific. Best 20 minutes a day I've spent on prep.",
+      title: "It backs the plan with a real refund offer",
+      body: "Use the daily plan for at least 30 days. If you don't pass within 60 days of unlocking, full refund — no support gauntlet. We're confident enough to put cash behind it.",
       tone: "amber",
     },
   ];
@@ -984,45 +965,40 @@ function Testimonials() {
       <div className="container">
         <Reveal>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-14">
-            <div className="flex justify-center">
-              <Stars />
-            </div>
             <h2 className="heading-2 text-balance">
-              People pass. Then they tell us.
+              Why this works when{" "}
+              <span className="gradient-text-static">other prep apps don't</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Real candidates prepping for real exams.
+              Four mechanisms. No magic. Each one fixes a specific failure
+              mode in how cert candidates actually study.
             </p>
           </div>
         </Reveal>
 
         <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-          {quotes.map((q, i) => (
+          {pillars.map((p, i) => (
             <Reveal key={i} delay={i * 80}>
               <div className="soft-card p-6 md:p-7 hover-lift h-full">
-                <Stars />
-                <p className="text-[15px] leading-relaxed mt-3 text-foreground/90">
-                  "{q.body}"
-                </p>
-                <div className="flex items-center gap-3 mt-5">
-                  <div
-                    className={`h-10 w-10 rounded-full flex items-center justify-center font-semibold text-sm text-white shrink-0 ${
-                      q.tone === "brand"
-                        ? "bg-gradient-to-br from-brand-500 to-brand-700"
-                        : q.tone === "violet"
-                          ? "bg-gradient-to-br from-violet2-500 to-violet2-700"
-                          : q.tone === "emerald"
-                            ? "bg-gradient-to-br from-emerald-500 to-emerald-700"
-                            : "bg-gradient-to-br from-amber-500 to-amber-700"
-                    }`}
-                  >
-                    {q.initials}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">{q.name}</div>
-                    <div className="text-xs text-muted-foreground">{q.role}</div>
-                  </div>
+                <div
+                  className={`h-10 w-10 rounded-2xl flex items-center justify-center text-white shrink-0 mb-4 ${
+                    p.tone === "brand"
+                      ? "bg-gradient-to-br from-brand-500 to-brand-700"
+                      : p.tone === "violet"
+                        ? "bg-gradient-to-br from-violet2-500 to-violet2-700"
+                        : p.tone === "emerald"
+                          ? "bg-gradient-to-br from-emerald-500 to-emerald-700"
+                          : "bg-gradient-to-br from-amber-500 to-amber-700"
+                  }`}
+                >
+                  <CheckCircle2 className="h-5 w-5" />
                 </div>
+                <h3 className="text-base font-semibold tracking-tight mb-2">
+                  {p.title}
+                </h3>
+                <p className="text-[14px] leading-relaxed text-muted-foreground">
+                  {p.body}
+                </p>
               </div>
             </Reveal>
           ))}
@@ -1114,7 +1090,10 @@ function Pricing() {
 
         <div className="text-center mt-8 text-sm text-muted-foreground">
           <ShieldCheck className="h-4 w-4 inline mr-1.5 -mt-0.5 text-emerald-600" />
-          14-day money-back guarantee · no questions asked
+          Pass Guarantee — full refund if you don't pass within 60 days.{" "}
+          <Link href="/refunds" className="text-foreground font-medium underline-offset-2 hover:underline">
+            See terms
+          </Link>
         </div>
       </div>
     </section>
@@ -1215,7 +1194,7 @@ function FAQ() {
   const faqs = [
     {
       q: "Do you guarantee I'll pass?",
-      a: "No honest study app can. What we guarantee is that you'll know exactly where you stand before the exam — so you're not guessing on test day. Most users who follow the daily plan for at least 10 days lift their readiness by 20+ points.",
+      a: "Yes — backed with cash. Use the daily plan for at least 30 days; if you don't pass within 60 days of unlocking, full refund. No support gauntlet. See /refunds for the binding terms. We're confident enough in the system to put dollars behind it instead of disclaimers.",
     },
     {
       q: "Is this just flashcards with extra steps?",

@@ -43,12 +43,17 @@ export default function TermsPage() {
           <ul className="space-y-2">
             <li>Purchases are processed by Lemon Squeezy, our payment processor.</li>
             <li>
-              <strong>Refund policy:</strong> full refund within 14 days if you haven&apos;t used a
-              license. Email{" "}
+              <strong>Refund policy:</strong> PassPilot ships under a Pass Guarantee.
+              The full terms — eligibility, usage thresholds, claim window, and the
+              EU Article 16(m) consent waiver for digital content — live at{" "}
+              <a href="/refunds" className="text-cyan-400 hover:underline">
+                passpilot.app/refunds
+              </a>
+              . The /refunds page is the binding policy. Email{" "}
               <a href="mailto:hello@passpilot.app" className="text-cyan-400 hover:underline">
                 hello@passpilot.app
               </a>{" "}
-              with your license key.
+              with your license key to file a claim.
             </li>
             <li>
               Subscriptions auto-renew unless cancelled. You can cancel any time from your Lemon
