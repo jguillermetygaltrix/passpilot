@@ -29,7 +29,22 @@ export default function TermsPage() {
             PassPilot is a study aid for IT certification exams (Microsoft AZ-900, AWS Cloud
             Practitioner, Microsoft MS-900, and additional certifications added over time). PassPilot
             is independent and not affiliated with, endorsed, or sponsored by Microsoft, Amazon Web
-            Services, or any certification body. All trademarks belong to their respective owners.
+            Services, Google, CompTIA, or any certification body. All trademarks belong to their respective owners.
+          </p>
+
+          <h2 className="text-2xl font-bold mt-6 mb-3">1.5 Eligibility</h2>
+          <p>
+            You must be at least 13 years old to use PassPilot. By creating an
+            account or purchasing a license, you represent that you are 13 or
+            older. We do not knowingly collect personal information from
+            children under 13 [15 USC §6502]. If we learn an account belongs
+            to a child under 13, we close it and delete the data per our{" "}
+            <a href="/privacy" className="text-cyan-400 hover:underline">Privacy Policy</a>.
+          </p>
+          <p className="mt-3">
+            If you are between 13 and 18 (or your jurisdiction&apos;s age of
+            majority), you may use PassPilot only with parent or guardian
+            permission. The parent or guardian is bound by these Terms.
           </p>
 
           <h2 className="text-2xl font-bold mt-6 mb-3">2. No guarantee of exam results</h2>
@@ -70,8 +85,11 @@ export default function TermsPage() {
 
           <h2 className="text-2xl font-bold mt-6 mb-3">5. Acceptable use</h2>
           <p>
-            Don&apos;t try to reverse-engineer our scoring engine, scrape our question bank, or use
-            PassPilot content to build a competing product.
+            Use PassPilot for your own cert prep. Don&apos;t share licenses, dump
+            questions, automate against the app, or abuse the Pass Guarantee.
+            The full rules are in our{" "}
+            <a href="/aup" className="text-cyan-400 hover:underline">Acceptable Use Policy</a>
+            . Violations can result in license revocation, account ban, or legal action.
           </p>
 
           <h2 className="text-2xl font-bold mt-6 mb-3">6. Content accuracy</h2>

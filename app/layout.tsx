@@ -4,6 +4,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { NativeBootstrap } from "@/components/native-bootstrap";
 import { DeviceRegistry } from "@/components/device-registry";
 import { BadgeToastHost } from "@/components/badge-toast";
+import { CookieBanner } from "@/components/cookie-banner";
 import { EXAMS } from "@/lib/data/exams";
 import "./globals.css";
 
@@ -109,6 +110,7 @@ export default function RootLayout({
         {children}
         <CommandPalette />
         <BadgeToastHost />
+        <CookieBanner />
       </body>
     </html>
   );

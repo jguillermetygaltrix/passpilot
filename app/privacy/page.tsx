@@ -95,10 +95,38 @@ export default function PrivacyPage() {
             </li>
           </ul>
 
-          <h2 className="text-2xl font-bold mt-10 mb-3">Children</h2>
+          <h2 className="text-2xl font-bold mt-10 mb-3">Who can use PassPilot</h2>
           <p>
-            PassPilot is not directed at children under 13. We don&apos;t knowingly collect data from
-            children.
+            PassPilot is intended for users 13 and older. We do not knowingly
+            collect personal information from children under 13.
+          </p>
+          <p className="mt-3">
+            If you&apos;re a parent or guardian and believe your child under 13 has
+            created a PassPilot account, email{" "}
+            <a href="mailto:privacy@passpilot.app" className="text-cyan-400 hover:underline">
+              privacy@passpilot.app
+            </a>
+            . We will:
+          </p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Close the account within 24 hours</li>
+            <li>Delete all associated data within 7 days</li>
+            <li>Refund any purchases regardless of usage</li>
+            <li>Confirm completion in writing</li>
+          </ul>
+          <p className="mt-3">
+            This complies with the Children&apos;s Online Privacy Protection Act
+            (COPPA) [15 USC §6502] and the FTC COPPA Rule [16 CFR Part 312].
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            EU/UK users: under GDPR-K [GDPR Art 8 + UK ICO Children&apos;s Code], the
+            minimum age in some jurisdictions is 16. PassPilot&apos;s 13+ policy may
+            not satisfy your local rules. EU/UK users under 16 should use PassPilot
+            only with parent/guardian permission. See our{" "}
+            <a href="/aup#age-requirement" className="text-cyan-400 hover:underline">
+              Acceptable Use Policy
+            </a>{" "}
+            for the full age-requirement framework.
           </p>
 
           <h2 className="text-2xl font-bold mt-10 mb-3">Changes to this policy</h2>

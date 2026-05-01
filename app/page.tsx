@@ -1355,9 +1355,16 @@ function Footer() {
             title="Company"
             links={[
               { label: "Support", href: "/support" },
+              { label: "Pass Guarantee", href: "/guarantee" },
               { label: "Refunds", href: "/refunds" },
               { label: "Privacy", href: "/privacy" },
               { label: "Terms", href: "/terms" },
+              { label: "Acceptable Use", href: "/aup" },
+              { label: "Cookies", href: "/cookies" },
+              { label: "DMCA", href: "/dmca" },
+              { label: "Security", href: "/security" },
+              { label: "Subprocessors", href: "/subprocessors" },
+              { label: "Delete account", href: "/delete-account" },
             ]}
           />
         </div>

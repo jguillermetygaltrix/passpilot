@@ -1,0 +1,11 @@
+# PassPilot security.txt — RFC 9116
+# https://passpilot.app/security
+
+Contact: mailto:security@passpilot.app
+Contact: https://passpilot.app/security
+Expires: 2027-04-30T23:59:59.000Z
+Encryption: https://passpilot.app/security/pgp.txt
+Acknowledgments: https://passpilot.app/security#hall-of-fame
+Preferred-Languages: en, es
+Canonical: https://passpilot.app/.well-known/security.txt
+Policy: https://passpilot.app/security
