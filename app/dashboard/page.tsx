@@ -256,7 +256,7 @@ function Inner() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-5">
+        <div className="grid lg:grid-cols-3 gap-5 min-w-0">
           <GradientBorder
             gradient={`linear-gradient(135deg, ${examMeta.accentFrom}40, ${examMeta.accentTo}40, #06b6d440)`}
             radius="16px"
@@ -373,7 +373,7 @@ function Inner() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-5 mt-5">
+        <div className="grid lg:grid-cols-3 gap-5 mt-5 min-w-0">
           <div className="card-surface p-6 lg:col-span-2 min-w-0 overflow-hidden">
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="min-w-0 flex-1">
@@ -447,13 +447,13 @@ function Inner() {
           )}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-5 mt-5">
-          <div className="card-surface p-6 lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <div className="font-semibold text-sm">Topic mastery</div>
+        <div className="grid lg:grid-cols-3 gap-5 mt-5 min-w-0">
+          <div className="card-surface p-6 lg:col-span-2 min-w-0 overflow-hidden">
+            <div className="flex items-center justify-between mb-4 gap-3">
+              <div className="font-semibold text-sm min-w-0">Topic mastery</div>
               <Link
                 href="/weakness"
-                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1"
+                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1 shrink-0 whitespace-nowrap"
               >
                 Weakness review <ArrowRight className="h-3 w-3" />
               </Link>
@@ -461,7 +461,7 @@ function Inner() {
             <TopicMasteryList mastery={mastery} />
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 min-w-0">
             {(() => {
               const nextLesson =
                 examLessons.find(

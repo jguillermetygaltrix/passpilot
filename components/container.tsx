@@ -8,7 +8,7 @@ export function AppShell({
   className?: string;
 }) {
   return (
-    <div className={cn("container pt-6 pb-24 md:pt-10 md:pb-12 max-w-5xl", className)}>
+    <div className={cn("container pt-6 pb-24 md:pt-10 md:pb-12 max-w-5xl min-w-0", className)}>
       {children}
     </div>
   );
