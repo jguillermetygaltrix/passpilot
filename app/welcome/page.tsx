@@ -39,9 +39,9 @@ export default function WelcomePage() {
     <div className="min-h-screen flex flex-col">
       <div className="absolute inset-0 -z-10 mesh-bg" />
 
-      <main className="container flex-1 flex flex-col items-center justify-center py-10 max-w-md w-full text-center">
+      <main className="container flex-1 flex flex-col items-center justify-center py-6 max-w-md w-full text-center">
         {/* Brand block */}
-        <div className="flex flex-col items-center gap-3 mb-10">
+        <div className="flex flex-col items-center gap-2 mb-6">
           <Logo className="h-14 w-14 rounded-2xl" />
           <h1 className="text-3xl font-bold tracking-tight">PassPilot</h1>
           <p className="text-sm text-muted-foreground">
@@ -50,31 +50,32 @@ export default function WelcomePage() {
         </div>
 
         {/* Hook */}
-        <div className="mb-10">
-          <h2 className="text-2xl font-semibold leading-tight mb-3">
-            The fastest path from
-            <br />
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold leading-tight mb-2">
+            The fastest path from{" "}
             <span className="text-brand-600">
               &ldquo;exam in 30 days&rdquo;
             </span>{" "}
             to{" "}
             <span className="text-brand-600">&ldquo;passed.&rdquo;</span>
           </h2>
-          <p className="text-base text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Pick your cert, take a 5-minute diagnostic, then daily drills until
             exam day.
           </p>
         </div>
 
         {/* Value bullets */}
-        <ul className="w-full text-left space-y-3 mb-12">
+        <ul className="w-full text-left space-y-2.5 mb-7">
           <li className="flex items-start gap-3">
             <div className="mt-0.5 h-9 w-9 rounded-xl bg-brand-50 dark:bg-brand-900/30 text-brand-600 flex items-center justify-center shrink-0">
               <Target className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-medium">7 certs, ready to study</div>
-              <div className="text-sm text-muted-foreground">
+              <div className="font-medium leading-tight">
+                7 certs, ready to study
+              </div>
+              <div className="text-xs text-muted-foreground">
                 Azure, AWS, Google Cloud, Microsoft 365, Security+
               </div>
             </div>
@@ -84,9 +85,11 @@ export default function WelcomePage() {
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-medium">10-minute daily drills</div>
-              <div className="text-sm text-muted-foreground">
-                Spaced repetition keeps the weak spots from coming back
+              <div className="font-medium leading-tight">
+                10-minute daily drills
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Spaced repetition keeps weak spots from coming back
               </div>
             </div>
           </li>
@@ -95,8 +98,10 @@ export default function WelcomePage() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-medium">Works offline, no account</div>
-              <div className="text-sm text-muted-foreground">
+              <div className="font-medium leading-tight">
+                Works offline, no account
+              </div>
+              <div className="text-xs text-muted-foreground">
                 Your progress lives on this device, encrypted
               </div>
             </div>
@@ -104,7 +109,7 @@ export default function WelcomePage() {
         </ul>
 
         {/* CTA */}
-        <div className="w-full flex flex-col items-center gap-4">
+        <div className="w-full flex flex-col items-center gap-3">
           <Button
             variant="primary"
             size="lg"
@@ -123,7 +128,7 @@ export default function WelcomePage() {
         </div>
 
         {/* Footer microcopy */}
-        <p className="mt-10 text-xs text-muted-foreground">
+        <p className="mt-5 text-xs text-muted-foreground">
           7 certs live · scrypt-encrypted progress · works offline
         </p>
       </main>

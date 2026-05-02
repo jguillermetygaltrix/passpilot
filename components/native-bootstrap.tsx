@@ -28,6 +28,21 @@ export function NativeBootstrap() {
     if (!isNative()) return;
 
     let cancelled = false;
+
+    // Status bar polish (DEC-049): switch to "Light" style (dark icons on
+    // light bg) once React mounts. Native splash + Info.plist's
+    // UIStatusBarStyle handle the brief light-icons-on-dark-splash period;
+    // this aligns the post-splash status bar with the welcome/onboarding
+    // mesh-bg light gradient. Dynamic import keeps the web build clean.
+    (async () => {
+      try {
+        const { StatusBar, Style } = await import("@capacitor/status-bar");
+        await StatusBar.setStyle({ style: Style.Light });
+      } catch {
+        // Plugin unavailable on web or pre-pod-install — silent fail.
+      }
+    })();
+
     (async () => {
       await initNativeIAP();
       if (!isNativeIAPAvailable()) return;
