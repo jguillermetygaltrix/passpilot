@@ -374,17 +374,17 @@ function Inner() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5 mt-5">
-          <div className="card-surface p-6 lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <div>
+          <div className="card-surface p-6 lg:col-span-2 min-w-0 overflow-hidden">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div className="min-w-0 flex-1">
                 <div className="font-semibold text-sm">Today's mission</div>
-                <div className="text-xs text-muted-foreground mt-0.5">
+                <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2 break-words">
                   {plan.mission}
                 </div>
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1"
+                className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1 shrink-0 whitespace-nowrap"
               >
                 Full plan <ArrowRight className="h-3 w-3" />
               </Link>

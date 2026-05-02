@@ -89,9 +89,11 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      <main className="container flex-1 flex flex-col items-center justify-center py-10 max-w-xl w-full">
+      {/* Scrollable step content. pb-28 leaves room for the sticky footer
+          so the last cert/option in long lists isn't hidden behind it. */}
+      <main className="container flex-1 flex flex-col items-stretch py-6 pb-28 max-w-xl w-full">
         <div className="w-full">
-          <div className="h-1.5 w-full bg-slate-100 dark:bg-muted rounded-full mb-8 overflow-hidden">
+          <div className="h-1.5 w-full bg-slate-100 dark:bg-muted rounded-full mb-6 overflow-hidden">
             <div
               className="h-full bg-brand-600 rounded-full transition-all duration-500"
               style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
@@ -131,31 +133,37 @@ export default function OnboardingPage() {
               />
             )}
           </div>
-
-          <div className="flex items-center justify-between gap-3 mt-10">
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={step === 0 ? () => router.push("/") : back}
-              className="text-muted-foreground"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {step === 0 ? "Home" : "Back"}
-            </Button>
-            {step < TOTAL_STEPS - 1 ? (
-              <Button variant="primary" size="lg" onClick={next}>
-                Continue
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button variant="primary" size="lg" onClick={commit}>
-                Start diagnostic
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
         </div>
       </main>
+
+      {/* Sticky footer — Continue button always one tap away, no scroll-hunt
+          (Boss directive 2026-05-02 DEC-049 polish). Uses safe-area-inset
+          for iOS home indicator. Backdrop blur keeps content readable
+          behind it. */}
+      <footer className="sticky bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+        <div className="container max-w-xl w-full flex items-center justify-between gap-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={step === 0 ? () => router.push("/") : back}
+            className="text-muted-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {step === 0 ? "Home" : "Back"}
+          </Button>
+          {step < TOTAL_STEPS - 1 ? (
+            <Button variant="primary" size="lg" onClick={next}>
+              Continue
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button variant="primary" size="lg" onClick={commit}>
+              Start diagnostic
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </footer>
     </div>
   );
 }
