@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -75,6 +75,14 @@ export default function OnboardingPage() {
   const next = () => setStep((s) => Math.min(TOTAL_STEPS - 1, s + 1));
   const back = () => setStep((s) => Math.max(0, s - 1));
 
+  // Whenever step changes, scroll back to top so the new question's
+  // header is in view — otherwise after a long-list step (cert picker),
+  // the user lands mid-page on the next step. Native-app behavior.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="absolute inset-0 -z-10 mesh-bg" />
@@ -101,7 +109,13 @@ export default function OnboardingPage() {
           </div>
 
           <div key={step} className="animate-fade-in">
-            {step === 0 && <ExamStep value={draft.examId} onChange={(v) => setDraft({ ...draft, examId: v })} />}
+            {step === 0 && (
+              <ExamStep
+                value={draft.examId}
+                onChange={(v) => setDraft({ ...draft, examId: v })}
+                onAutoAdvance={next}
+              />
+            )}
             {step === 1 && (
               <DateStep
                 value={draft.examDate}
@@ -112,6 +126,7 @@ export default function OnboardingPage() {
               <ConfidenceStep
                 value={draft.confidence}
                 onChange={(v) => setDraft({ ...draft, confidence: v })}
+                onAutoAdvance={next}
               />
             )}
             {step === 3 && (
@@ -124,24 +139,27 @@ export default function OnboardingPage() {
               <OutcomeStep
                 value={draft.targetOutcome}
                 onChange={(v) => setDraft({ ...draft, targetOutcome: v })}
+                onAutoAdvance={next}
               />
             )}
             {step === 5 && (
               <WhyStep
                 value={draft.why}
                 onChange={(v) => setDraft({ ...draft, why: v })}
+                onAutoAdvance={next}
               />
             )}
           </div>
         </div>
       </main>
 
-      {/* Sticky footer — Continue button always one tap away, no scroll-hunt
-          (Boss directive 2026-05-02 DEC-049 polish). Uses safe-area-inset
-          for iOS home indicator. Backdrop blur keeps content readable
-          behind it. */}
-      <footer className="sticky bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-        <div className="container max-w-xl w-full flex items-center justify-between gap-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      {/* Fixed footer — Continue button always one tap away, no scroll-hunt
+          (Boss directive 2026-05-02 DEC-049 polish). `fixed` instead of
+          `sticky` because Capacitor's WKWebView scroll context can break
+          sticky positioning. Uses safe-area-inset for iOS home indicator.
+          Backdrop blur keeps content readable behind it. */}
+      <footer className="fixed bottom-0 inset-x-0 z-30 border-t border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+        <div className="container max-w-xl w-full mx-auto flex items-center justify-between gap-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <Button
             variant="ghost"
             size="md"
@@ -227,9 +245,11 @@ function ChoiceRow({
 function ExamStep({
   value,
   onChange,
+  onAutoAdvance,
 }: {
   value: ExamId;
   onChange: (v: ExamId) => void;
+  onAutoAdvance?: () => void;
 }) {
   const exams: {
     id: ExamId;
@@ -301,7 +321,13 @@ function ExamStep({
           <ChoiceRow
             key={e.id}
             active={value === e.id}
-            onClick={() => onChange(e.id)}
+            onClick={() => {
+              onChange(e.id);
+              // Auto-advance after 500ms — gives user a beat to see the
+              // selection highlight before transitioning, but eliminates
+              // the scroll-hunt-for-Continue UX. Native-app feel.
+              if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
+            }}
           >
             <div
               className={`h-10 w-10 rounded-xl bg-gradient-to-br ${e.gradient} text-white flex items-center justify-center font-semibold text-[11px] shrink-0 shadow-pop`}
@@ -401,9 +427,11 @@ function DateStep({
 function ConfidenceStep({
   value,
   onChange,
+  onAutoAdvance,
 }: {
   value: ConfidenceLevel;
   onChange: (v: ConfidenceLevel) => void;
+  onAutoAdvance?: () => void;
 }) {
   const opts: { v: ConfidenceLevel; title: string; sub: string; emoji: string }[] = [
     {
@@ -443,7 +471,10 @@ function ConfidenceStep({
           <ChoiceRow
             key={o.v}
             active={value === o.v}
-            onClick={() => onChange(o.v)}
+            onClick={() => {
+              onChange(o.v);
+              if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
+            }}
           >
             <div className="text-2xl shrink-0">{o.emoji}</div>
             <div>
@@ -511,9 +542,11 @@ function HoursStep({
 function OutcomeStep({
   value,
   onChange,
+  onAutoAdvance,
 }: {
   value: OutcomeKind;
   onChange: (v: OutcomeKind) => void;
+  onAutoAdvance?: () => void;
 }) {
   const opts: {
     v: OutcomeKind;
@@ -552,7 +585,10 @@ function OutcomeStep({
           <ChoiceRow
             key={o.v}
             active={value === o.v}
-            onClick={() => onChange(o.v)}
+            onClick={() => {
+              onChange(o.v);
+              if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
+            }}
           >
             <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30 flex items-center justify-center shrink-0">
               <o.icon className="h-5 w-5" />
@@ -571,9 +607,11 @@ function OutcomeStep({
 function WhyStep({
   value,
   onChange,
+  onAutoAdvance,
 }: {
   value: WhyKind;
   onChange: (v: WhyKind) => void;
+  onAutoAdvance?: () => void;
 }) {
   const opts: {
     v: WhyKind;
@@ -618,7 +656,10 @@ function WhyStep({
           <ChoiceRow
             key={o.v}
             active={value === o.v}
-            onClick={() => onChange(o.v)}
+            onClick={() => {
+              onChange(o.v);
+              if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
+            }}
           >
             <div className="h-10 w-10 rounded-xl bg-brand-50 dark:bg-brand-500/15 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-500/30 flex items-center justify-center shrink-0">
               <o.icon className="h-5 w-5" />

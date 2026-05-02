@@ -24,8 +24,11 @@ const config: CapacitorConfig = {
   webDir: "out",
   // (bundledWebRuntime removed — deprecated in Capacitor 5+, default behavior is now correct)
 
-  // Dark splash to match the app's aesthetic
-  backgroundColor: "#0B0D13",
+  // WebView root background. Light by default so the iOS safe-area zones
+  // (notch, home indicator) show as light when the in-app page bg is light.
+  // The splash phase uses its own backgroundColor under `plugins.SplashScreen`
+  // (#0B0D13 dark navy) — the two are independent.
+  backgroundColor: "#FFFFFF",
 
   ios: {
     contentInset: "automatic",
