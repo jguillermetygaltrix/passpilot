@@ -56,10 +56,20 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: "cv11", "ss01", "ss03";
+    /* Kill iOS WebView rubber-band overscroll (DEC-049 polish, 2026-05-02).
+       Without this, scrolling past the content limits on Capacitor iOS reveals
+       the WebView's #0B0D13 backgroundColor as "black spots" — the splash
+       color leaks into the user's view. `none` matches the behavior of every
+       first-party Apple app. `overflow-x: hidden` prevents horizontal
+       rubber-band from any wide content. */
+    overscroll-behavior: none;
+    overflow-x: hidden;
   }
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "cv11", "ss01", "ss03";
+    overscroll-behavior: none;
+    overflow-x: hidden;
     /* Capacitor / iOS notch + Android status bar safe-area handling.
        On web (no insets) these resolve to 0 — no impact. */
     padding-top: env(safe-area-inset-top);
