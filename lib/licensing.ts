@@ -20,14 +20,12 @@ import { EXAMS } from "./data/exams";
 // canonical EXAMS catalog — buying Multi-Cert correctly unlocks all 7
 // (and any future cert added to EXAMS).
 //
-// 2026-04-28: Boss created LS products for the 4 newer per-cert SKUs
-// (AI-900, AWS AIP, GCP CDL, Security+). Checkout URLs are wired in
-// CHECKOUT_URLS below. Numeric LS product IDs needed here for webhook
-// validation routing — placeholder zeros until Boss grabs them from
-// each product's URL bar in the LS dashboard. Without the IDs, real
-// buyers of these 4 certs will FAIL license validation (the upgrade-wall
-// will still show the right buy buttons, but redemption flow won't grant
-// entitlement). Tracked in open_loops.
+// 2026-04-28: 4 newer per-cert SKUs (AI-900, AWS AIP, GCP CDL, Security+)
+// created in LS. Numeric product IDs grabbed from the LS dashboard ("Copy
+// ID" on each product) and verified against test-mode checkout flow.
+// All 7 per-cert SKUs + Multi-Cert are now wired end-to-end: checkout URL
+// → buyer pays → LS webhook returns product_id → LS_PRODUCT_MAP grants
+// the right entitlement. (Closed 2026-05-01.)
 const LS_PRODUCT_MAP: Record<
   string,
   { tier: "pro" | "multi"; exams: ExamId[] }
