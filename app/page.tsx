@@ -48,7 +48,13 @@ export default function Landing() {
     if (typeof window === "undefined") return;
     if (!isNative()) return;
     setRedirecting(true);
-    const target = profile?.examId ? "/dashboard" : "/onboarding";
+    // Native routing tree (DEC-047 follow-up, 2026-05-02):
+    //   returning user (has examId)  → /dashboard
+    //   first-time user              → /welcome → (Let's go) → /onboarding
+    // Prior behavior dumped first-time native users straight into the cert
+    // picker. The /welcome screen sits between splash and onboarding as a
+    // brand-introduction + value-prop hook.
+    const target = profile?.examId ? "/dashboard" : "/welcome";
     router.replace(target);
   }, [router, profile?.examId]);
 
