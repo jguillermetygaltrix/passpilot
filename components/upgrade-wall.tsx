@@ -8,6 +8,7 @@ import { GradientBorder } from "./ui/gradient-border";
 import { useApp } from "@/lib/store";
 import { verifyLicense, CHECKOUT_URLS } from "@/lib/licensing";
 import { getExamMeta, EXAMS } from "@/lib/data/exams";
+import type { ExamId } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
@@ -141,12 +142,23 @@ function TabBtn({
 
 function UpgradeTab() {
   const { profile } = useApp();
-  const examMeta = profile ? getExamMeta(profile.examId) : null;
+
+  // Cert switcher on the Pro card — lets visitors buy ANY of the 7 certs at
+  // $19.99 directly from the paywall modal without leaving the current page.
+  // Defaults to the user's profile cert; falls back to EXAMS[0] for fresh visitors.
+  // (Same UX as the dedicated /upgrade page — DEC-045 follow-up: the modal
+  // was locked to profile.examId with no switcher, so users hitting a paywall
+  // on the dashboard saw "AZ-900 · lifetime" no matter which cert they actually
+  // wanted to study.)
+  const [selectedProExamId, setSelectedProExamId] = useState<string>(
+    profile?.examId ?? EXAMS[0].id,
+  );
+  const selectedProMeta = getExamMeta(selectedProExamId as ExamId);
 
   // Per-cert Pro checkout URLs. Boss shipped LS products for all 7 certs on
   // 2026-04-28 — every cert now has its own per-cert SKU at $19.99. The map
-  // is now complete; Multi-Cert ($39 for all 7) remains the better nudge
-  // when a user is shopping multiple certs.
+  // is complete; Multi-Cert ($39 for all 7) remains the better nudge for
+  // users shopping multiple certs.
   const PRO_URL_BY_EXAM: Partial<Record<string, string>> = {
     "az-900": CHECKOUT_URLS.proAz900,
     "aws-ccp": CHECKOUT_URLS.proAwsCcp,
@@ -157,9 +169,7 @@ function UpgradeTab() {
     "gcp-cdl": CHECKOUT_URLS.proGcpCdl,
   };
   const proCheckoutUrl =
-    (profile?.examId && PRO_URL_BY_EXAM[profile.examId]) ||
-    CHECKOUT_URLS.proAz900; // safe fallback — license-server still grants Pro tier
-  const proSkuMatchesExam = !!(profile?.examId && PRO_URL_BY_EXAM[profile.examId]);
+    PRO_URL_BY_EXAM[selectedProExamId] || CHECKOUT_URLS.proAz900;
 
   const proFeatures = [
     "Unlimited practice drills",
@@ -188,20 +198,47 @@ function UpgradeTab() {
         <span className="absolute -top-3 left-4 chip bg-brand-600 text-white border-transparent shadow-soft">
           <Sparkles className="h-3 w-3" /> Best for this exam
         </span>
-        <div className="flex items-baseline justify-between mb-2 mt-1">
+        <div className="flex items-baseline justify-between mb-3 mt-1">
           <div>
             <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
               Pro
             </div>
             <div className="text-xs text-muted-foreground">
-              {examMeta?.name ?? "1 exam"} · lifetime
+              {selectedProMeta.name} · lifetime
             </div>
           </div>
           <div className="text-3xl font-semibold tracking-tight tabular-nums">
             $19.99
           </div>
         </div>
-        <ul className="space-y-2 mt-3 flex-1">
+        <label className="rounded-lg border border-brand-100 dark:border-brand-500/30 bg-brand-50/60 dark:bg-brand-500/10 p-2 text-xs mb-3 flex items-center gap-1.5 cursor-pointer hover:border-brand-200 dark:hover:border-brand-500/50 transition-colors">
+          <span className="font-medium text-brand-700 dark:text-brand-300 shrink-0">
+            Unlocks:
+          </span>
+          <select
+            value={selectedProExamId}
+            onChange={(e) => setSelectedProExamId(e.target.value)}
+            className="flex-1 bg-transparent border-0 outline-none font-medium text-foreground cursor-pointer focus:ring-0 -my-0.5 text-xs min-w-0"
+            aria-label="Pick which certification to unlock with Pro"
+          >
+            {EXAMS.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.fullTitle}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="h-3 w-3 text-brand-700 dark:text-brand-300 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </label>
+        <ul className="space-y-2 flex-1">
           {proFeatures.map((f, i) => (
             <li key={i} className="flex items-start gap-2 text-sm">
               <Check className="h-4 w-4 text-brand-600 mt-0.5 shrink-0" />
@@ -209,15 +246,9 @@ function UpgradeTab() {
             </li>
           ))}
         </ul>
-        {!proSkuMatchesExam && (
-          <p className="mt-3 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-md px-2.5 py-1.5 leading-relaxed">
-            Pro for <b>{examMeta?.name ?? "this cert"}</b> launches soon. Multi-Cert
-            on the right unlocks it today + 6 more for $20 more.
-          </p>
-        )}
         <a href={proCheckoutUrl} target="_blank" rel="noopener" className="mt-5">
           <Button variant="primary" size="md" className="w-full group">
-            Get Pro — $19.99
+            Get {selectedProMeta.shortCode} Pro — $19.99
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Button>
         </a>
