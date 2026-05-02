@@ -1095,6 +1095,24 @@ function Pricing() {
             How it works
           </Link>
         </div>
+
+        {/* Trademark / nominative-fair-use notice — required when third-party
+            cert names (AZ-900, AWS CCP, MS-900, AI-900, AWS AIP, GCP CDL,
+            Security+) appear on a commercial pricing surface. The asterisk
+            anchors the disclaimer; the disclaimer itself disclaims any
+            sponsorship/endorsement by Microsoft, Amazon, Google, or
+            CompTIA so trademark holders can't argue affiliation confusion.
+            (15 USC §1114 + nominative-fair-use New Kids on the Block test.) */}
+        <p className="mt-6 text-center text-[11px] leading-relaxed text-muted-foreground/80 max-w-2xl mx-auto">
+          * AZ-900, AI-900, MS-900 are trademarks of Microsoft Corp.
+          AWS Cloud Practitioner and AWS AI Practitioner are trademarks of
+          Amazon.com, Inc. or its affiliates. Google Cloud Digital Leader
+          is a trademark of Google LLC. CompTIA Security+ is a trademark
+          of CompTIA. PassPilot is independent study software and is not
+          affiliated with, sponsored by, or endorsed by any of these
+          organizations. All product names are used for identification
+          only.
+        </p>
       </div>
     </section>
   );

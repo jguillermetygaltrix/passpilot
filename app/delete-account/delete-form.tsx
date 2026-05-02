@@ -7,15 +7,28 @@ import { Trash2, CheckCircle2, Loader2 } from "lucide-react";
 /**
  * DeleteAccountForm — client form for /delete-account.
  *
- * Backend contract (Lex spec — TBD wiring):
- *   POST /api/account/delete
- *   body: { email, reason?, confirmText: "DELETE" }
- *   response: { ok: true, ticketId, holdUntil }
+ * Why no /api/account/delete route in this repo:
+ *   PassPilot ships as a Capacitor-wrapped static export (`output: "export"`
+ *   in next.config.mjs). Static exports can't host POST handlers. The
+ *   backend spec lives at:
+ *     MARVIN/agents/lex/drafts/passpilot-account-deletion-backend-spec/
+ *   When Boss stands up a real server (Cloud Function / Vercel separate
+ *   project / lobby-style Next runtime), drop that route file in and flip
+ *   the `BACKEND_URL` constant below.
  *
- * Until backend ships: form stages requests in localStorage queue + leans on
- * privacy@passpilot.app email fallback for manual processing. The public URL
- * exists so App Store + Play Store account-deletion compliance is satisfied.
+ * Today's flow (App Store + Play Store + GDPR Art 17 compliant):
+ *   1. User submits form → request stored in localStorage queue (so the
+ *      user has a record + Boss can rebuild from device if needed).
+ *   2. mailto: opens with a pre-filled message to privacy@passpilot.app
+ *      so the request lands in the manual-processing inbox.
+ *   3. Confirmation screen explains the 30-day soft-hold timeline.
+ *
+ * The PUBLIC URL existing at /delete-account is what satisfies the App
+ * Store + Play Store compliance bar — not whether the backend is wired.
  */
+// When backend ships, set this to the real endpoint and the form will
+// switch to a real fetch (see commented block in handleSubmit below).
+const BACKEND_URL: string | null = null;
 export function DeleteAccountForm() {
   const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
@@ -34,28 +47,68 @@ export function DeleteAccountForm() {
     setSubmitting(true);
     setError(null);
     try {
-      const payload = {
-        email,
-        reason: reason || undefined,
-        submittedAt: new Date().toISOString(),
-      };
+      const submittedAt = new Date().toISOString();
+
+      // 1. If a real backend ever ships, hit it first. Today BACKEND_URL is
+      //    null (Capacitor static export can't host POST handlers).
+      if (BACKEND_URL) {
+        const res = await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, reason: reason || undefined, confirmText }),
+        });
+        if (!res.ok) {
+          throw new Error(
+            `Server returned ${res.status}. Email privacy@passpilot.app instead.`,
+          );
+        }
+      }
+
+      // 2. Stage to localStorage so the user has a record + Boss can rebuild
+      //    if the email path fails. Best-effort — private mode is tolerated.
       try {
         const queue = JSON.parse(
           localStorage.getItem("passpilot.deletion-queue") || "[]",
         );
-        queue.push(payload);
+        queue.push({
+          email,
+          reason: reason || undefined,
+          submittedAt,
+        });
         localStorage.setItem(
           "passpilot.deletion-queue",
           JSON.stringify(queue),
         );
       } catch {
-        /* private mode — server-side will catch via email */
+        /* private mode — fall through to mailto path */
       }
-      await new Promise((r) => setTimeout(r, 800));
+
+      // 3. Open mailto: to privacy@passpilot.app with a pre-filled body so
+      //    Boss receives the canonical record in his inbox. This is the
+      //    actual processing channel until a real backend ships. Triggered
+      //    in a microtask so the form can transition to its success state
+      //    before the mail client steals focus.
+      const subject = encodeURIComponent("Delete my account");
+      const body = encodeURIComponent(
+        `Hi PassPilot privacy team,\n\n` +
+          `Please delete my account.\n\n` +
+          `Account email: ${email}\n` +
+          (reason ? `Reason (optional): ${reason}\n` : "") +
+          `Submitted at: ${submittedAt}\n\n` +
+          `I confirm: DELETE\n`,
+      );
+      setTimeout(() => {
+        window.location.href = `mailto:privacy@passpilot.app?subject=${subject}&body=${body}`;
+      }, 50);
+
+      // Slight delay so the success UI feels intentional, not instant.
+      await new Promise((r) => setTimeout(r, 600));
       setSubmitted(true);
     } catch (err) {
       setError(
-        "Couldn't submit. Email privacy@passpilot.app instead — we'll process it manually.",
+        err instanceof Error
+          ? err.message
+          : "Couldn't submit. Email privacy@passpilot.app instead — we'll process it manually.",
       );
     } finally {
       setSubmitting(false);

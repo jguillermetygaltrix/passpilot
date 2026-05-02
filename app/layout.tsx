@@ -20,8 +20,10 @@ const OG_IMAGE = "/og-cover.png"; // 1200×630, drop a file at public/og-cover.p
 const CERT_COUNT = EXAMS.length;
 const VENDOR_LIST = Array.from(new Set(EXAMS.map((e) => e.vendor))).join(", ");
 // Pricing copy — kept short so OG cards don't truncate.
-// Real tiers are wired in lib/licensing.ts: Lifetime $99 · Annual $49 · Monthly $9.99 · Weekly $4.99.
-const PRICE_LINE = "from $4.99/wk · $99 lifetime";
+// Real tiers wired in lib/licensing.ts: Pro per-cert $19.99 · Multi-Cert (all 7) $39.
+// Keep this in sync with PRICES in lib/licensing.ts so OG / Twitter cards
+// never claim a price the checkout doesn't honor.
+const PRICE_LINE = "$19.99 per cert · $39 for all 7";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://passpilot.app"),
