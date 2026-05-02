@@ -5,6 +5,7 @@ import { NativeBootstrap } from "@/components/native-bootstrap";
 import { DeviceRegistry } from "@/components/device-registry";
 import { BadgeToastHost } from "@/components/badge-toast";
 import { CookieBanner } from "@/components/cookie-banner";
+import { SplashKiller } from "@/components/splash-killer";
 import { EXAMS } from "@/lib/data/exams";
 import "./globals.css";
 
@@ -107,6 +108,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen antialiased font-sans">
+        <SplashKiller />
         <NativeBootstrap />
         <DeviceRegistry />
         {children}
