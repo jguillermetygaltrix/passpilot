@@ -113,16 +113,27 @@ export default function AccountPage() {
             />
           </section>
 
-          {/* Support + policy links */}
+          {/* Support + policy links — full set required for App Store submission.
+              /delete-account is mandatory under Apple App Store guideline 5.1.1(v):
+              every app with accounts must surface a self-serve account deletion
+              path INSIDE the app, not just on a marketing page. Native iOS users
+              skip the marketing landing footer entirely. */}
           <section className="border-t pt-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               Policies & support
             </h2>
             <div className="grid gap-2 sm:grid-cols-2 text-sm">
-              <PolicyLink href="/refunds"  icon={FileText} label="Refund policy" />
-              <PolicyLink href="/privacy"  icon={FileText} label="Privacy policy" />
-              <PolicyLink href="/terms"    icon={FileText} label="Terms of service" />
-              <PolicyLink href="/support"  icon={LifeBuoy} label="Get support" />
+              <PolicyLink href="/support"        icon={LifeBuoy}  label="Get support" />
+              <PolicyLink href="/delete-account" icon={FileText}  label="Delete account" />
+              <PolicyLink href="/refunds"        icon={FileText}  label="Refund policy" />
+              <PolicyLink href="/guarantee"      icon={FileText}  label="Pass guarantee" />
+              <PolicyLink href="/privacy"        icon={FileText}  label="Privacy policy" />
+              <PolicyLink href="/terms"          icon={FileText}  label="Terms of service" />
+              <PolicyLink href="/cookies"        icon={FileText}  label="Cookie policy" />
+              <PolicyLink href="/aup"            icon={FileText}  label="Acceptable use" />
+              <PolicyLink href="/dmca"           icon={FileText}  label="DMCA / copyright" />
+              <PolicyLink href="/security"       icon={FileText}  label="Security" />
+              <PolicyLink href="/subprocessors"  icon={FileText}  label="Sub-processors" />
             </div>
           </section>
         </div>

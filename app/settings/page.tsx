@@ -290,7 +290,9 @@ function Inner() {
                     <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500" />
                     <span className="text-muted-foreground">by</span>
                     <a
-                      href="#"
+                      href="https://galtrix.tech"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="font-semibold bg-gradient-to-r from-brand-600 to-violet2-600 bg-clip-text text-transparent"
                     >
                       Galtrix

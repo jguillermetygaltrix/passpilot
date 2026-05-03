@@ -1,0 +1,11 @@
+PassPilot · Security PGP Key
+============================
+
+This is a placeholder until a production PGP key is generated.
+For security disclosures right now, email security@passpilot.app.
+
+If you have a confidential vulnerability to report, please use the
+encrypted email or the GitHub Security Advisory link in /security
+instead. We acknowledge all reports within 48 hours.
+
+— PassPilot Security Team
