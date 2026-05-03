@@ -105,7 +105,7 @@ export function UpgradeWall({
 
           <div className="px-6 md:px-8 pb-7">
             {tab === "upgrade" ? (
-              <UpgradeTab />
+              <UpgradeTab onSwitchToRedeem={() => setTab("redeem")} />
             ) : (
               <RedeemTab onSuccess={onClose} />
             )}
@@ -140,7 +140,11 @@ function TabBtn({
   );
 }
 
-function UpgradeTab() {
+function UpgradeTab({
+  onSwitchToRedeem,
+}: {
+  onSwitchToRedeem?: () => void;
+}) {
   const { profile } = useApp();
 
   // Cert switcher on the Pro card — lets visitors buy ANY of the 7 certs at
@@ -293,6 +297,24 @@ function UpgradeTab() {
         <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
         14-day money-back guarantee · pay via card, Apple Pay, Google Pay, PayPal
       </div>
+
+      {/* Returning-buyer nudge — for users who already paid (web checkout, gift,
+          previous device) and just need to unlock this device. Avoids forcing
+          them through the pricing flow again. Apple-anti-steering safe: no
+          "save money" / "buy on web" / "cheaper" copy — purely about an
+          existing key already in their possession. */}
+      {onSwitchToRedeem && (
+        <div className="md:col-span-2 mt-1 text-center">
+          <button
+            type="button"
+            onClick={onSwitchToRedeem}
+            className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 underline-offset-4 hover:underline transition-colors inline-flex items-center gap-1"
+          >
+            <KeyRound className="h-3 w-3" />
+            Already have a key? Redeem here →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
