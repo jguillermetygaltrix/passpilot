@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type {
@@ -24,7 +25,19 @@ interface AppState {
   attempts: QuizAttempt[];
   completedBlockIds: string[];
   completedLessonIds: string[];
+  /**
+   * Date stamp (YYYY-MM-DD) of the last plan generation. Paired with
+   * `cachedPlan` to keep today's plan stable — without this, useDailyPlan
+   * re-derived blocks on every render and the planner's "next un-completed
+   * lesson" logic shifted block IDs out from under markBlockDone tracking
+   * (DEC-052 follow-up: counter stayed at 0 even after completions).
+   */
   lastPlanDate: string | null;
+  /**
+   * Today's plan, frozen at first generation. Cleared (set null) when
+   * profile changes or resetAll() runs. Re-derived when lastPlanDate !== today.
+   */
+  cachedPlan: StudyPlan | null;
   license: License | null;
   dailyDrills: DailyDrillCount | null;
   notificationPrefs: NotificationPrefs;
@@ -39,6 +52,8 @@ interface AppState {
   ) => QuizAttempt;
   markBlockDone: (blockId: string) => void;
   markLessonComplete: (lessonId: string) => void;
+  /** Build today's plan if not cached (no-op if already cached for today). */
+  ensurePlan: () => void;
   setLicense: (license: License | null) => void;
   incrementDrill: () => void;
   resetAll: () => void;
@@ -55,13 +70,17 @@ export const useApp = create<AppState>()(
       completedBlockIds: [],
       completedLessonIds: [],
       lastPlanDate: null,
+      cachedPlan: null,
       license: null,
       dailyDrills: null,
       notificationPrefs: DEFAULT_NOTIFICATION_PREFS,
       setProfile: (p) =>
+        // Switching exam (or first-time profile set) invalidates today's
+        // cached plan — different topic graph, different lessons.
         set({
           profile: p,
           lastPlanDate: null,
+          cachedPlan: null,
         }),
       updateProfile: (patch) =>
         set((s) =>
@@ -114,6 +133,32 @@ export const useApp = create<AppState>()(
             profile: updatedProfile,
           };
         }),
+      // DEC-052 follow-up — generate today's plan once, freeze it for the
+      // day. Without this, useDailyPlan re-derived blocks on every render
+      // and the planner's "next un-completed lesson" logic shifted block IDs
+      // out from under markBlockDone tracking (Boss saw counter stuck at
+      // 0/6 even after completing blocks). Idempotent — no-op if already
+      // cached for today.
+      ensurePlan: () => {
+        const s = get();
+        const today = new Date().toISOString().slice(0, 10);
+        if (s.cachedPlan && s.lastPlanDate === today) return;
+        if (!s.profile) return;
+        const examTopics = getTopicsForExam(s.profile.examId);
+        const baseMastery = computeTopicMastery(s.attempts, examTopics);
+        const mastery = computePriority(
+          baseMastery,
+          daysLeft(s.profile.examDate),
+          examTopics
+        );
+        const plan = buildDailyPlan(
+          s.profile,
+          mastery,
+          s.attempts,
+          s.completedLessonIds
+        );
+        set({ cachedPlan: plan, lastPlanDate: today });
+      },
       setLicense: (license) => set({ license }),
       incrementDrill: () =>
         set((s) => {
@@ -131,6 +176,7 @@ export const useApp = create<AppState>()(
           completedBlockIds: [],
           completedLessonIds: [],
           lastPlanDate: null,
+          cachedPlan: null,
           license: null,
           dailyDrills: null,
         }),
@@ -167,19 +213,29 @@ export function useMasteryAndReadiness() {
 }
 
 export function useDailyPlan(): StudyPlan | null {
-  // DEC-052 — pull completedLessonIds so the planner can advance through the
-  // curriculum (next un-completed lesson per focus topic) instead of always
-  // re-suggesting lesson 1.
-  const { profile, attempts, completedLessonIds } = useApp();
+  // DEC-052 follow-up — read from cachedPlan instead of re-deriving on every
+  // render. ensurePlan() builds + freezes today's plan on first access (and
+  // again at date rollover). This stabilizes block IDs so completion
+  // tracking via completedBlockIds works correctly across render cycles.
+  const profile = useApp((s) => s.profile);
+  const cachedPlan = useApp((s) => s.cachedPlan);
+  const lastPlanDate = useApp((s) => s.lastPlanDate);
+  const ensurePlan = useApp((s) => s.ensurePlan);
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Trigger plan build if missing or stale (date rolled over).
+  // useEffect runs after render so the first paint may show null briefly,
+  // but the very next render after ensurePlan's set() will have it.
+  useEffect(() => {
+    if (!profile) return;
+    if (cachedPlan && lastPlanDate === today) return;
+    ensurePlan();
+  }, [profile, cachedPlan, lastPlanDate, today, ensurePlan]);
+
   if (!profile) return null;
-  const examTopics = getTopicsForExam(profile.examId);
-  const baseMastery = computeTopicMastery(attempts, examTopics);
-  const mastery = computePriority(
-    baseMastery,
-    daysLeft(profile.examDate),
-    examTopics
-  );
-  return buildDailyPlan(profile, mastery, attempts, completedLessonIds);
+  if (lastPlanDate === today && cachedPlan) return cachedPlan;
+  return null;
 }
 
 function daysLeft(iso: string): number {
