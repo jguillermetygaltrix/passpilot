@@ -281,5 +281,86 @@ If E2E fails on CI, do NOT upload — fix first.
 
 ---
 
+## Sideloading to a real iPhone (dev signing, free or paid Apple ID)
+
+Use this when you want to feel PassPilot on your actual phone before
+shipping a TestFlight build. Faster iteration loop than App Store
+review, and the only way to test things like real iOS notification
+permission prompts, true Taptic feedback, and home-screen install.
+
+### One-time setup
+
+1. **Plug iPhone into Mac via USB-C** (or pair wirelessly via Xcode →
+   Window → Devices and Simulators → check "Connect via network").
+2. **On iPhone**: Settings → Privacy & Security → Developer Mode → ON
+   (requires reboot the first time).
+3. **Trust this Mac** when iPhone prompts.
+4. **In Xcode**, open `ios/App/App.xcworkspace` (NOT the .xcodeproj),
+   select the **App** target → Signing & Capabilities tab:
+   - Check **Automatically manage signing**
+   - Set **Team** to your Apple ID (Free dev accounts work; paid lets
+     you ship to TestFlight)
+   - **Free accounts only**: bundle ID `com.galtrix.passpilot` will
+     conflict with the App Store identifier — change to
+     `com.galtrix.passpilot.dev` for sideload-only builds. Revert
+     before TestFlight uploads.
+
+### Each iteration
+
+```bash
+# 1. Make code changes, then rebuild web + sync
+npm run build && npx cap sync ios
+
+# 2. List connected devices to grab the UDID
+xcrun xctrace list devices 2>&1 | grep iPhone
+
+# 3. Run on the iPhone (replace UDID with yours)
+npx cap run ios --target=00008140-XXXXXXXXXXXXXXXX
+```
+
+The first run takes ~3 min (full provisioning fetch + first install).
+Subsequent runs are ~30s after Next builds.
+
+### First-launch on iPhone
+
+iPhone will refuse to launch the app the first time with an
+"Untrusted Developer" dialog. To trust:
+- **Settings → General → VPN & Device Management → [your Apple ID]
+  → Trust**
+- Re-launch from the home screen icon.
+
+Free Apple ID profiles **expire every 7 days** — re-run `npx cap run
+ios` to re-sign and reinstall. Paid Developer accounts last 1 year.
+
+### What to verify on real device (not sim)
+
+- [ ] Haptics: Submit-correct vs Submit-wrong on a question — feel
+      different patterns
+- [ ] Notification permission prompt: Settings → Reminders → enable —
+      iOS native dialog appears (sim uses a fake one)
+- [ ] Daily reminder fires: set time 1 min in the future, lock phone,
+      wait
+- [ ] Splash screen: PassPilot brand image during launch (not the
+      blank Capacitor white)
+- [ ] Status bar: matches dark/light per app theme
+- [ ] Safe area: bottom nav clears the home indicator on Face ID
+      devices
+- [ ] AI Coach: with NEXT_PUBLIC_GEMINI_API_KEY in `.env.local`,
+      "Ask the coach" pill appears post-reveal and the slide-up sheet
+      works (test both correct and wrong answers)
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| "No iOS Devices Connected" in Xcode | Unplug, replug, trust Mac on phone |
+| "Failed to register bundle identifier" | Change bundle ID (free account collision) |
+| App launches then immediately quits | Untrusted Developer — see Trust step above |
+| Web changes don't show up | Forgot `npx cap sync ios` after `npm run build` |
+| 7-day signature expired | Re-run `npx cap run ios` (re-signs automatically) |
+
+---
+
 *Last updated: 2026-05-02 · Authored by Marvin during the App Store
-launch prep + E2E coverage sprint.*
+launch prep + E2E coverage sprint. Sideload section added during
+DEC-051 (AI Coach + push-notif sync).*
