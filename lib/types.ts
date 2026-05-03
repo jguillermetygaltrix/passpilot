@@ -177,8 +177,17 @@ export interface TopicMastery {
 
 export interface StudyPlanBlock {
   id: string;
-  kind: "study" | "practice" | "review" | "cram" | "rest";
+  /**
+   * "lesson" — guided micro-loop: read one lesson, then a 3-Q mini-quiz on
+   *   that topic (DEC-052). Carries `lessonId` + `topicId`.
+   * "study" — legacy generic "go read this topic" block. Still emitted as a
+   *   fallback when a topic has no remaining un-completed lessons.
+   * "practice" / "review" / "cram" / "rest" — existing block kinds.
+   */
+  kind: "lesson" | "study" | "practice" | "review" | "cram" | "rest";
   topicId?: string;
+  /** Only set for kind === "lesson". Identifies the lesson to read inside the block flow. */
+  lessonId?: string;
   title: string;
   description: string;
   minutes: number;

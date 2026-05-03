@@ -138,26 +138,33 @@ function Inner() {
             {plan.blocks.map((b, idx) => {
               const isDone = completedBlockIds.includes(b.id);
               const icon =
-                b.kind === "study"
-                  ? BookOpen
-                  : b.kind === "practice"
-                    ? Dumbbell
-                    : b.kind === "review"
-                      ? ListChecks
-                      : b.kind === "cram"
-                        ? LifeBuoy
-                        : Coffee;
+                b.kind === "lesson"
+                  ? BookOpen // dual nature signaled by the kind label below ("Read + quiz")
+                  : b.kind === "study"
+                    ? BookOpen
+                    : b.kind === "practice"
+                      ? Dumbbell
+                      : b.kind === "review"
+                        ? ListChecks
+                        : b.kind === "cram"
+                          ? LifeBuoy
+                          : Coffee;
               const Icon = icon;
+              // DEC-052 — lesson blocks deep-link into the new guided flow
+              // (read → 3-Q quiz → done) at /plan/block. Everything else
+              // keeps its existing routing.
               const actionHref =
-                b.kind === "practice"
-                  ? "/practice?mode=mixed"
-                  : b.kind === "review"
-                    ? "/practice?mode=incorrect-only"
-                    : b.kind === "cram"
-                      ? "/rescue"
-                      : b.topicId
-                        ? `/guide/${b.topicId}`
-                        : "/practice";
+                b.kind === "lesson" && b.lessonId && b.topicId
+                  ? `/plan/block?id=${encodeURIComponent(b.id)}&lesson=${encodeURIComponent(b.lessonId)}&topic=${encodeURIComponent(b.topicId)}`
+                  : b.kind === "practice"
+                    ? "/practice?mode=mixed"
+                    : b.kind === "review"
+                      ? "/practice?mode=incorrect-only"
+                      : b.kind === "cram"
+                        ? "/rescue"
+                        : b.topicId
+                          ? `/guide/${b.topicId}`
+                          : "/practice";
               return (
                 <li
                   key={b.id}
@@ -186,7 +193,11 @@ function Inner() {
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1">
                         <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                          {b.kind === "cram" ? "Cram" : b.kind}
+                          {b.kind === "cram"
+                            ? "Cram"
+                            : b.kind === "lesson"
+                              ? "Read + quiz"
+                              : b.kind}
                         </span>
                         <span className="chip bg-slate-50 dark:bg-muted border-slate-200 dark:border-border text-slate-700 dark:text-slate-300">
                           <Clock className="h-3 w-3" /> {b.minutes}m
@@ -194,6 +205,11 @@ function Inner() {
                         {b.topicId && (
                           <span className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300">
                             {TOPIC_MAP[b.topicId]?.shortName}
+                          </span>
+                        )}
+                        {b.kind === "lesson" && (
+                          <span className="chip bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300">
+                            <Dumbbell className="h-3 w-3" />3 Q
                           </span>
                         )}
                       </div>

@@ -1,5 +1,6 @@
 import { AZ900_TOPICS, TOPIC_MAP } from "./data/topics";
 import { getQuestionsByTopic } from "./data/questions";
+import { LESSONS_BY_TOPIC } from "./data/lessons";
 import type {
   QuizAttempt,
   StudyPlan,
@@ -13,7 +14,15 @@ import { daysUntil } from "./scoring";
 export function buildDailyPlan(
   profile: UserProfile,
   mastery: TopicMastery[],
-  attempts: QuizAttempt[]
+  attempts: QuizAttempt[],
+  /**
+   * Lessons the user has already finished (DEC-052). Used to pick the *next*
+   * un-completed lesson per focus topic, so the daily plan walks the curriculum
+   * forward instead of re-suggesting the same opener every day. Optional for
+   * back-compat with callers that haven't been updated yet — when omitted,
+   * we fall back to "first lesson in the topic".
+   */
+  completedLessonIds: string[] = []
 ): StudyPlan {
   const daysLeft = daysUntil(profile.examDate);
   const totalMinutes = Math.max(15, Math.round(profile.hoursPerDay * 60));
@@ -53,41 +62,75 @@ export function buildDailyPlan(
   }
 
   const focusTopics = ranked.slice(0, rescueMode ? 2 : 3);
-  const studyMinutesEach = Math.max(
-    10,
-    Math.floor((remaining * 0.55) / Math.max(1, focusTopics.length))
-  );
+
+  // DEC-052 — study blocks become "lesson + 3-Q quiz" loops. Each focus topic
+  // contributes the next un-completed lesson; if every lesson in that topic is
+  // already done, fall back to a generic study block so the topic still shows
+  // up in the day's focus list. Lesson blocks are budgeted at ~10 minutes each
+  // (4-6 read + 3-4 quiz + reveal) — tight enough to do 3 in a 30-min session,
+  // long enough to encode meaningfully.
+  const completedSet = new Set(completedLessonIds);
+  const LESSON_BLOCK_MINUTES = 10;
 
   focusTopics.forEach((m, idx) => {
     const topic = m.topic;
     if (!topic) return;
     const accPct = Math.round(m.accuracy * 100);
-    blocks.push({
-      id: `study-${topic.id}-${idx}`,
-      kind: "study",
-      topicId: topic.id,
-      title: `Study: ${topic.name}`,
-      description:
+    const topicLessons = (LESSONS_BY_TOPIC[topic.id] ?? []).slice().sort(
+      (a, b) => a.order - b.order
+    );
+    const nextLesson = topicLessons.find((l) => !completedSet.has(l.id));
+
+    if (nextLesson) {
+      const reason =
         m.attempts === 0
-          ? `New territory. Read the summary and cram sheet, then try 3 practice questions.`
-          : `You're at ${accPct}% here. Re-read the key facts, then do a 5-question drill.`,
-      minutes: studyMinutesEach,
-      done: false,
-    });
-    remaining -= studyMinutesEach;
+          ? `New territory. Read the lesson, then a 3-question quiz locks it in.`
+          : `You're at ${accPct}% here. Lesson + immediate quiz turns the gap into reps.`;
+      blocks.push({
+        id: `lesson-${nextLesson.id}-${idx}`,
+        kind: "lesson",
+        topicId: topic.id,
+        lessonId: nextLesson.id,
+        title: nextLesson.title,
+        description: reason,
+        minutes: LESSON_BLOCK_MINUTES,
+        done: false,
+      });
+      remaining -= LESSON_BLOCK_MINUTES;
+    } else {
+      // Fallback: every lesson done → still show the topic, but as a
+      // pure-practice nudge (no lesson to re-read into).
+      blocks.push({
+        id: `study-${topic.id}-${idx}`,
+        kind: "study",
+        topicId: topic.id,
+        title: `${topic.name} — refresh + drill`,
+        description:
+          accPct >= 80
+            ? `You've finished every lesson here (at ${accPct}%). Skim the cram sheet, then a 5-Q drill keeps it sharp.`
+            : `You've read every lesson but you're at ${accPct}%. Hit the cram sheet, then drill until 70%+.`,
+        minutes: LESSON_BLOCK_MINUTES,
+        done: false,
+      });
+      remaining -= LESSON_BLOCK_MINUTES;
+    }
   });
 
-  const practiceMinutes = Math.max(10, Math.min(20, remaining - 5));
+  // End-of-day mixed drill — shrunk from 10→5 questions in DEC-052 because
+  // the per-block lesson quizzes already do most of the retrieval work.
+  // The mixed drill now serves breadth + transfer (random topic interleaving),
+  // not the primary retrieval load.
+  const practiceMinutes = Math.max(6, Math.min(12, remaining - 5));
   if (practiceMinutes > 0) {
     blocks.push({
       id: "practice-mixed",
       kind: "practice",
       title: nearExam
         ? "Timed mixed drill (exam-like pressure)"
-        : "Mixed practice drill",
+        : "Mixed end-of-day drill",
       description: nearExam
-        ? "10 mixed questions under pressure. Simulates exam pacing."
-        : "10 mixed questions across all topics to keep breadth sharp.",
+        ? "5 mixed questions under pressure. Simulates exam pacing."
+        : "5 mixed questions across all topics — interleaving locks in transfer.",
       minutes: practiceMinutes,
       done: false,
     });

@@ -167,7 +167,10 @@ export function useMasteryAndReadiness() {
 }
 
 export function useDailyPlan(): StudyPlan | null {
-  const { profile, attempts } = useApp();
+  // DEC-052 — pull completedLessonIds so the planner can advance through the
+  // curriculum (next un-completed lesson per focus topic) instead of always
+  // re-suggesting lesson 1.
+  const { profile, attempts, completedLessonIds } = useApp();
   if (!profile) return null;
   const examTopics = getTopicsForExam(profile.examId);
   const baseMastery = computeTopicMastery(attempts, examTopics);
@@ -176,7 +179,7 @@ export function useDailyPlan(): StudyPlan | null {
     daysLeft(profile.examDate),
     examTopics
   );
-  return buildDailyPlan(profile, mastery, attempts);
+  return buildDailyPlan(profile, mastery, attempts, completedLessonIds);
 }
 
 function daysLeft(iso: string): number {
