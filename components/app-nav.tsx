@@ -21,6 +21,7 @@ const items = [
   { href: "/practice", label: "Practice", icon: Dumbbell },
   { href: "/weakness", label: "Weak", icon: AlertTriangle },
   { href: "/guide", label: "Guide", icon: BookOpen },
+  { href: "/settings", label: "Settings", icon: SettingsIcon },
 ];
 
 export function AppNav() {
@@ -97,7 +98,7 @@ export function AppNav() {
 
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border pb-[env(safe-area-inset-bottom)]">
-        <div className="grid grid-cols-5">
+        <div className="grid grid-cols-6">
           {items.map((it) => {
             const active = pathname?.startsWith(it.href);
             return (

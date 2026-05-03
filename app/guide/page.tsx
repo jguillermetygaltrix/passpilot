@@ -163,49 +163,49 @@ function Inner() {
           </Reveal>
         </div>
 
+        {/* Header + WeightBar in their own light card */}
         <Reveal>
-          <div className="card-surface p-6 md:p-8 mb-6 relative overflow-hidden">
-            <Spotlight color="rgba(61, 96, 255, 0.06)" size={500} />
-            <div className="relative">
-              <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Target className="h-4 w-4 text-brand-600" />
-                    <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
-                      Domain weights
-                    </div>
+          <div className="card-surface p-6 md:p-8 mb-4">
+            <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Target className="h-4 w-4 text-brand-600" />
+                  <div className="text-[11px] uppercase tracking-wider text-brand-700 dark:text-brand-300 font-semibold">
+                    Domain weights
                   </div>
-                  <h2 className="font-semibold text-lg">What you're tested on</h2>
-                  <p className="text-sm text-muted-foreground mt-1 max-w-xl">
-                    Each domain below has short lessons, deep review, and
-                    practice drills. Tap a domain to start its chapter.
-                  </p>
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  ~<CountUp to={estTotalMinutes} /> min of reading ·{" "}
-                  <CountUp to={totalLessons} /> lessons
-                </div>
+                <h2 className="font-semibold text-lg">What you're tested on</h2>
+                <p className="text-sm text-muted-foreground mt-1 max-w-xl">
+                  Each domain below has short lessons, deep review, and
+                  practice drills. Tap a domain to start its chapter.
+                </p>
               </div>
-
-              <WeightBar topics={examTopics} />
-
-              <div className="mt-6 grid md:grid-cols-2 gap-3">
-                {examTopics.map((t, idx) => (
-                  <Reveal key={t.id} delay={idx * 80}>
-                    <DomainCard
-                      index={idx + 1}
-                      topicId={t.id}
-                      name={t.name}
-                      weight={t.weight}
-                      summary={t.summary}
-                      completedIds={completedLessonIds}
-                    />
-                  </Reveal>
-                ))}
+              <div className="text-xs text-muted-foreground">
+                ~<CountUp to={estTotalMinutes} /> min of reading ·{" "}
+                <CountUp to={totalLessons} /> lessons
               </div>
             </div>
+            <WeightBar topics={examTopics} />
           </div>
         </Reveal>
+
+        {/* Chapter cards as TOP-LEVEL items — no nested outer card, no
+            Spotlight, no per-card Reveal animation. Removes the visual
+            artifacts Boss flagged 2026-05-03 (subpixel ghost lines from
+            transformed Reveal children inside a clipping outer card). */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          {examTopics.map((t, idx) => (
+            <DomainCard
+              key={t.id}
+              index={idx + 1}
+              topicId={t.id}
+              name={t.name}
+              weight={t.weight}
+              summary={t.summary}
+              completedIds={completedLessonIds}
+            />
+          ))}
+        </div>
 
         <div className="grid md:grid-cols-2 gap-5">
           <Reveal>

@@ -98,15 +98,19 @@ function NativePaywall({ platform }: { platform: "ios" | "android" }) {
   if (!iapAvailable) {
     return (
       <Reveal>
-        <div className="text-center max-w-xl mx-auto pt-8">
+        {/* min-w-0 + overflow-hidden + break-words on outer wrapper +
+            text element prevents the width-overflow Boss flagged on
+            iPhone 17 Pro (long words like "PassPilot" / "purchases" /
+            "App Store" were clipping past viewport right edge). */}
+        <div className="text-center max-w-xl mx-auto pt-8 min-w-0 overflow-hidden break-words">
           <div className="chip bg-brand-50 dark:bg-brand-500/15 border-brand-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 mx-auto mb-3">
             <Sparkles className="h-3 w-3" />
             PassPilot Pro
           </div>
-          <h1 className="heading-1">
+          <h1 className="heading-1 break-words">
             Unlock unlimited study time.
           </h1>
-          <p className="text-muted-foreground mt-4 leading-relaxed text-lg">
+          <p className="text-muted-foreground mt-4 leading-relaxed text-lg break-words">
             Upgrade options are coming to the {platform === "ios" ? "App Store" : "Play Store"} soon.
             If you already bought PassPilot on another device, restore your purchase below.
           </p>

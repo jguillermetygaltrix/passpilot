@@ -15,6 +15,8 @@ import { computePriority, computeTopicMastery, readinessScore } from "./scoring"
 import { getTopicsForExam } from "./data/topics";
 import { uid } from "./utils";
 import { applyActivity, mergeStreakIntoProfile } from "./streak";
+import type { NotificationPrefs } from "./notifications";
+import { DEFAULT_PREFS as DEFAULT_NOTIFICATION_PREFS } from "./notifications";
 
 interface AppState {
   hydrated: boolean;
@@ -25,8 +27,10 @@ interface AppState {
   lastPlanDate: string | null;
   license: License | null;
   dailyDrills: DailyDrillCount | null;
+  notificationPrefs: NotificationPrefs;
   setProfile: (p: UserProfile) => void;
   updateProfile: (patch: Partial<UserProfile>) => void;
+  setNotificationPrefs: (prefs: NotificationPrefs) => void;
   recordAttempt: (
     kind: QuizAttempt["kind"],
     answers: AnswerRecord[],
@@ -53,6 +57,7 @@ export const useApp = create<AppState>()(
       lastPlanDate: null,
       license: null,
       dailyDrills: null,
+      notificationPrefs: DEFAULT_NOTIFICATION_PREFS,
       setProfile: (p) =>
         set({
           profile: p,
@@ -62,6 +67,7 @@ export const useApp = create<AppState>()(
         set((s) =>
           s.profile ? { profile: { ...s.profile, ...patch } } : s
         ),
+      setNotificationPrefs: (prefs) => set({ notificationPrefs: prefs }),
       recordAttempt: (kind, answers, topicId, mock) => {
         const attempt: QuizAttempt = {
           id: uid("att"),

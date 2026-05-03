@@ -5,8 +5,17 @@ import { AppNav } from "@/components/app-nav";
 import { HydrationGate } from "@/components/hydration-gate";
 import { AppShell } from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "@/lib/store";
+import {
+  checkPermission,
+  requestPermission,
+  scheduleAll,
+  cancelAll,
+} from "@/lib/notifications";
+import { isNative } from "@/lib/platform";
+import { getExamMeta } from "@/lib/data/exams";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useEntitlements } from "@/lib/entitlements";
 import { UpgradeWall } from "@/components/upgrade-wall";
 import { describeLicense } from "@/lib/licensing";
@@ -243,6 +252,15 @@ function Inner() {
           </div>
         </div>
 
+        {/* Appearance (theme switcher) — discoverable on mobile (was only in
+            desktop top-nav before). Boss directive 2026-05-03. */}
+        <AppearanceSection />
+
+        {/* Notification preferences (DEC-050 — daily drill / streak-at-risk /
+            countdown reminders via @capacitor/local-notifications). Renders
+            on every platform but the underlying scheduling is silent on web. */}
+        <NotificationsSection />
+
         <div className="card-surface p-6 border-rose-200 dark:border-rose-500/30 bg-rose-50/30 dark:bg-rose-500/10 mb-4">
           <div className="flex items-center gap-2 text-sm font-medium text-rose-700 dark:text-rose-300 mb-1">
             <RotateCcw className="h-4 w-4" />
@@ -309,5 +327,159 @@ function Inner() {
         </div>
       </AppShell>
     </>
+  );
+}
+
+/**
+ * AppearanceSection — light/dark theme switcher discoverable on mobile.
+ * The desktop top-nav already has the same ThemeToggle in its corner;
+ * this brings parity to the mobile bottom-nav user (Boss directive 2026-05-03).
+ */
+function AppearanceSection() {
+  return (
+    <div className="card-surface p-6 mb-4">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-sm font-medium mb-1">
+            <span className="inline-block w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-violet-600" />
+            Appearance
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Light or dark — your eyes, your call.
+          </p>
+        </div>
+        <ThemeToggle />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * NotificationsSection — toggle + reminder-time picker for the daily drill,
+ * streak-at-risk alert, and days-to-exam countdown notifications. Renders on
+ * every platform; the underlying scheduling is silent on web (the
+ * @capacitor/local-notifications plugin no-ops outside iOS/Android).
+ *
+ * Permission UX:
+ *   - First time enabling, OS sheet asks for permission
+ *   - If denied, we surface a hint to enable in iOS Settings
+ *   - State persists in Zustand (`notificationPrefs`) so toggle stays sticky
+ */
+function NotificationsSection() {
+  const { profile, notificationPrefs, setNotificationPrefs } = useApp();
+  const [permission, setPermission] = useState<
+    "granted" | "denied" | "default" | "checking"
+  >("checking");
+
+  useEffect(() => {
+    let cancelled = false;
+    checkPermission().then((p) => {
+      if (!cancelled) setPermission(p);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const drilledToday = profile
+    ? profile.lastActiveDate?.slice(0, 10) ===
+      new Date().toISOString().slice(0, 10)
+    : false;
+  const examMeta = profile ? getExamMeta(profile.examId) : null;
+
+  const reschedule = async (
+    next: typeof notificationPrefs,
+    perm: typeof permission
+  ) => {
+    if (!profile || !examMeta) return;
+    if (next.enabled && perm !== "granted") return;
+    await scheduleAll({
+      prefs: next,
+      examName: examMeta.name,
+      examDateISO: profile.examDate,
+      streakDays: profile.streakDays ?? 0,
+      drilledToday,
+    });
+  };
+
+  const handleToggle = async () => {
+    const next = { ...notificationPrefs, enabled: !notificationPrefs.enabled };
+
+    if (next.enabled && permission !== "granted") {
+      // First-time enable: request OS permission
+      const result = await requestPermission();
+      setPermission(result);
+      if (result !== "granted") {
+        // User denied — keep toggle off
+        return;
+      }
+    }
+
+    setNotificationPrefs(next);
+    if (next.enabled) {
+      await reschedule(next, "granted");
+    } else {
+      await cancelAll();
+    }
+  };
+
+  const handleTimeChange = async (time: string) => {
+    const next = { ...notificationPrefs, dailyReminderTime: time };
+    setNotificationPrefs(next);
+    if (next.enabled && permission === "granted") {
+      await reschedule(next, "granted");
+    }
+  };
+
+  return (
+    <div className="card-surface p-6 mb-4">
+      <div className="flex items-center gap-2 text-sm font-medium mb-1">
+        <span className="inline-block w-4 h-4 rounded-full bg-brand-500" />
+        Reminders
+      </div>
+      <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+        Daily drill reminder, streak-at-risk alert, and days-to-exam
+        countdown. All on-device — nothing sent to a server.
+      </p>
+
+      <label className="flex items-center justify-between cursor-pointer mb-4">
+        <span className="text-sm font-medium">
+          Notifications
+          {!isNative() && (
+            <span className="ml-2 text-xs font-normal text-muted-foreground">
+              (mobile app only)
+            </span>
+          )}
+        </span>
+        <input
+          type="checkbox"
+          checked={notificationPrefs.enabled}
+          onChange={handleToggle}
+          disabled={!isNative() || permission === "denied"}
+          className="h-5 w-9 appearance-none rounded-full bg-slate-200 dark:bg-muted checked:bg-brand-600 transition-colors relative cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed before:content-[''] before:absolute before:top-0.5 before:left-0.5 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-transform checked:before:translate-x-4"
+        />
+      </label>
+
+      {notificationPrefs.enabled && permission === "granted" && (
+        <label className="block">
+          <span className="text-xs font-medium text-muted-foreground mb-1.5 block">
+            Daily reminder time
+          </span>
+          <input
+            type="time"
+            value={notificationPrefs.dailyReminderTime}
+            onChange={(e) => handleTimeChange(e.target.value)}
+            className="w-full h-11 rounded-xl border border-border px-4 text-sm bg-white dark:bg-card focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500"
+          />
+        </label>
+      )}
+
+      {permission === "denied" && (
+        <div className="mt-3 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs p-3 leading-relaxed">
+          Notifications were denied. Enable them in your phone&apos;s Settings →
+          PassPilot → Notifications, then come back here.
+        </div>
+      )}
+    </div>
   );
 }
