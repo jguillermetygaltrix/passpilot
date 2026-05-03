@@ -20,8 +20,15 @@
  */
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Cookie, X, Check } from "lucide-react";
 import Link from "next/link";
+
+// Routes where the cookie banner is suppressed — first-impression / focused
+// flows where a stacked-overlay banner clutters the screen and conflicts with
+// sticky footers (e.g. /onboarding's Continue bar). The banner re-appears on
+// /dashboard onwards. Discovered via Playwright E2E in DEC-049 polish.
+const HIDDEN_ON_ROUTES = ["/welcome", "/onboarding", "/diagnostic"];
 
 const STORAGE_KEY = "passpilot.cookie-consent";
 const TTL_MS = 365 * 24 * 60 * 60 * 1000; // 1 year
@@ -70,6 +77,7 @@ function writeChoice(accepted: boolean, marketing: boolean): void {
 }
 
 export function CookieBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
   const [marketing, setMarketing] = useState(false);
@@ -87,7 +95,12 @@ export function CookieBanner() {
       window.removeEventListener("passpilot:open-cookie-prefs", handler);
   }, []);
 
-  if (!visible) return null;
+  // Suppress on first-impression / focused-flow routes — see HIDDEN_ON_ROUTES.
+  const suppressed = pathname
+    ? HIDDEN_ON_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"))
+    : false;
+
+  if (!visible || suppressed) return null;
 
   const acceptAll = () => {
     writeChoice(true, marketing);
@@ -106,6 +119,9 @@ export function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie preferences"
+      // Banner stays at bottom; the onboarding sticky footer uses z-[60]
+      // (above this z-50) so its Continue button is always clickable.
+      // Discovered via Playwright E2E in DEC-049 polish (2026-05-02).
       className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2 pointer-events-none"
     >
       <div className="mx-auto max-w-3xl pointer-events-auto rounded-2xl border bg-card shadow-card p-5">

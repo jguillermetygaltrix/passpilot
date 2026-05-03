@@ -10,3 +10,8 @@ dist
 .idea
 .claude/
 tsconfig.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+

@@ -158,7 +158,7 @@ export default function OnboardingPage() {
           `sticky` because Capacitor's WKWebView scroll context can break
           sticky positioning. Uses safe-area-inset for iOS home indicator.
           Backdrop blur keeps content readable behind it. */}
-      <footer className="fixed bottom-0 inset-x-0 z-30 border-t border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      <footer className="fixed bottom-0 inset-x-0 z-[60] border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
         <div className="container max-w-xl w-full mx-auto flex items-center justify-between gap-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <Button
             variant="ghost"
