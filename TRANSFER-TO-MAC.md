@@ -206,4 +206,80 @@ This way the Windows side picks up where the Mac left off automatically.
 
 ---
 
-*Last updated: 2026-05-02 · Authored by Marvin during the Mac transfer prep.*
+## App Store launch sequence (Mac-side, after iOS scaffold + sim build verified)
+
+The DEC-049 polish sprint locked the codebase + locked all 41 E2E tests.
+Once Boss is ready to upload to TestFlight, this is the end-to-end:
+
+### One-time setup (~30 min)
+
+1. **Apple Developer Team ID** — find at
+   <https://developer.apple.com/account> → Membership → Team ID.
+   Save as `TEAM_ID` env var.
+2. **Sign in to Xcode** — Xcode → Settings → Accounts → "+" → Apple ID →
+   add the same Apple ID that owns the Developer Program.
+3. **App Store Connect API key** (for CLI uploads — skip if uploading
+   via Xcode Organizer GUI):
+   - <https://appstoreconnect.apple.com/access/api> → "+" → Developer access
+   - Download `AuthKey_*.p8` (one-time download, keep safe in
+     `~/.appstoreconnect/private_keys/`)
+   - Note the Key ID + Issuer ID; export as `ASC_KEY_PATH`,
+     `ASC_KEY_ID`, `ASC_ISSUER_ID`
+4. **App Store Connect: create app entry** —
+   <https://appstoreconnect.apple.com/apps> → "+" → New App
+   - Bundle ID: `com.galtrix.passpilot`
+   - SKU: `passpilot-ios-1`
+   - Name: `PassPilot — Pass your cert`
+   - Primary language: English (U.S.)
+5. **Privacy + IAP setup in App Store Connect** — see Step 5 of the
+   "Step 5 — App Store Connect setup" section above.
+
+### Repeat per release (~5 min)
+
+```bash
+# 1. Build the archive (Release config, signed with your Team)
+TEAM_ID=YOUR_10CHAR_TEAM_ID ./scripts/build-ios-archive.sh
+
+# 2. Upload to TestFlight (uses ASC API key)
+./scripts/upload-testflight.sh build/App.ipa
+```
+
+The `scripts/build-ios-archive.sh` script:
+- Runs `npm run build` (Next.js static export)
+- Runs `npx cap sync ios` (copies web assets into the iOS bundle)
+- Runs `xcodebuild archive` with Release config + automatic signing +
+  `-allowProvisioningUpdates` so Xcode auto-fetches/refreshes the
+  provisioning profile against your Team
+- Exports an App-Store-method .ipa via `ExportOptions.plist` generated
+  on the fly
+
+The `scripts/upload-testflight.sh` script:
+- Validates the .ipa with `xcrun altool --validate-app`
+- Uploads to App Store Connect with `xcrun altool --upload-app`
+- Build appears in TestFlight tab after 15-30 min of processing
+
+### After upload
+
+- **Internal testers** (Boss + Edwin + Yiram) — add via TestFlight tab,
+  install via TestFlight app on iPhone. Available immediately after
+  build processes.
+- **External testers** — separate Beta App Review (~24h turnaround).
+- **App Store submission** — Submit for Review when ready (separate
+  full review, ~2-7 days).
+
+### Sanity checks before every upload
+
+```bash
+# All E2E tests must pass — locked by .github/workflows/e2e.yml on PR/push
+npx playwright test
+
+# Visual regression baselines (macOS-local; run before any UI change)
+npx playwright test visual-regression
+```
+
+If E2E fails on CI, do NOT upload — fix first.
+
+---
+
+*Last updated: 2026-05-02 · Authored by Marvin during the App Store
+launch prep + E2E coverage sprint.*

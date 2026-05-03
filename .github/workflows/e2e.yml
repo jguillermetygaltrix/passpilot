@@ -1,0 +1,67 @@
+name: E2E (Playwright)
+
+# Runs the full PassPilot E2E test suite on every push to main + every PR.
+# Catches regressions in:
+#   - onboarding flow (welcome → 6 steps → diagnostic kickoff)
+#   - dashboard navigation + 11 legal links + 10 legal pages
+#   - all study-mode routes (diagnostic, practice, mock, review, listen, cram, plan, weakness, guide, achievements, daily, rescue, founder gate)
+#   - Pro/Free/Multi license gating + redeem flow
+#
+# 41 tests pass in ~2 min on Ubuntu chromium. Free CI for public repos.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        # Cached by setup-node so reruns are fast
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Next.js (production export)
+        # Surfaces type errors and build-time failures before the E2E even runs
+        run: npm run build
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          # CI flag tells playwright.config.ts to forbid `.only` and skip
+          # `reuseExistingServer` so the build is hermetic.
+          CI: "true"
+
+      - name: Upload Playwright HTML report on failure
+        if: ${{ failure() || cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload screenshot evidence on failure
+        if: ${{ failure() || cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: test-results/
+          retention-days: 14

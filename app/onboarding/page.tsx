@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/app-nav";
 import { useApp } from "@/lib/store";
+import { tap, confirm } from "@/lib/haptics";
 import type {
   ConfidenceLevel,
   ExamId,
@@ -170,12 +171,26 @@ export default function OnboardingPage() {
             {step === 0 ? "Home" : "Back"}
           </Button>
           {step < TOTAL_STEPS - 1 ? (
-            <Button variant="primary" size="lg" onClick={next}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                confirm();
+                next();
+              }}
+            >
               Continue
               <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button variant="primary" size="lg" onClick={commit}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                confirm();
+                commit();
+              }}
+            >
               Start diagnostic
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -322,6 +337,7 @@ function ExamStep({
             key={e.id}
             active={value === e.id}
             onClick={() => {
+              tap(); // light haptic on cert pick (iOS Taptic / Android vibration)
               onChange(e.id);
               // Auto-advance after 500ms — gives user a beat to see the
               // selection highlight before transitioning, but eliminates
@@ -472,6 +488,7 @@ function ConfidenceStep({
             key={o.v}
             active={value === o.v}
             onClick={() => {
+              tap(); // light haptic on selection (iOS Taptic / Android vibration)
               onChange(o.v);
               if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
             }}
@@ -586,6 +603,7 @@ function OutcomeStep({
             key={o.v}
             active={value === o.v}
             onClick={() => {
+              tap(); // light haptic on selection (iOS Taptic / Android vibration)
               onChange(o.v);
               if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
             }}
@@ -657,6 +675,7 @@ function WhyStep({
             key={o.v}
             active={value === o.v}
             onClick={() => {
+              tap(); // light haptic on selection (iOS Taptic / Android vibration)
               onChange(o.v);
               if (onAutoAdvance) setTimeout(onAutoAdvance, 500);
             }}

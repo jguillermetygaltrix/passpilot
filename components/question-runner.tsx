@@ -10,6 +10,7 @@ import { useApp } from "@/lib/store";
 import { CheckCircle2, XCircle, ArrowRight, Flag } from "lucide-react";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { WhyWrongExplainer } from "./why-wrong-explainer";
+import { tap, success, error as hapticError } from "@/lib/haptics";
 import { track } from "@/lib/usage";
 import { recordWrongAnswer, gradeCard, getCard } from "@/lib/sr";
 import { evaluateAll } from "@/lib/achievements";
@@ -70,12 +71,16 @@ export function QuestionRunner({
 
   const handleSelect = (i: number) => {
     if (revealed) return;
+    tap(); // light haptic on every option pick (iOS Taptic / Android vibration)
     setSelected(i);
   };
 
   const handleSubmit = () => {
     if (selected === null) return;
     const correct = selected === q.correctIndex;
+    // Strong haptic on reveal — success buzz for correct, error buzz for wrong
+    if (correct) success();
+    else hapticError();
     const record: AnswerRecord = {
       questionId: q.id,
       topicId: q.topicId,
