@@ -7,9 +7,12 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ProgressBar } from "./ui/progress";
 import { useApp } from "@/lib/store";
-import { CheckCircle2, XCircle, ArrowRight, Flag } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, Flag, Sparkles } from "lucide-react";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { WhyWrongExplainer } from "./why-wrong-explainer";
+import { CoachPanel } from "./coach-panel";
+import { isCoachAvailable } from "@/lib/ai-coach";
+import { getExamMeta } from "@/lib/data/exams";
 import { tap, success, error as hapticError } from "@/lib/haptics";
 import { track } from "@/lib/usage";
 import { recordWrongAnswer, gradeCard, getCard } from "@/lib/sr";
@@ -44,6 +47,7 @@ export function QuestionRunner({
   const [startedAt, setStartedAt] = useState<number>(() => Date.now());
   const [completedAttemptId, setCompletedAttemptId] = useState<string | null>(null);
   const [finalScore, setFinalScore] = useState<number | null>(null);
+  const [coachOpen, setCoachOpen] = useState(false);
 
   const { profile } = useApp();
   const examId = profile?.examId;
@@ -58,6 +62,7 @@ export function QuestionRunner({
     setStartedAt(Date.now());
     setSelected(null);
     setRevealed(false);
+    setCoachOpen(false); // close coach when moving to a new question
     // Track question VIEW when new question renders
     if (questions[index]?.id) {
       track.questionViewed(questions[index].id, examId);
@@ -388,6 +393,22 @@ export function QuestionRunner({
                 officialExplanation={q.explanation}
               />
             )}
+            {/* Ask the coach — multi-turn AI tutor. Available after reveal
+                for both correct and wrong answers; suggestedPrompts() in
+                lib/ai-coach.ts tailors first-turn chips to the outcome. */}
+            {isCoachAvailable() && (
+              <button
+                type="button"
+                onClick={() => {
+                  tap();
+                  setCoachOpen(true);
+                }}
+                className="mt-3 inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-brand-200 dark:border-brand-500/30 bg-white dark:bg-card text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-500/15 transition-colors"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Ask the coach
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -415,6 +436,25 @@ export function QuestionRunner({
           </Button>
         )}
       </div>
+
+      {/* AI Coach bottom sheet — only mounted when isCoachAvailable() so we
+          don't ship the panel for users without a Gemini key. Context is
+          recomputed each render from the active question + selection state. */}
+      {isCoachAvailable() && revealed && (
+        <CoachPanel
+          open={coachOpen}
+          onClose={() => setCoachOpen(false)}
+          context={{
+            examName: getExamMeta(q.examId)?.name ?? q.examId,
+            topicName: TOPIC_MAP[q.topicId]?.name ?? q.topicId,
+            question: q.prompt,
+            choices: q.choices,
+            correctIndex: q.correctIndex,
+            userSelectedIndex: selected ?? undefined,
+            officialExplanation: q.explanation,
+          }}
+        />
+      )}
     </div>
   );
 }

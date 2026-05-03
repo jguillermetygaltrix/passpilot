@@ -6,6 +6,7 @@ import { DeviceRegistry } from "@/components/device-registry";
 import { BadgeToastHost } from "@/components/badge-toast";
 import { CookieBanner } from "@/components/cookie-banner";
 import { SplashKiller } from "@/components/splash-killer";
+import { NotificationsSync } from "@/components/notifications-sync";
 import { EXAMS } from "@/lib/data/exams";
 import "./globals.css";
 
@@ -111,6 +112,7 @@ export default function RootLayout({
         <SplashKiller />
         <NativeBootstrap />
         <DeviceRegistry />
+        <NotificationsSync />
         {children}
         <CommandPalette />
         <BadgeToastHost />
