@@ -122,7 +122,7 @@ export function PassNarrativeCard({
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
               <span className="chip bg-white dark:bg-card border-border text-foreground">
                 <Sparkles className="h-3 w-3 text-brand-600" />
-                MARVIN read
+                Cirrus read
               </span>
             </div>
             <h2

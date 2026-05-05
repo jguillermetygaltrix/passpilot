@@ -1,5 +1,12 @@
 /**
- * AI Coach — multi-turn chat tutor for cert questions.
+ * Cirrus — PassPilot's in-app AI study coach (multi-turn chat tutor).
+ *
+ * Branded as "Cirrus" on the user-facing surface (chip on dashboard,
+ * Coach panel header, suggested-prompts intro) — picked because (a) it's
+ * a cloud type, directly tying to the AWS/Azure/GCP cert subject matter,
+ * (b) fits the PassPilot aviation theme, (c) feels like a friendly named
+ * persona, not a faceless "AI assistant." Internal file/function/type
+ * names keep the "coach" terminology so they're greppable.
  *
  * Uses Gemini Flash (same model as lib/ai.ts WhyWrongExplainer) for
  * cost reasons (1500 free req/day) and to stay within the static-export
@@ -71,7 +78,8 @@ function buildSystemInstruction(ctx: CoachContext): string {
     ctx.userSelectedIndex === ctx.correctIndex;
 
   return [
-    `You are a patient, sharp, no-nonsense tutor helping a student study for the ${ctx.examName} exam.`,
+    `You are Cirrus — PassPilot's in-app study coach. You are patient, sharp, no-nonsense, and you help students prep for IT certifications. Stay in character as Cirrus; never mention any underlying model name.`,
+    `Right now you are helping a student study for the ${ctx.examName} exam.`,
     `The current topic is: ${ctx.topicName}.`,
     "",
     "The student is looking at this question:",

@@ -87,7 +87,7 @@ export function CoachPanel({
       setError(
         err instanceof Error
           ? err.message.slice(0, 140)
-          : "Coach hit a snag. Try again in a sec."
+          : "Cirrus hit a snag. Try again in a sec."
       );
     } finally {
       setBusy(false);
@@ -128,7 +128,7 @@ export function CoachPanel({
             </div>
             <div>
               <div id="coach-title" className="font-semibold text-sm">
-                Ask the coach
+                Ask Cirrus
               </div>
               <div className="text-xs text-muted-foreground">
                 {context.topicName}
@@ -138,7 +138,7 @@ export function CoachPanel({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Close Cirrus"
             className="h-9 w-9 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <X className="h-4 w-4" />
@@ -153,7 +153,7 @@ export function CoachPanel({
           {messages.length === 0 && !busy && (
             <div className="space-y-3">
               <div className="text-xs text-muted-foreground text-center">
-                Tap a suggestion or ask anything about this question.
+                Tap a suggestion or ask Cirrus anything about this question.
               </div>
               <div className="flex flex-wrap gap-2">
                 {prompts.map((p) => (
@@ -196,7 +196,7 @@ export function CoachPanel({
               <div className="bg-slate-100 dark:bg-muted rounded-2xl rounded-bl-sm px-4 py-3 inline-flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                  Coach is thinking…
+                  Cirrus is thinking…
                 </span>
               </div>
             </div>
@@ -220,7 +220,7 @@ export function CoachPanel({
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask the coach…"
+            placeholder="Ask Cirrus…"
             disabled={busy}
             className="flex-1 h-11 rounded-full border border-border bg-white dark:bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-brand-500 disabled:opacity-60"
           />

@@ -419,7 +419,7 @@ export function QuestionRunner({
                 className="mt-3 inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-brand-200 dark:border-brand-500/30 bg-white dark:bg-card text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-500/15 transition-colors"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Ask the coach
+                Ask Cirrus
               </button>
             )}
           </div>

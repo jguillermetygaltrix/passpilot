@@ -24,6 +24,7 @@ import { topInsight } from "@/lib/scoring";
 import { buildPassNarrative } from "@/lib/pass-narrative";
 import { PassNarrativeCard } from "@/components/pass-narrative-card";
 import { StreakFlame, streakTier, streakTierLabel } from "@/components/streak-flame";
+import { TopicConstellation } from "@/components/topic-constellation";
 import { getTopicsForExam } from "@/lib/data/topics";
 import { getWhyTone, getWhyLabel } from "@/lib/why-tone";
 import { TOPIC_MAP } from "@/lib/data/topics";
@@ -450,13 +451,30 @@ function Inner() {
         <div className="grid lg:grid-cols-3 gap-5 mt-5 min-w-0">
           <div className="card-surface p-6 lg:col-span-2 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between mb-4 gap-3">
-              <div className="font-semibold text-sm min-w-0">Topic mastery</div>
+              <div className="min-w-0">
+                <div className="font-semibold text-sm">Topic mastery map</div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  Tap a hex to drill that topic
+                </div>
+              </div>
               <Link
                 href="/weakness"
                 className="text-xs font-medium text-brand-700 dark:text-brand-300 hover:text-brand-800 flex items-center gap-1 shrink-0 whitespace-nowrap"
               >
                 Weakness review <ArrowRight className="h-3 w-3" />
               </Link>
+            </div>
+            {/* DEC-054 D — constellation hero replaces the bare list as the
+                primary mastery visual. List remains below for accessibility +
+                full detail. Hex size scales with topic.weight, fill tone
+                tracks accuracy, glow halo intensity tracks mastery. */}
+            <div className="flex justify-center mb-6">
+              <TopicConstellation
+                topics={getTopicsForExam(profile.examId)}
+                mastery={mastery}
+                width={360}
+                height={320}
+              />
             </div>
             <TopicMasteryList mastery={mastery} />
           </div>
