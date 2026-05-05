@@ -24,7 +24,7 @@ export function AppShell({
   return (
     <div
       className={cn(
-        "container pt-6 pb-24 md:pt-10 md:pb-12 max-w-5xl min-w-0",
+        "container pt-6 pb-24 md:pt-10 md:pb-12 max-w-5xl min-w-0 relative z-10",
         // iPhone notch / Dynamic Island clearance for content top.
         // Resolves to 0 on Android / web / desktop where no inset exists.
         "pt-[max(1.5rem,env(safe-area-inset-top))]",

@@ -79,6 +79,7 @@
     font-feature-settings: "cv11", "ss01", "ss03";
     overscroll-behavior: none;
     overflow-x: hidden;
+    position: relative;
     /* DEC-057 — body padding ONLY handles landscape notch (left/right).
        Top/bottom safe-area is now self-managed by individual components:
        AppNav's bottom nav uses `pb-[env(safe-area-inset-bottom)]`,
@@ -90,6 +91,47 @@
        a web page"). */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+
+  /* DEC-059 — premium-app top hero gradient (Boss directive: "B = hero
+     color extends edge-to-edge under the status bar like Apple Music /
+     Spotify / Notion"). A brand-tinted gradient overlay that always sits
+     at the top of every page, covering the iPhone status-bar safe-area
+     zone with brand color instead of plain bg.
+     - position: fixed so it stays at viewport top during scroll
+     - height covers safe-area-inset-top + ~80px of content area (so it
+       blends into the page's first content card)
+     - z-index: 0 with pointer-events: none so it doesn't interfere with
+       any UI clicks
+     - violet → cyan gradient on dark, soft brand-blue on light
+     - subtle alpha (0.15 → 0.06 → transparent) so it adds richness
+       without dominating; like a light-leak through the top of the
+       screen */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(env(safe-area-inset-top) + 96px);
+    background: linear-gradient(
+      to bottom,
+      hsl(230 90% 60% / 0.18) 0%,
+      hsl(265 80% 65% / 0.10) 40%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* In dark mode, push the gradient toward violet for a richer feel that
+     reads as "premium" against the near-black --background. */
+  .dark body::before {
+    background: linear-gradient(
+      to bottom,
+      hsl(265 90% 65% / 0.22) 0%,
+      hsl(230 80% 55% / 0.12) 45%,
+      transparent 100%
+    );
   }
   ::selection {
     @apply bg-brand-200 text-brand-900;
