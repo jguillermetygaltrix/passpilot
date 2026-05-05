@@ -36,7 +36,12 @@ export default function WelcomePage() {
   }, [router, profile?.examId]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    // DEC-057 — `min-h-dvh` (dynamic viewport height) instead of
+    // `min-h-screen` (= 100vh, broken on iOS WKWebView with safe-area).
+    // dvh updates as iOS chrome appears/disappears; no overflow into
+    // empty space. Self-handles top + bottom safe-area now that body
+    // doesn't.
+    <div className="min-h-dvh flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <div className="absolute inset-0 -z-10 mesh-bg" />
 
       <main className="container flex-1 flex flex-col items-center justify-center py-6 max-w-md w-full text-center">
