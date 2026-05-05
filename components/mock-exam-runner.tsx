@@ -41,6 +41,7 @@ import { track } from "@/lib/usage";
 import { cn } from "@/lib/utils";
 import { evaluateAll } from "@/lib/achievements";
 import { fireBadgeUnlocks } from "./badge-toast";
+import { shuffleQuestions, newDrillSeed } from "@/lib/shuffle";
 
 interface Props {
   exam: ExamMeta;
@@ -56,9 +57,20 @@ interface QState {
   timeMs: number;      // accumulated time on this Q
 }
 
-export function MockExamRunner({ exam, questions, durationSec, onComplete }: Props) {
+export function MockExamRunner({ exam, questions: rawQuestions, durationSec, onComplete }: Props) {
   const router = useRouter();
   const recordAttempt = useApp((s) => s.recordAttempt);
+
+  // DEC-053 — shuffle each question's choices with a per-mock seed.
+  // Source data has correctIndex bias; without runtime shuffle a real
+  // mock exam would still teach pattern recognition. Seed stable per
+  // mock instance via useState initializer.
+  const [drillSeed] = useState(() => newDrillSeed());
+  const questions = useMemo(
+    () => shuffleQuestions(rawQuestions, drillSeed),
+    [rawQuestions, drillSeed]
+  );
+
   const [index, setIndex] = useState(0);
   const [states, setStates] = useState<QState[]>(() =>
     questions.map(() => ({

@@ -13,6 +13,7 @@ import { WhyWrongExplainer } from "./why-wrong-explainer";
 import { CoachPanel } from "./coach-panel";
 import { isCoachAvailable } from "@/lib/ai-coach";
 import { getExamMeta } from "@/lib/data/exams";
+import { shuffleQuestions, newDrillSeed } from "@/lib/shuffle";
 import { tap, success, error as hapticError } from "@/lib/haptics";
 import { track } from "@/lib/usage";
 import { recordWrongAnswer, gradeCard, getCard } from "@/lib/sr";
@@ -30,7 +31,7 @@ interface Props {
 }
 
 export function QuestionRunner({
-  questions,
+  questions: rawQuestions,
   kind,
   topicId,
   title = "Practice",
@@ -40,6 +41,18 @@ export function QuestionRunner({
 }: Props) {
   const router = useRouter();
   const recordAttempt = useApp((s) => s.recordAttempt);
+
+  // DEC-053 — shuffle each question's choices with a per-drill seed.
+  // Source data has correctIndex bias (~58% B, ~32% C); without runtime
+  // shuffle, users can pattern-match instead of learn. Seed is stable
+  // for the lifetime of this drill via useState initializer, so re-renders
+  // don't re-shuffle and break the user's selection mid-question.
+  const [drillSeed] = useState(() => newDrillSeed());
+  const questions = useMemo(
+    () => shuffleQuestions(rawQuestions, drillSeed),
+    [rawQuestions, drillSeed]
+  );
+
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
   const [selected, setSelected] = useState<number | null>(null);

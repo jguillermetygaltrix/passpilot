@@ -39,6 +39,14 @@ jobs:
         # Cached by setup-node so reruns are fast
         run: npx playwright install --with-deps chromium
 
+      - name: Verify shuffle distribution (DEC-053)
+        # Asserts choice-shuffle produces ~25% per option across 1000
+        # presentations. Catches regressions of the B/C bias that the
+        # 2026-05-04 audit caught in the source pool. Fails fast — runs
+        # before the longer build/E2E so a broken shuffle doesn't waste
+        # CI minutes.
+        run: node scripts/verify-shuffle-distribution.mjs
+
       - name: Build Next.js (production export)
         # Surfaces type errors and build-time failures before the E2E even runs
         run: npm run build
