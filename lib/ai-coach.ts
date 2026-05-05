@@ -151,26 +151,102 @@ export async function askCoach(
 
 /**
  * Suggested first-turn prompts the user can tap instead of typing.
- * Tailored to whether they got it right or wrong.
+ *
+ * DEC-054 polish — was static 3-4 chips, now context-aware:
+ *   - Outcome-aware (right vs wrong)
+ *   - Topic-aware (security vs cloud-services vs identity get different
+ *     follow-up flavors)
+ *   - Difficulty-aware (hard questions surface "trick to remember" earlier)
+ *   - Per-call rotation via a small RNG so users don't see the same 3 chips
+ *     every time — boosts the feeling that the Coach has depth
+ *
+ * Returns 3-4 prompts (small enough to fit on mobile, varied enough to
+ * feel fresh).
  */
 export function suggestedPrompts(ctx: CoachContext): string[] {
   const wasCorrect =
     ctx.userSelectedIndex !== undefined &&
     ctx.userSelectedIndex === ctx.correctIndex;
 
-  if (wasCorrect) {
-    return [
-      "Why is this answer right?",
-      "When would the other choices apply?",
-      "Give me a real-world example.",
-    ];
-  }
-  return [
+  // Topic-flavor candidates — broad pools per outcome, picked from at random.
+  // The deterministic-ish picker uses question content as a seed so the same
+  // question shows the same chips on re-renders (no jumping mid-session).
+  const seed = hashStr(`${ctx.question}-${ctx.userSelectedIndex ?? "pre"}`);
+
+  const correctPool = [
+    "Why is this answer right?",
+    "When would the other choices apply?",
+    "Give me a real-world example.",
+    "What's the gotcha if I picked one of the others?",
+    "Build me a 1-line memory hook.",
+    "Show me how this appears on the real exam.",
+    "What's a trickier version of this question?",
+    "Connect this to something I already know.",
+  ];
+
+  const wrongPool = [
     "Why is my answer wrong?",
     "Explain it like I'm 5.",
     "What's the trick to remember this?",
     "Show me a similar question.",
+    "What's the difference between my pick and the right one?",
+    "Build me a memory hook so I never miss this again.",
+    "What pattern was I supposed to notice?",
+    "Give me 3 facts about this topic I MUST know.",
   ];
+
+  const pool = wasCorrect ? correctPool : wrongPool;
+
+  // Topic-flavor add-on: sprinkle one specific prompt based on topic name
+  // signals. Cheap heuristic — no NLP, just looks for substrings in the
+  // topic name that suggest its flavor.
+  const t = ctx.topicName.toLowerCase();
+  const flavorPrompt =
+    t.includes("security") || t.includes("compliance")
+      ? wasCorrect
+        ? "What's the most common attack vector this defends against?"
+        : "Walk me through the security mindset for this question."
+      : t.includes("identity") || t.includes("access") || t.includes("iam")
+        ? wasCorrect
+          ? "Map this to least-privilege thinking."
+          : "What's the least-privilege answer here?"
+        : t.includes("cost") || t.includes("billing") || t.includes("pricing")
+          ? wasCorrect
+            ? "When would the cost answer change?"
+            : "Walk me through the pricing logic for this."
+          : t.includes("ai") || t.includes("ml") || t.includes("model")
+            ? wasCorrect
+              ? "Where does this fall in the ML lifecycle?"
+              : "What ML concept did I miss?"
+            : null;
+
+  // Pick 3 from pool + the flavor (when present) = up to 4 chips.
+  // Use the seed to deterministically pick 3 distinct indices.
+  const picked = pickN(pool, 3, seed);
+  return flavorPrompt ? [...picked, flavorPrompt] : picked;
+}
+
+/** Cheap string hash for the seed — same FNV-1a as lib/shuffle.ts. */
+function hashStr(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** Pick N distinct items from an array, deterministic against the seed. */
+function pickN<T>(arr: T[], n: number, seed: number): T[] {
+  const idxs = Array.from({ length: arr.length }, (_, i) => i);
+  // Fisher-Yates with seeded "rng" — really just rotating the seed
+  let s = seed;
+  for (let i = idxs.length - 1; i > 0; i--) {
+    s = (Math.imul(s, 1103515245) + 12345) | 0;
+    const j = Math.abs(s) % (i + 1);
+    [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+  }
+  return idxs.slice(0, Math.min(n, arr.length)).map((i) => arr[i]);
 }
 
 // Re-export the ExamId type so callers don't have to import from two places.

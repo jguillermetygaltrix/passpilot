@@ -158,6 +158,26 @@ const config: Config = {
           "0%, 100%": { opacity: "0", transform: "scale(0.4)" },
           "50%": { opacity: "1", transform: "scale(1)" },
         },
+        // Subtle non-uniform flicker — 6 keyframes irregularly spaced so it
+        // doesn't read as a clean pulse. Used by <StreakFlame /> for tier
+        // ≥ torch (DEC-054). The transform is tiny but the brightness shift
+        // sells the "alive" feel.
+        "flame-flicker": {
+          "0%": { transform: "scale(1) rotate(0deg)", opacity: "0.94" },
+          "18%": { transform: "scale(1.04) rotate(-0.6deg)", opacity: "1" },
+          "37%": { transform: "scale(0.99) rotate(0.4deg)", opacity: "0.92" },
+          "55%": { transform: "scale(1.03) rotate(-0.3deg)", opacity: "1" },
+          "73%": { transform: "scale(1.01) rotate(0.5deg)", opacity: "0.96" },
+          "100%": { transform: "scale(1) rotate(0deg)", opacity: "0.94" },
+        },
+        // Badge unlock celebration — used by badge-toast + future
+        // achievement animations (DEC-054 A3).
+        "badge-pop": {
+          "0%": { transform: "scale(0.4) rotate(-12deg)", opacity: "0" },
+          "55%": { transform: "scale(1.15) rotate(4deg)", opacity: "1" },
+          "78%": { transform: "scale(0.96) rotate(-2deg)", opacity: "1" },
+          "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.4s ease-out",
@@ -170,6 +190,8 @@ const config: Config = {
         "pulse-ring": "pulse-ring 1.8s cubic-bezier(0, 0, 0.2, 1) infinite",
         "bounce-in": "bounce-in 0.5s cubic-bezier(.2,.9,.2,1)",
         sparkle: "sparkle 1.8s ease-in-out infinite",
+        "flame-flicker": "flame-flicker 2.2s ease-in-out infinite",
+        "badge-pop": "badge-pop 0.7s cubic-bezier(.34,1.56,.64,1)",
       },
     },
   },

@@ -3,6 +3,7 @@
 import { useApp } from "@/lib/store";
 import { Flame, Shield } from "lucide-react";
 import { useMemo } from "react";
+import { StreakFlame, streakTier, streakTierLabel } from "./streak-flame";
 
 /**
  * Visible streak indicator — shows consecutive days with study activity.
@@ -57,6 +58,8 @@ function CompactBadge({
       ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
       : "border-orange-500/40 bg-orange-500/15 text-orange-200";
 
+  // DEC-054 — tier-aware flame replaces the flat lucide icon. showGlow=false
+  // because the chip's small height would smear the halo into the border.
   return (
     <div
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${color}`}
@@ -65,10 +68,10 @@ function CompactBadge({
           ? shields > 0
             ? `Drill today or a shield will be consumed automatically (${shields} banked)`
             : "Drill today to keep your streak alive — no shields banked"
-          : `${shields} shield${shields === 1 ? "" : "s"} banked`
+          : `${streakTierLabel(streakTier(streak))} · ${shields} shield${shields === 1 ? "" : "s"} banked`
       }
     >
-      <Flame className="w-3.5 h-3.5" />
+      <StreakFlame days={streak} size={14} showGlow={false} />
       {streak}-day streak
       {shields > 0 && (
         <span className="ml-0.5 inline-flex items-center gap-0.5 text-cyan-300">
@@ -131,14 +134,15 @@ function FullCard({
         <div
           className={`rounded-full p-2 ${status === "at-risk" ? "bg-amber-500/20" : "bg-orange-500/20"}`}
         >
-          <Flame
-            className={`w-6 h-6 ${status === "at-risk" ? "text-amber-300" : "text-orange-300"}`}
-          />
+          {/* DEC-054 — tier-aware flame with glow halo. The full card has
+              enough vertical room that the halo reads as celebration, not
+              clutter. */}
+          <StreakFlame days={streak} size={26} />
         </div>
         <div className="flex-1">
           <div className="text-2xl font-bold text-white">{streak}</div>
           <div className="text-xs font-semibold uppercase tracking-wider text-orange-200/80">
-            Day streak
+            {streakTierLabel(streakTier(streak))}
           </div>
         </div>
         {shields > 0 && (

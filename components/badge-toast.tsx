@@ -22,6 +22,7 @@
 import { useEffect, useState } from "react";
 import { Sparkles, X, Trophy } from "lucide-react";
 import type { BadgeDef } from "@/lib/achievements";
+import { success } from "@/lib/haptics";
 
 const EVENT_NAME = "passpilot:badge-unlock";
 const AUTO_DISMISS_MS = 5000;
@@ -30,6 +31,9 @@ type ToastItem = BadgeDef & { _key: string };
 
 export function fireBadgeUnlocks(badges: BadgeDef[]): void {
   if (typeof window === "undefined" || !badges.length) return;
+  // DEC-054 — haptic celebration on every unlock. Multiple badges in
+  // one fire only get one buzz (don't shake the phone for 3 seconds).
+  success();
   window.dispatchEvent(
     new CustomEvent<BadgeDef[]>(EVENT_NAME, { detail: badges })
   );
@@ -79,6 +83,7 @@ export function BadgeToastHost() {
     >
       {items.map((b) => {
         const tone = rarityTone(b.rarity);
+        const isHype = b.rarity === "legendary" || b.rarity === "epic";
         return (
           <div
             key={b._key}
@@ -86,11 +91,31 @@ export function BadgeToastHost() {
             onClick={() => dismiss(b._key)}
             role="status"
           >
+            {/* DEC-054 — pulsing ring around legendary/epic badges. Sparkle
+                particles in the corners. The bigger the rarity, the more
+                the toast feels like a moment. */}
             <div
-              className={`absolute -top-12 -right-12 w-32 h-32 rounded-full blur-3xl opacity-50 ${tone.glow}`}
+              className={`absolute -top-12 -right-12 w-32 h-32 rounded-full blur-3xl opacity-50 ${tone.glow} ${isHype ? "animate-pulse" : ""}`}
             />
+            {isHype && (
+              <>
+                <Sparkles
+                  className={`absolute top-2 right-10 h-3 w-3 ${tone.text} animate-sparkle`}
+                  style={{ animationDelay: "0ms" }}
+                />
+                <Sparkles
+                  className={`absolute bottom-3 right-3 h-2.5 w-2.5 ${tone.text} animate-sparkle`}
+                  style={{ animationDelay: "600ms" }}
+                />
+                <Sparkles
+                  className={`absolute top-8 left-12 h-2 w-2 ${tone.text} animate-sparkle`}
+                  style={{ animationDelay: "1200ms" }}
+                />
+              </>
+            )}
             <div className="relative p-4 flex items-start gap-3">
-              <div className="text-4xl shrink-0 leading-none mt-0.5">
+              {/* Bouncy emoji entrance — animate-badge-pop is in tailwind.config.ts */}
+              <div className="text-4xl shrink-0 leading-none mt-0.5 animate-badge-pop">
                 {b.emoji}
               </div>
               <div className="min-w-0 flex-1">

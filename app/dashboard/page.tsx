@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { topInsight } from "@/lib/scoring";
 import { buildPassNarrative } from "@/lib/pass-narrative";
 import { PassNarrativeCard } from "@/components/pass-narrative-card";
+import { StreakFlame, streakTier, streakTierLabel } from "@/components/streak-flame";
 import { getTopicsForExam } from "@/lib/data/topics";
 import { getWhyTone, getWhyLabel } from "@/lib/why-tone";
 import { TOPIC_MAP } from "@/lib/data/topics";
@@ -314,8 +315,15 @@ function Inner() {
                   <span className="text-muted-foreground">d</span>
                 </>
               }
-              sub={profile.streakDays ? "Keep the fire alive" : "Start today"}
-              icon={Flame}
+              sub={
+                profile.streakDays === 0
+                  ? "Start today"
+                  : streakTierLabel(streakTier(profile.streakDays))
+              }
+              // DEC-054 — tier-aware flame replaces flat lucide icon. Dashboard
+              // streak tile now visually levels up (ember → flame → torch →
+              // bonfire → blue → plasma) as the streak grows.
+              iconNode={<StreakFlame days={profile.streakDays} size={18} />}
               tone="amber"
             />
             <StatCard

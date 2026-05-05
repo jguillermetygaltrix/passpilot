@@ -6,6 +6,7 @@ export function StatCard({
   value,
   sub,
   icon: Icon,
+  iconNode,
   tone = "default",
   className,
 }: {
@@ -13,6 +14,13 @@ export function StatCard({
   value: React.ReactNode;
   sub?: string;
   icon?: LucideIcon;
+  /**
+   * DEC-054 — escape hatch for richer icon visuals (e.g., the tier-aware
+   * <StreakFlame /> on the dashboard's Streak tile). Takes precedence over
+   * `icon` when supplied. Render whatever you want; the container provides
+   * a 36×36 rounded slot with a tone-tinted background.
+   */
+  iconNode?: React.ReactNode;
   tone?: "default" | "brand" | "emerald" | "amber" | "rose";
   className?: string;
 }) {
@@ -46,14 +54,14 @@ export function StatCard({
             <div className="text-xs text-muted-foreground mt-1">{sub}</div>
           )}
         </div>
-        {Icon && (
+        {(iconNode || Icon) && (
           <div
             className={cn(
               "h-9 w-9 rounded-full border flex items-center justify-center shrink-0",
               toneBg
             )}
           >
-            <Icon className="h-4 w-4" />
+            {iconNode ? iconNode : Icon ? <Icon className="h-4 w-4" /> : null}
           </div>
         )}
       </div>

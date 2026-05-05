@@ -265,38 +265,60 @@ function Inner() {
         )}
 
         {phase === "done" && (
-          <div className="card-surface p-8 text-center animate-fade-in">
-            <div className="h-14 w-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="h-7 w-7" />
-            </div>
-            <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-              Block complete
-            </div>
-            <h2 className="text-2xl font-semibold tracking-tight mt-2">
-              Lesson + quiz locked in
-            </h2>
-            <p className="text-sm text-muted-foreground mt-2 leading-relaxed max-w-md mx-auto">
-              You read the lesson and immediately tested it — that's the
-              encoding pattern that actually sticks.
-              {profile?.streakDays
-                ? ` Day ${profile.streakDays} of your streak counts.`
-                : ""}
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/plan" className="flex-1 sm:flex-none">
-                <Button variant="primary" size="lg" className="w-full">
-                  Back to plan
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link
-                href={`/guide/${topic.id}/${lesson.id}`}
-                className="flex-1 sm:flex-none"
-              >
-                <Button variant="outline" size="lg" className="w-full">
-                  Re-read in full guide
-                </Button>
-              </Link>
+          <div className="card-surface p-8 text-center animate-fade-in relative overflow-hidden">
+            {/* DEC-054 — celebration polish. Sparkles + atmospheric glow +
+                bouncy check icon make the "Block complete" moment feel
+                earned. Single ✨ would feel cheap; three offset sparkles
+                with staggered timing reads as deliberate. */}
+            <div
+              className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full bg-emerald-300/40 dark:bg-emerald-500/30 blur-3xl pointer-events-none"
+              aria-hidden
+            />
+            <Sparkles
+              className="absolute top-6 left-8 h-4 w-4 text-emerald-400 animate-sparkle"
+              style={{ animationDelay: "0ms" }}
+            />
+            <Sparkles
+              className="absolute top-12 right-10 h-3 w-3 text-emerald-500 animate-sparkle"
+              style={{ animationDelay: "500ms" }}
+            />
+            <Sparkles
+              className="absolute bottom-20 left-12 h-3 w-3 text-emerald-400 animate-sparkle"
+              style={{ animationDelay: "1100ms" }}
+            />
+            <div className="relative">
+              <div className="h-16 w-16 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-4 shadow-pop animate-badge-pop">
+                <CheckCircle2 className="h-8 w-8" />
+              </div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                Block complete
+              </div>
+              <h2 className="text-2xl font-semibold tracking-tight mt-2">
+                Lesson + quiz locked in
+              </h2>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed max-w-md mx-auto">
+                You read the lesson and immediately tested it — that's the
+                encoding pattern that actually sticks.
+                {profile?.streakDays
+                  ? ` Day ${profile.streakDays} of your streak counts.`
+                  : ""}
+              </p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/plan" className="flex-1 sm:flex-none">
+                  <Button variant="primary" size="lg" className="w-full">
+                    Back to plan
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link
+                  href={`/guide/${topic.id}/${lesson.id}`}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Button variant="outline" size="lg" className="w-full">
+                    Re-read in full guide
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         )}

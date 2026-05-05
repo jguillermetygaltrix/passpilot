@@ -62,6 +62,42 @@ function Inner() {
           <h1 className="heading-2 mt-1">Today's study plan</h1>
         </div>
 
+        {/* DEC-054 — sticky compact progress strip. Always visible while
+            scrolling so the user feels the day's arc continuously
+            ("3 of 6 done · 28 min in"). Sits below the AppNav header on
+            mobile thanks to top-12 (3rem). */}
+        {total > 0 && (
+          <div className="sticky top-12 z-30 -mx-4 sm:mx-0 mb-5 px-4 sm:px-0">
+            <div className="rounded-2xl border border-border bg-white/80 dark:bg-card/80 backdrop-blur-md shadow-sm px-4 py-3">
+              <div className="flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-3 font-medium">
+                  <span className="tabular-nums">
+                    <span className="text-brand-700 dark:text-brand-300 font-bold text-sm">
+                      {done}
+                    </span>
+                    <span className="text-muted-foreground">/{total}</span>
+                    <span className="text-muted-foreground ml-1">blocks</span>
+                  </span>
+                  <span className="h-3 w-px bg-border" aria-hidden />
+                  <span className="tabular-nums text-muted-foreground">
+                    {doneMin}/{plan.totalMinutes}m
+                  </span>
+                </div>
+                {done === total && (
+                  <span className="chip bg-emerald-50 dark:bg-emerald-500/15 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 animate-fade-in">
+                    🎉 Plan complete
+                  </span>
+                )}
+              </div>
+              <ProgressBar
+                value={(done / total) * 100}
+                className="mt-2"
+                tone={done === total ? "emerald" : "brand"}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="card-surface p-6 mb-5 border-l-4 border-brand-500 relative overflow-hidden">
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-brand-100 dark:bg-brand-500/20 blur-3xl opacity-60" />
           <div className="relative">
