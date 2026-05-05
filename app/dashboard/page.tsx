@@ -21,6 +21,9 @@ import { UpgradeWall } from "@/components/upgrade-wall";
 import { EXAMS } from "@/lib/data/exams";
 import { useEffect, useState } from "react";
 import { topInsight } from "@/lib/scoring";
+import { buildPassNarrative } from "@/lib/pass-narrative";
+import { PassNarrativeCard } from "@/components/pass-narrative-card";
+import { getTopicsForExam } from "@/lib/data/topics";
 import { getWhyTone, getWhyLabel } from "@/lib/why-tone";
 import { TOPIC_MAP } from "@/lib/data/topics";
 import { getLessonsForExam } from "@/lib/data/lessons";
@@ -79,6 +82,16 @@ function Inner() {
   const examLessons = getLessonsForExam(profile.examId);
   const { mastery, readiness } = mr;
   const insight = topInsight(readiness, mastery);
+  // DEC-053 — pass-readiness narrative replaces the bare insight paragraph.
+  // Same data, transformed into a story-mode frame ("73% likely to pass · here's
+  // your biggest lever · here's the next move"). Pure function; topics scoped
+  // to the user's actual exam so AZ-900 vs AWS CCP get the right weights.
+  const passNarrative = buildPassNarrative(
+    readiness,
+    mastery,
+    profile,
+    getTopicsForExam(profile.examId)
+  );
   const weak = [...mastery]
     .filter((m) => m.attempts > 0 && m.accuracy < 0.7)
     .sort((a, b) => b.priority - a.priority)
@@ -257,52 +270,31 @@ function Inner() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5 min-w-0">
-          <GradientBorder
-            gradient={`linear-gradient(135deg, ${examMeta.accentFrom}40, ${examMeta.accentTo}40, #06b6d440)`}
-            radius="16px"
-            thickness={1.5}
-            className="lg:col-span-2"
-            innerClassName="p-6 md:p-7 relative overflow-hidden"
-          >
-            <div
-              className="absolute -top-20 -right-20 w-60 h-60 rounded-full blur-3xl opacity-50"
-              style={{ background: examMeta.accentFrom }}
+          {/* DEC-053 — narrative card replaces the bare ReadinessRing + insight
+              paragraph. Same underlying readiness data, restructured as a
+              "% pass-prob → biggest lever → next move → context line" story.
+              The pass-prob number inside the card now serves the visual-hero
+              role the ring used to fill. */}
+          <div className="lg:col-span-2 min-w-0">
+            <PassNarrativeCard
+              narrative={passNarrative}
+              accentFrom={examMeta.accentFrom}
+              accentTo={examMeta.accentTo}
+              ctaHref="/plan"
+              ctaLabel="Open today's mission"
             />
-            <div className="relative grid sm:grid-cols-[auto_1fr] gap-6 items-center">
-              <ReadinessRing
-                score={readiness.score}
-                risk={readiness.risk}
-                size={148}
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <RiskBadge risk={readiness.risk} />
-                  <span className="chip bg-white dark:bg-card border-border text-foreground">
-                    <Sparkles className="h-3 w-3 text-brand-600" />
-                    AI read
-                  </span>
-                </div>
-                <p className="text-sm text-foreground leading-relaxed">{insight}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Link href="/plan">
-                    <Button variant="primary" size="sm" className="group">
-                      Open today's mission
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </Button>
-                  </Link>
-                  {rescueNeeded && (
-                    <Link href="/rescue">
-                      <Button variant="danger" size="sm">
-                        <LifeBuoy className="h-3.5 w-3.5" />
-                        Rescue mode
-                      </Button>
-                    </Link>
-                  )}
-                </div>
+            {rescueNeeded && (
+              <div className="mt-3">
+                <Link href="/rescue">
+                  <Button variant="danger" size="sm" className="w-full sm:w-auto">
+                    <LifeBuoy className="h-3.5 w-3.5" />
+                    Rescue mode — exam in {readiness.daysLeft} days
+                  </Button>
+                </Link>
               </div>
-            </div>
-          </GradientBorder>
-
+            )}
+          </div>
+          {/* Stat tiles — days-left, streak, today's minutes, lessons */}
           <div className="grid grid-cols-2 gap-5">
             <StatCard
               label="Days to exam"
