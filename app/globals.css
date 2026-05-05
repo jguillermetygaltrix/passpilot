@@ -64,6 +64,15 @@
        rubber-band from any wide content. */
     overscroll-behavior: none;
     overflow-x: hidden;
+    /* DEC-058 — html element bg matches the app theme so the iPhone
+       status-bar safe-area zone (which sits OUTSIDE body but INSIDE html)
+       doesn't leak the WebView's white default through that strip. Boss
+       reported a thin white horizontal line under the iOS status bar on
+       v1.0(2) — root cause was html had no background color, so the
+       safe-area zone showed WebView's default. Setting bg-background on
+       html means light-mode users see light, dark-mode users see dark,
+       and the strip matches the rest of the app. */
+    @apply bg-background;
   }
   body {
     @apply bg-background text-foreground font-sans;

@@ -29,15 +29,43 @@ export function NativeBootstrap() {
 
     let cancelled = false;
 
-    // Status bar polish (DEC-049): switch to "Light" style (dark icons on
-    // light bg) once React mounts. Native splash + Info.plist's
-    // UIStatusBarStyle handle the brief light-icons-on-dark-splash period;
-    // this aligns the post-splash status bar with the welcome/onboarding
-    // mesh-bg light gradient. Dynamic import keeps the web build clean.
+    // Status bar — DYNAMIC theme matching (DEC-058 — was hardcoded Light
+    // in DEC-049, which broke the dark-mode user's status bar visibility:
+    // light-mode users got dark icons on light bg ✓, but dark-mode users
+    // ALSO got dark icons on a dark app body, making the time/battery
+    // unreadable.
+    //
+    // Capacitor status-bar plugin Style semantics (counter-intuitive):
+    //   Style.Light = LIGHT content (white icons) — for use on DARK bg
+    //   Style.Dark  = DARK content (black icons) — for use on LIGHT bg
+    //
+    // Strategy: detect the theme that just got applied by no-flash script
+    // in app/layout.tsx (adds .dark to html), and re-evaluate when the
+    // user toggles theme inside the app (MutationObserver on
+    // <html>.classList).
     (async () => {
       try {
         const { StatusBar, Style } = await import("@capacitor/status-bar");
-        await StatusBar.setStyle({ style: Style.Light });
+
+        const applyForTheme = async () => {
+          const isDark = document.documentElement.classList.contains("dark");
+          await StatusBar.setStyle({
+            style: isDark ? Style.Light : Style.Dark,
+          });
+        };
+
+        await applyForTheme();
+
+        // Re-apply if user toggles theme via Settings → Appearance.
+        const observer = new MutationObserver(() => {
+          void applyForTheme();
+        });
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+
+        // Note: observer leaks on unmount — single-mount component, OK.
       } catch {
         // Plugin unavailable on web or pre-pod-install — silent fail.
       }
