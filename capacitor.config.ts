@@ -49,7 +49,20 @@ const config: CapacitorConfig = {
   backgroundColor: "#0B0D13",
 
   ios: {
-    contentInset: "automatic",
+    // DEC-060 (2026-05-05) — was "automatic" (default), which makes
+    // WKWebView auto-inset its content area BELOW iOS safe-area zones
+    // (notch, home indicator). Result: any `position: fixed; top: 0`
+    // element actually positioned at WebView-content-top, NOT screen-top
+    // → couldn't extend our brand gradient (DEC-059 body::before) into
+    // the status-bar zone. With "never", the WebView's content frame
+    // extends to screen edges, and CSS `env(safe-area-inset-*)`
+    // utilities handle component-level padding (which we already do
+    // post-DEC-057 on AppShell + bottom nav).
+    //
+    // Net effect: status-bar zone now reflects whatever the page paints
+    // there — which after DEC-059 is the brand gradient. Premium feel,
+    // edge-to-edge, like Apple Music / Spotify / Notion.
+    contentInset: "never",
     // Allow the web view to run local content; payment is via StoreKit, not web
     limitsNavigationsToAppBoundDomains: false,
     // Scheme for deep-links (future: referral links, license redeem)
